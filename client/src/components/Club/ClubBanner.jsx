@@ -1,11 +1,11 @@
 import { Bell, Share2 } from "lucide-react";
 
-export default function ClubBanner() {
+export default function ClubBanner({imageUrl}) {
   return (
     <div className="relative h-96">
       <div className="absolute inset-0">
         <img
-          src="https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?auto=format&fit=crop&q=80&w=2000"
+          src={imageUrl}
           alt="Classic Cinema Club Banner"
           className="object-cover w-full h-full"
         />

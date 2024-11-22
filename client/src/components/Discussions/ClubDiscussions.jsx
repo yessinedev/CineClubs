@@ -29,7 +29,7 @@ const SAMPLE_DISCUSSIONS = [
   },
 ];
 
-export default function ClubDiscussions() {
+export default function ClubDiscussions({id}) {
   const [showNewThread, setShowNewThread] = React.useState(false);
   const [newThread, setNewThread] = React.useState({ title: '', content: '' });
 
@@ -47,7 +47,7 @@ export default function ClubDiscussions() {
           <h2 className="text-2xl font-bold text-white">Discussions</h2>
           <button
             onClick={() => setShowNewThread(true)}
-            className="flex items-center gap-2 px-4 py-2 text-white transition-colors bg-purple-500 rounded-lg hover:bg-purple-600"
+            className="flex items-center gap-2 px-4 py-2 text-white transition-colors bg-purple-500 rounded-xl hover:bg-purple-600"
           >
             <MessageSquarePlus className="w-5 h-5" />
             New Thread
@@ -61,14 +61,14 @@ export default function ClubDiscussions() {
               value={newThread.title}
               onChange={(e) => setNewThread({ ...newThread, title: e.target.value })}
               placeholder="Thread title"
-              className="w-full px-4 py-2 text-white placeholder-gray-400 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500"
+              className="w-full px-4 py-2 text-white placeholder-gray-400 bg-gray-800 border border-gray-700 rounded-xl focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500"
             />
             <textarea
               value={newThread.content}
               onChange={(e) => setNewThread({ ...newThread, content: e.target.value })}
               placeholder="What's on your mind?"
               rows={4}
-              className="w-full px-4 py-3 text-white placeholder-gray-400 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500"
+              className="w-full px-4 py-3 text-white placeholder-gray-400 bg-gray-800 border border-gray-700 rounded-xl focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500"
             />
             <div className="flex justify-end space-x-3">
               <button
@@ -80,7 +80,7 @@ export default function ClubDiscussions() {
               </button>
               <button
                 type="submit"
-                className="px-4 py-2 text-white transition-colors bg-purple-500 rounded-lg hover:bg-purple-600"
+                className="px-4 py-2 text-white transition-colors bg-purple-500 rounded-xl hover:bg-purple-600"
               >
                 Post Thread
               </button>

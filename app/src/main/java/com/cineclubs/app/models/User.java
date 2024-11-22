@@ -5,6 +5,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 
+import java.util.Set;
+
 @Entity
 @Table(name = "users")
 @Data
@@ -29,4 +31,16 @@ public class User {
 
     @Column(name = "updated_at")
     private java.time.LocalDateTime updatedAt;
+
+    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Post> posts;
+
+    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Comment> comments;
+
+    @ManyToMany(mappedBy = "likes")
+    private Set<Post> likedPosts;
+
+    @ManyToMany(mappedBy = "likes")
+    private Set<Comment> likedComments;
 }

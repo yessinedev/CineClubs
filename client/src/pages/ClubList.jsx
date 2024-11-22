@@ -1,8 +1,7 @@
 import { ClubCard } from "@/components/Club/ClubCard";
 import { fetchClubs } from "@/services/clubService";
 import { useQuery } from "@tanstack/react-query";
-import { Users} from "lucide-react";
-import { Link } from "react-router-dom";
+
 
 const ClubList = () => {
   const {
