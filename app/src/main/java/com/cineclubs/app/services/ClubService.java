@@ -8,6 +8,7 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.HashSet;
 import java.util.List;
@@ -63,6 +64,16 @@ public class ClubService {
         Club club = getClubById(id);
         clubRepository.delete(club);
         messagingTemplate.convertAndSend("/topic/clubs/delete", id);
+    }
+
+    public void joinClub(String clerkId, Long clubId) {
+        Club club = getClubById(clubId);
+        User user = userService.getUserByClerkId(clerkId);
+        club.getMembers().add(user);
+        club.setCurrentMembers(club.getCurrentMembers() + 1);
+        Club joinedClub = clubRepository.save(club);
+        messagingTemplate.convertAndSend("/topic/clubs", joinedClub);
+
     }
 }
 

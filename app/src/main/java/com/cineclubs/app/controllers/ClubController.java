@@ -40,5 +40,11 @@ public class ClubController {
         clubService.deleteClub(id);
         return ResponseEntity.noContent().build();
     }
+
+    @PostMapping("/join")
+    public ResponseEntity<Void> joinClub(@RequestParam String clerkId, @RequestParam Long clubId) {
+        clubService.joinClub(clerkId, clubId);
+        return ResponseEntity.noContent().build();
+    }
 }
 
