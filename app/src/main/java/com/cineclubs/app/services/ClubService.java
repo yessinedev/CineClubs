@@ -66,23 +66,35 @@ public class ClubService {
         messagingTemplate.convertAndSend("/topic/clubs/delete", id);
     }
 
+    public boolean isUserJoined(Club club, User user) {
+        return club.getMembers().contains(user);
+    }
+
+
     public void joinClub(String clerkId, Long clubId) {
         Club club = getClubById(clubId);
         User user = userService.getUserByClerkId(clerkId);
-        club.getMembers().add(user);
-        club.setCurrentMembers(club.getCurrentMembers() + 1);
-        Club joinedClub = clubRepository.save(club);
-        messagingTemplate.convertAndSend("/topic/clubs", joinedClub);
+        boolean isJoined = isUserJoined(club, user);
+        if (!isJoined) {
+            club.getMembers().add(user);
+            club.setCurrentMembers(club.getCurrentMembers() + 1);
+            Club joinedClub = clubRepository.save(club);
+            messagingTemplate.convertAndSend("/topic/clubs", joinedClub);
+        }
 
     }
 
     public void leaveClub(String clerkId, Long clubId) {
         Club club = getClubById(clubId);
         User user = userService.getUserByClerkId(clerkId);
-        club.getMembers().remove(user);
-        club.setCurrentMembers(club.getCurrentMembers() - 1);
-        Club joinedClub = clubRepository.save(club);
-        messagingTemplate.convertAndSend("/topic/clubs", joinedClub);
+        boolean isJoined = isUserJoined(club, user);
+        if(isJoined){
+            club.getMembers().remove(user);
+            club.setCurrentMembers(club.getCurrentMembers() - 1);
+            Club joinedClub = clubRepository.save(club);
+            messagingTemplate.convertAndSend("/topic/clubs", joinedClub);
+        }
+
 
     }
 }
