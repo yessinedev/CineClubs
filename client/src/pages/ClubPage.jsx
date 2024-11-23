@@ -4,18 +4,24 @@ import ClubDetails from "../components/Club/ClubDetails";
 import { fetchClub } from "@/services/clubService";
 import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
+import { useUser } from "@clerk/clerk-react";
 
 export default function ClubPage() {
   const { id } = useParams();
+  const { isSignedIn, user } = useUser();
   const {
     data: club,
     isLoading,
     error,
   } = useQuery({
-    queryKey: ["club"],
+    queryKey: ["club", id],
     queryFn: () => fetchClub(id),
   });
- 
+
+  const isMember =
+    isSignedIn && club?.members?.some((member) => member.clerkId === user?.id);
+
+  
   return (
     <div className="min-h-screen bg-gray-950">
       {isLoading ? (
@@ -34,8 +40,8 @@ export default function ClubPage() {
         <>
           <ClubBanner imageUrl={club.imageUrl} />
           <div className="relative z-10 px-4 mx-auto -mt-52 max-w-7xl sm:px-6 lg:px-8">
-            <ClubDetails club={club} />
-            <ClubDiscussions id={id} />
+            <ClubDetails club={club} isMember={isMember} user={user} />
+            {isMember && <ClubDiscussions id={id} />}
           </div>
         </>
       )}
