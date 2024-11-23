@@ -46,5 +46,11 @@ public class ClubController {
         clubService.joinClub(clerkId, clubId);
         return ResponseEntity.noContent().build();
     }
+
+    @PutMapping("/leave")
+    public ResponseEntity<Void> leaveClub(@RequestParam String clerkId, @RequestParam Long clubId) {
+        clubService.leaveClub(clerkId, clubId);
+        return ResponseEntity.noContent().build();
+    }
 }
 
