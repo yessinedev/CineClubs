@@ -5,20 +5,25 @@ import com.cineclubs.app.models.Club;
 import com.cineclubs.app.models.User;
 import com.cineclubs.app.repository.ClubRepository;
 import jakarta.persistence.EntityNotFoundException;
-import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
+
 
 import java.util.HashSet;
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
+
 public class ClubService {
     private final ClubRepository clubRepository;
     private final UserService userService;
     private final SimpMessagingTemplate messagingTemplate;
+
+    public ClubService(ClubRepository clubRepository, UserService userService, SimpMessagingTemplate messagingTemplate) {
+        this.clubRepository = clubRepository;
+        this.userService = userService;
+        this.messagingTemplate = messagingTemplate;
+    }
 
     public List<Club> getAllClubs() {
         return clubRepository.findAll();

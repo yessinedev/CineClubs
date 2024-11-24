@@ -2,7 +2,6 @@ package com.cineclubs.app.controllers;
 
 import com.cineclubs.app.models.Club;
 import com.cineclubs.app.services.ClubService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,9 +9,13 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/clubs")
-@RequiredArgsConstructor
+
 public class ClubController {
     private final ClubService clubService;
+
+    public ClubController(ClubService clubService) {
+        this.clubService = clubService;
+    }
 
     @GetMapping
     public ResponseEntity<List<Club>> getAllClubs() {

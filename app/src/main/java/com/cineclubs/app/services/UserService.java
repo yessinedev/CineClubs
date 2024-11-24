@@ -1,25 +1,39 @@
 package com.cineclubs.app.services;
 
+import com.cineclubs.app.dto.UserDTO;
 import com.cineclubs.app.models.User;
 import com.cineclubs.app.repository.UserRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 
 @Service
-@RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
 
-    public User createOrUpdateUser(User user) {
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
+    public UserDTO createOrUpdateUser(User user) {
         user.setUpdatedAt(LocalDateTime.now());
 
         if (!userRepository.existsByClerkId(user.getClerkId())) {
             user.setCreatedAt(LocalDateTime.now());
         }
 
-        return userRepository.save(user);
+        User savedUser = userRepository.save(user);
+        return new UserDTO(savedUser);
+    }
+
+    public UserDTO getUserDTOByClerkId(String clerkId) {
+        User user = getUserByClerkId(clerkId);
+        return new UserDTO(user);
+    }
+
+    public UserDTO getUserDTOWithPostsByClerkId(String clerkId) {
+        User user = getUserByClerkId(clerkId);
+        return new UserDTO(user, true);
     }
 
     public User getUserByClerkId(String clerkId) {
