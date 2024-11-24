@@ -1,8 +1,8 @@
 package com.cineclubs.app.controllers;
 
+import com.cineclubs.app.dto.ClubDTO;
 import com.cineclubs.app.models.Club;
 import com.cineclubs.app.services.ClubService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,12 +10,16 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/clubs")
-@RequiredArgsConstructor
+
 public class ClubController {
     private final ClubService clubService;
 
+    public ClubController(ClubService clubService) {
+        this.clubService = clubService;
+    }
+
     @GetMapping
-    public ResponseEntity<List<Club>> getAllClubs() {
+    public ResponseEntity<List<ClubDTO>> getAllClubs() {
         return ResponseEntity.ok(clubService.getAllClubs());
     }
 
@@ -24,15 +28,22 @@ public class ClubController {
         return ResponseEntity.ok(clubService.getClubById(id));
     }
 
+    @GetMapping("/{id}/with-members")
+    public ResponseEntity<ClubDTO> getClubByIdWithMembers(@PathVariable Long id) {
+        Club club = clubService.getClubById(id);
+
+        return ResponseEntity.ok(new ClubDTO(club, true));
+    }
+
     @PostMapping
-    public ResponseEntity<Club> createClub(@RequestBody Club club, @RequestParam String clerkId) {
-        return ResponseEntity.ok(clubService.createClub(club, clerkId));
+    public ResponseEntity<ClubDTO> createClub(@RequestBody Club club, @RequestParam String userId) {
+        return ResponseEntity.ok(clubService.createClub(club, userId));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Club> updateClub(@PathVariable Long id, @RequestBody Club club,
-                                           @RequestParam String clerkId) {
-        return ResponseEntity.ok(clubService.updateClub(id, club, clerkId));
+    public ResponseEntity<ClubDTO> updateClub(@PathVariable Long id, @RequestBody Club club,
+                                           @RequestParam String userId) {
+        return ResponseEntity.ok(clubService.updateClub(id, club, userId));
     }
 
     @DeleteMapping("/{id}")
@@ -42,14 +53,14 @@ public class ClubController {
     }
 
     @PostMapping("/join")
-    public ResponseEntity<Void> joinClub(@RequestParam String clerkId, @RequestParam Long clubId) {
-        clubService.joinClub(clerkId, clubId);
+    public ResponseEntity<Void> joinClub(@RequestParam String userId, @RequestParam Long clubId) {
+        clubService.joinClub(userId, clubId);
         return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/leave")
-    public ResponseEntity<Void> leaveClub(@RequestParam String clerkId, @RequestParam Long clubId) {
-        clubService.leaveClub(clerkId, clubId);
+    public ResponseEntity<Void> leaveClub(@RequestParam String userId, @RequestParam Long clubId) {
+        clubService.leaveClub(userId, clubId);
         return ResponseEntity.noContent().build();
     }
 }

@@ -4,76 +4,90 @@ import com.cineclubs.app.models.Club;
 import com.cineclubs.app.models.Post;
 import com.cineclubs.app.models.User;
 import com.cineclubs.app.repository.PostRepository;
+import com.cineclubs.app.dto.PostDTO;
 import jakarta.persistence.EntityNotFoundException;
-import lombok.AllArgsConstructor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-@AllArgsConstructor
 public class PostService {
     private final PostRepository postRepository;
     private final UserService userService;
     private final ClubService clubService;
     private final SimpMessagingTemplate messagingTemplate;
 
-    // Create a new post
-    public Post createPost(Long clubId, String userId, Post post) {
-        User author = userService.getUserByClerkId(userId);
+    public PostService(PostRepository postRepository,
+                       UserService userService,
+                       ClubService clubService,
+                       SimpMessagingTemplate messagingTemplate) {
+        this.postRepository = postRepository;
+        this.userService = userService;
+        this.clubService = clubService;
+        this.messagingTemplate = messagingTemplate;
+    }
+
+    public PostDTO createPost(Long clubId, String userId, Post post) {
+        User author = userService.getUserByUserId(userId);
         Club club = clubService.getClubById(clubId);
 
         post.setAuthor(author);
         post.setClub(club);
         Post savedPost = postRepository.save(post);
-        messagingTemplate.convertAndSend("/topic/posts", savedPost);
-        return savedPost;
-    }
-    public List<Post> getAllPosts() {
-        return postRepository.findAll();
+        PostDTO postDTO = new PostDTO(savedPost);
+        messagingTemplate.convertAndSend("/topic/posts", postDTO);
+        return postDTO;
     }
 
-    public Post getPostById(Long id) {
-        return postRepository.findById(id)
+    public List<PostDTO> getAllPosts() {
+        return postRepository.findAll().stream()
+                .map(PostDTO::new)
+                .toList();
+    }
+
+    public PostDTO getPostById(Long id) {
+        Post post = postRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Post not found with id: " + id));
+        return new PostDTO(post);
     }
 
-    public List<Post> getPostsForClub(Long clubId) {
-        return postRepository.findByClubId(clubId);
+    public List<PostDTO> getPostsForClub(Long clubId) {
+        return postRepository.findByClubId(clubId).stream()
+                .map(PostDTO::new)
+                .toList();
     }
 
-    public List<Post> getPostsForUser(String clerkId){
-        return postRepository.findByAuthorClerkId(clerkId);
+    public List<PostDTO> getPostsForUser(String clerkId) {
+        return postRepository.findByAuthorUserId(clerkId).stream()
+                .map(PostDTO::new)
+                .toList();
     }
 
-    // Like a post
-    public Post likePost(Long postId, String userId) {
+    public PostDTO likePost(Long postId, String userId) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("Post not found"));
-        User user = userService.getUserByClerkId(userId);
+        User user = userService.getUserByUserId(userId);
 
         post.getLikes().add(user);
         Post likedPost = postRepository.save(post);
-        messagingTemplate.convertAndSend("/topic/posts", likedPost);
-        return likedPost;
+        PostDTO postDTO = new PostDTO(likedPost);
+        messagingTemplate.convertAndSend("/topic/posts", postDTO);
+        return postDTO;
     }
 
-    // Unlike a post
-    public Post unlikePost(Long postId, String userId) {
+    public PostDTO unlikePost(Long postId, String userId) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("Post not found"));
-        User user = userService.getUserByClerkId(userId);
+        User user = userService.getUserByUserId(userId);
         post.getLikes().remove(user);
         Post unlikedPost = postRepository.save(post);
-        messagingTemplate.convertAndSend("/topic/posts", unlikedPost);
-        return unlikedPost;
+        PostDTO postDTO = new PostDTO(unlikedPost);
+        messagingTemplate.convertAndSend("/topic/posts", postDTO);
+        return postDTO;
     }
 
-    // Delete a post
     public void deletePost(Long postId) {
         postRepository.deleteById(postId);
     }
-
-
 }
