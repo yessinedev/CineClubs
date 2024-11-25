@@ -32,14 +32,9 @@ public class UserService {
         return new UserDTO(savedUser);
     }
 
-    public UserDTO getUserDTOByUserId(String userId) {
+    public UserDTO getUserDTO(String userId, boolean includePosts) {
         User user = getUserByUserId(userId);
-        return new UserDTO(user);
-    }
-
-    public UserDTO getUserDTOWithPostsByUserId(String userId) {
-        User user = getUserByUserId(userId);
-        return new UserDTO(user, true);
+        return new UserDTO(user, includePosts);
     }
 
     public User getUserByUserId(String userId) {
