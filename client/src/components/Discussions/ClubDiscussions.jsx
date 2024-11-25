@@ -29,7 +29,7 @@ const SAMPLE_DISCUSSIONS = [
   },
 ];
 
-export default function ClubDiscussions({posts}) {
+export default function ClubDiscussions({posts, user}) {
   const [showNewThread, setShowNewThread] = React.useState(false);
   const [newThread, setNewThread] = React.useState({ title: '', content: '' });
 
@@ -90,7 +90,7 @@ export default function ClubDiscussions({posts}) {
 
         <div className="space-y-6">
           {posts?.map((post) => (
-            <DiscussionThread key={post.id} {...post} />
+            <DiscussionThread key={post.id} post={post} user={user} />
           ))}
         </div>
       </div>

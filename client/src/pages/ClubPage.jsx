@@ -41,7 +41,7 @@ export default function ClubPage() {
           <ClubBanner imageUrl={club.imageUrl} />
           <div className="relative z-10 px-4 mx-auto -mt-52 max-w-7xl sm:px-6 lg:px-8">
             <ClubDetails club={club} isMember={isMember} user={user} />
-            {isMember && <ClubDiscussions posts={club.posts} />}
+            {isMember && <ClubDiscussions posts={club.posts} user={user} />}
           </div>
         </>
       )}
