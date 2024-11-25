@@ -6,10 +6,9 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export default function DiscussionThread({ post, user, isExpanded = false }) {
   const [expanded, setExpanded] = React.useState(isExpanded);
-  const [liked, setLiked] = React.useState(false);
 
   const queryClient = useQueryClient();
-  // Mutation to join a club
+  
   const { mutate: likePostMutation } = useMutation({
     mutationFn: () => likePost(post.id, user.id),
     onSuccess: () => {
@@ -20,7 +19,7 @@ export default function DiscussionThread({ post, user, isExpanded = false }) {
     },
   });
 
-  // Mutation to leave a club
+  
   const { mutate: unlikePostMutation} = useMutation({
     mutationFn: () => unlikePost(post.id, user.id),
     onSuccess: () => {

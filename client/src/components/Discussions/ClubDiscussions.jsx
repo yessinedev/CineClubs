@@ -1,15 +1,26 @@
 import React from 'react';
 import { MessageSquarePlus } from 'lucide-react';
 import DiscussionThread from './DiscussionThread';
-import { fetchClubPosts } from '@/services/postService';
-import { useQuery } from '@tanstack/react-query';
+import { createPost, fetchClubPosts } from '@/services/postService';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 
 
 export default function ClubDiscussions({clubId, user}) {
   const [showNewThread, setShowNewThread] = React.useState(false);
   const [newThread, setNewThread] = React.useState({ title: '', content: '' });
-
+  
+  const queryClient = useQueryClient();
+  // Mutation to create a post
+  const { mutate: createPostMutation } = useMutation({
+    mutationFn: ({ thread, userId, clubId }) => createPost(thread, userId, clubId),
+    onSuccess: () => {
+      queryClient.invalidateQueries(["posts", user.id, clubId]); // Refetch club details
+    },
+    onError: (error) => {
+      console.error("Failed to like the post:", error);
+    },
+  });
   const {
     data: clubPosts,
     isLoading,
@@ -19,9 +30,15 @@ export default function ClubDiscussions({clubId, user}) {
     queryFn: () => fetchClubPosts(clubId, user.id),
   });
 
-  const handleSubmitThread = (e) => {
+  const handleSubmitThread = async (e) => {
     e.preventDefault();
+    console.log(newThread)
     // Handle thread submission
+    createPostMutation({
+      thread: newThread,
+      userId: user.id,
+      clubId: clubId,
+    });
     setShowNewThread(false);
     setNewThread({ title: '', content: '' });
   };
