@@ -46,16 +46,15 @@ public class PostService {
                 .toList();
     }
 
-    public PostDTO getPostById(Long id) {
+    public PostDTO getPostById(Long id, String currentUserId) {
         Post post = postRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Post not found with id: " + id));
-        return new PostDTO(post);
+        return new PostDTO(post, currentUserId);
     }
 
-    public List<PostDTO> getPostsForClub(Long clubId) {
-        clubService.getClubById(clubId);
+    public List<PostDTO> getPostsForClub(Long clubId, String currentUserId) {
         return postRepository.findByClubId(clubId).stream()
-                .map(PostDTO::new)
+                .map(post -> currentUserId != null ? new PostDTO(post, currentUserId) : new PostDTO(post))
                 .toList();
     }
 
