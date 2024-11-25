@@ -9,39 +9,42 @@ public class ClubDTO {
     private String name;
     private String description;
     private String imageUrl;
-    private Integer currentMembers;
     private String ownerId;
     private String ownerUsername;
     private String ownerImageUrl;
     private int membersCount;
     private int postsCount;
     private List<PostDTO> posts;
+    private List<UserDTO> members;
 
     public ClubDTO(Club club) {
-        this(club, false);
+        this(club, false, false);
     }
 
-    public ClubDTO(Club club, boolean includePosts) {
+    public ClubDTO(Club club, boolean includePosts, boolean includeMembers) {
         this.id = club.getId();
         this.name = club.getName();
         this.description = club.getDescription();
         this.imageUrl = club.getImageUrl();
-        this.currentMembers = club.getCurrentMembers();
         this.ownerId = club.getUser().getuserId();
         this.ownerUsername = club.getUser().getUsername();
         this.ownerImageUrl = club.getUser().getImageUrl();
         this.membersCount = club.getMembers() != null ? club.getMembers().size() : 0;
         this.postsCount = club.getPosts() != null ? club.getPosts().size() : 0;
 
-
         if (includePosts && club.getPosts() != null) {
             this.posts = club.getPosts().stream()
-                    .map(PostDTO::new)
+                    .map(post -> new PostDTO(post, false))
+                    .collect(Collectors.toList());
+        }
+
+        if (includeMembers && club.getMembers() != null) {
+            this.members = club.getMembers().stream()
+                    .map(UserDTO::new)
                     .collect(Collectors.toList());
         }
     }
 
-    // Getters and Setters
     public Long getId() {
         return id;
     }
@@ -72,14 +75,6 @@ public class ClubDTO {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
-    }
-
-    public Integer getCurrentMembers() {
-        return currentMembers;
-    }
-
-    public void setCurrentMembers(Integer currentMembers) {
-        this.currentMembers = currentMembers;
     }
 
     public String getOwnerId() {
@@ -128,6 +123,14 @@ public class ClubDTO {
 
     public void setPosts(List<PostDTO> posts) {
         this.posts = posts;
+    }
+
+    public List<UserDTO> getMembers() {
+        return members;
+    }
+
+    public void setMembers(List<UserDTO> members) {
+        this.members = members;
     }
 
 }

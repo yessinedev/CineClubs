@@ -1,9 +1,6 @@
 package com.cineclubs.app.models;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.util.Objects;
 import java.util.Set;
@@ -25,32 +22,26 @@ public class Club {
     @Column(nullable = false)
     private String imageUrl;
 
-    @Column(name = "current_members")
-    private Integer currentMembers;
-
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
     @ManyToMany
-    @JoinTable(
-            name = "club_members",
-            joinColumns = @JoinColumn(name = "club_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id")
-    )
+    @JoinTable(name = "club_members", joinColumns = @JoinColumn(name = "club_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
     private Set<User> members;
 
     @OneToMany(mappedBy = "club", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Post> posts;
 
-    public Club() {}
+    public Club() {
+    }
 
-    public Club(Long id, String name, String description, String imageUrl, Integer currentMembers, User user, Set<User> members, Set<Post> posts) {
+    public Club(Long id, String name, String description, String imageUrl, User user,
+            Set<User> members, Set<Post> posts) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.imageUrl = imageUrl;
-        this.currentMembers = currentMembers;
         this.user = user;
         this.members = members;
         this.posts = posts;
@@ -88,14 +79,6 @@ public class Club {
         this.imageUrl = imageUrl;
     }
 
-    public Integer getCurrentMembers() {
-        return currentMembers;
-    }
-
-    public void setCurrentMembers(Integer currentMembers) {
-        this.currentMembers = currentMembers;
-    }
-
     public User getUser() {
         return user;
     }
@@ -122,7 +105,8 @@ public class Club {
 
     @Override
     public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
+        if (o == null || getClass() != o.getClass())
+            return false;
         Club club = (Club) o;
         return Objects.equals(id, club.id);
     }
@@ -132,4 +116,3 @@ public class Club {
         return Objects.hashCode(id);
     }
 }
-

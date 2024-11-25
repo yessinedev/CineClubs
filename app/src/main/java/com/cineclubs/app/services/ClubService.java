@@ -1,15 +1,12 @@
 package com.cineclubs.app.services;
 
-
 import com.cineclubs.app.dto.ClubDTO;
-import com.cineclubs.app.dto.PostDTO;
 import com.cineclubs.app.models.Club;
 import com.cineclubs.app.models.User;
 import com.cineclubs.app.repository.ClubRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
-
 
 import java.util.HashSet;
 import java.util.List;
@@ -21,7 +18,8 @@ public class ClubService {
     private final UserService userService;
     private final SimpMessagingTemplate messagingTemplate;
 
-    public ClubService(ClubRepository clubRepository, UserService userService, SimpMessagingTemplate messagingTemplate) {
+    public ClubService(ClubRepository clubRepository, UserService userService,
+            SimpMessagingTemplate messagingTemplate) {
         this.clubRepository = clubRepository;
         this.userService = userService;
         this.messagingTemplate = messagingTemplate;
@@ -29,7 +27,7 @@ public class ClubService {
 
     public List<ClubDTO> getAllClubs() {
         return clubRepository.findAll().stream()
-                .map(club -> new ClubDTO(club, false))
+                .map(club -> new ClubDTO(club, false, false))
                 .toList();
     }
 
@@ -38,23 +36,17 @@ public class ClubService {
                 .orElseThrow(() -> new EntityNotFoundException("Club not found with id: " + id));
     }
 
-    public ClubDTO getClubWithMembers(Long id) {
-        Club club = getClubById(id);
-        return new ClubDTO(club, true);
-    }
-
     public ClubDTO createClub(Club club, String clerkId) {
         User user = userService.getUserByUserId(clerkId);
         club.setUser(user);
-        // Add the creator to the members list
         if (club.getMembers() == null) {
             club.setMembers(new HashSet<>());
         }
         club.getMembers().add(user);
         Club savedClub = clubRepository.save(club);
 
-        messagingTemplate.convertAndSend("/topic/clubs", savedClub);
-        return new ClubDTO(savedClub);
+        messagingTemplate.convertAndSend("/topic/clubs", new ClubDTO(savedClub, false, false));
+        return new ClubDTO(savedClub, false, false);
     }
 
     public ClubDTO updateClub(Long id, Club clubDetails, String clerkId) {
@@ -67,11 +59,10 @@ public class ClubService {
         club.setName(clubDetails.getName());
         club.setDescription(clubDetails.getDescription());
         club.setImageUrl(clubDetails.getImageUrl());
-        club.setCurrentMembers(clubDetails.getCurrentMembers());
 
         Club updatedClub = clubRepository.save(club);
-        messagingTemplate.convertAndSend("/topic/clubs", updatedClub);
-        return new ClubDTO(updatedClub);
+        messagingTemplate.convertAndSend("/topic/clubs", new ClubDTO(updatedClub, false, false));
+        return new ClubDTO(updatedClub, false, false);
     }
 
     public void deleteClub(Long id) {
@@ -84,32 +75,35 @@ public class ClubService {
         return club.getMembers().contains(user);
     }
 
-
     public void joinClub(String clerkId, Long clubId) {
-        Club club = getClubById(clubId);
+        Club club = getClubEntityById(clubId);
         User user = userService.getUserByUserId(clerkId);
         boolean isJoined = isUserJoined(club, user);
         if (!isJoined) {
             club.getMembers().add(user);
-            club.setCurrentMembers(club.getCurrentMembers() + 1);
             Club joinedClub = clubRepository.save(club);
-            messagingTemplate.convertAndSend("/topic/clubs", joinedClub);
+            messagingTemplate.convertAndSend("/topic/clubs", new ClubDTO(joinedClub, false, false));
         }
-
     }
 
     public void leaveClub(String clerkId, Long clubId) {
         Club club = getClubById(clubId);
         User user = userService.getUserByUserId(clerkId);
         boolean isJoined = isUserJoined(club, user);
-        if(isJoined){
+        if (isJoined) {
             club.getMembers().remove(user);
-            club.setCurrentMembers(club.getCurrentMembers() - 1);
-            Club joinedClub = clubRepository.save(club);
-            messagingTemplate.convertAndSend("/topic/clubs", joinedClub);
+            Club leftClub = clubRepository.save(club);
+            messagingTemplate.convertAndSend("/topic/clubs", new ClubDTO(leftClub, false, false));
         }
+    }
 
+    private Club getClubEntityById(Long id) {
+        return clubRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Club not found with id: " + id));
+    }
 
+    public ClubDTO getClubDTO(Long id, boolean includePosts, boolean includeMembers) {
+        Club club = getClubById(id);
+        return new ClubDTO(club, includePosts, includeMembers);
     }
 }
-
