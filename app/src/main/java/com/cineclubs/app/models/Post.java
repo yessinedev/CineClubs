@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.Set;
+import java.util.HashSet;
 
 @Entity
 @Table(name = "posts")
@@ -34,17 +35,14 @@ public class Post {
     private Set<Comment> comments;
 
     @ManyToMany
-    @JoinTable(
-            name = "post_likes",
-            joinColumns = @JoinColumn(name = "post_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id")
-    )
-    private Set<User> likes; // Users who liked the post
+    @JoinTable(name = "post_likes", joinColumns = @JoinColumn(name = "post_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
+    private Set<User> likes = new HashSet<>();
 
     public Post() {
     }
 
-    public Post(Long id, String title, String content, LocalDateTime createdAt, User author, Club club, Set<Comment> comments, Set<User> likes) {
+    public Post(Long id, String title, String content, LocalDateTime createdAt, User author, Club club,
+            Set<Comment> comments, Set<User> likes) {
         this.id = id;
         this.title = title;
         this.content = content;
@@ -121,7 +119,8 @@ public class Post {
 
     @Override
     public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
+        if (o == null || getClass() != o.getClass())
+            return false;
         Post post = (Post) o;
         return Objects.equals(id, post.id);
     }
@@ -131,4 +130,3 @@ public class Post {
         return Objects.hashCode(id);
     }
 }
-

@@ -34,7 +34,7 @@ public class ClubDTO {
 
         if (includePosts && club.getPosts() != null) {
             this.posts = club.getPosts().stream()
-                    .map(post -> new PostDTO(post, false))
+                    .map(PostDTO::new)
                     .collect(Collectors.toList());
         }
 
