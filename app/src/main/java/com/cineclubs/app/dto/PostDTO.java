@@ -24,7 +24,7 @@ public class PostDTO {
         this.createdAt = post.getCreatedAt();
 
         this.authorId = post.getAuthor().getuserId();
-        this.authorName = post.getAuthor().getUsername();
+        this.authorName = post.getAuthor().getFirstName() + " " + post.getAuthor().getLastName();
         this.authorImageUrl = post.getAuthor().getImageUrl();
 
         this.clubId = post.getClub().getId();
