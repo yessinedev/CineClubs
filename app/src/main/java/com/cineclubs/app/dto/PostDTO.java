@@ -15,27 +15,43 @@ public class PostDTO {
     private String clubName;
     private int commentsCount;
     private int likesCount;
+    private boolean hasLiked;
 
-    public PostDTO(Post post, boolean includeAuthor) {
+    public PostDTO(Post post, String currentUserId) {
         this.id = post.getId();
         this.title = post.getTitle();
         this.content = post.getContent();
         this.createdAt = post.getCreatedAt();
 
-        if (includeAuthor) {
-            this.authorId = post.getAuthor().getuserId();
-            this.authorName = post.getAuthor().getFirstName() + " " + post.getAuthor().getLastName();
-            this.authorImageUrl = post.getAuthor().getImageUrl();
-        }
+        this.authorId = post.getAuthor().getuserId();
+        this.authorName = post.getAuthor().getUsername();
+        this.authorImageUrl = post.getAuthor().getImageUrl();
 
         this.clubId = post.getClub().getId();
         this.clubName = post.getClub().getName();
         this.commentsCount = post.getComments() != null ? post.getComments().size() : 0;
         this.likesCount = post.getLikes() != null ? post.getLikes().size() : 0;
+
+        this.hasLiked = post.getLikes() != null &&
+                post.getLikes().stream().anyMatch(user -> user.getuserId().equals(currentUserId));
     }
 
     public PostDTO(Post post) {
-        this(post, true);
+        this.id = post.getId();
+        this.title = post.getTitle();
+        this.content = post.getContent();
+        this.createdAt = post.getCreatedAt();
+
+        this.authorId = post.getAuthor().getuserId();
+        this.authorName = post.getAuthor().getUsername();
+        this.authorImageUrl = post.getAuthor().getImageUrl();
+
+        this.clubId = post.getClub().getId();
+        this.clubName = post.getClub().getName();
+        this.commentsCount = post.getComments() != null ? post.getComments().size() : 0;
+        this.likesCount = post.getLikes() != null ? post.getLikes().size() : 0;
+
+        this.hasLiked = false;
     }
 
     public Long getId() {
@@ -124,6 +140,14 @@ public class PostDTO {
 
     public void setLikesCount(int likesCount) {
         this.likesCount = likesCount;
+    }
+
+    public boolean isHasLiked() {
+        return hasLiked;
+    }
+
+    public void setHasLiked(boolean hasLiked) {
+        this.hasLiked = hasLiked;
     }
 
 }

@@ -20,21 +20,25 @@ public class PostController {
 
     @PostMapping
     public ResponseEntity<PostDTO> createPost(@RequestParam Long clubId,
-                                              @RequestParam String userId,
-                                              @RequestBody Post post) {
+            @RequestParam String userId,
+            @RequestBody Post post) {
         PostDTO createdPost = postService.createPost(clubId, userId, post);
         return ResponseEntity.ok(createdPost);
     }
 
     @GetMapping("/club/{clubId}")
-    public ResponseEntity<List<PostDTO>> getPostsByClub(@PathVariable Long clubId) {
-        List<PostDTO> posts = postService.getPostsForClub(clubId);
+    public ResponseEntity<List<PostDTO>> getPostsByClub(
+            @PathVariable Long clubId,
+            @RequestParam(required = false) String userId) {
+        List<PostDTO> posts = postService.getPostsForClub(clubId, userId);
         return ResponseEntity.ok(posts);
     }
 
     @GetMapping("/{postId}")
-    public ResponseEntity<PostDTO> getPostById(@PathVariable Long postId) {
-        PostDTO post = postService.getPostById(postId);
+    public ResponseEntity<PostDTO> getPostById(
+            @PathVariable Long postId,
+            @RequestParam String userId) {
+        PostDTO post = postService.getPostById(postId, userId);
         return ResponseEntity.ok(post);
     }
 
