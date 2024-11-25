@@ -72,6 +72,7 @@ public class PostService {
         post.getLikes().add(user);
         Post likedPost = postRepository.save(post);
         PostDTO postDTO = new PostDTO(likedPost);
+        postDTO.setHasLiked(true);
         messagingTemplate.convertAndSend("/topic/posts", postDTO);
         return postDTO;
     }
