@@ -5,12 +5,13 @@ import ThreadReplies from './ThreadReplies';
 
 
 export default function DiscussionThread({
-  author,
+  authorName,
+  authorImageUrl,
   title,
   content,
-  timestamp,
-  likes,
-  replies,
+  createdAt,
+  likesCount,
+  commentsCount,
   isExpanded = false,
 }) {
   const [expanded, setExpanded] = React.useState(isExpanded);
@@ -21,13 +22,13 @@ export default function DiscussionThread({
       <div className="flex items-start justify-between">
         <div className="flex items-center space-x-3">
           <img
-            src={author.avatar}
-            alt={author.name}
+            src={authorImageUrl}
+            alt={authorName}
             className="object-cover w-10 h-10 rounded-full"
           />
           <div>
-            <h3 className="font-medium text-white">{author.name}</h3>
-            <span className="text-sm text-gray-400">{timestamp}</span>
+            <h3 className="font-medium text-white">{authorName}</h3>
+            <span className="text-sm text-gray-400">{createdAt}</span>
           </div>
         </div>
         <button className="text-gray-400 hover:text-white">
@@ -49,14 +50,14 @@ export default function DiscussionThread({
             }`}
           >
             <Heart className="w-5 h-5" fill={liked ? 'currentColor' : 'none'} />
-            <span>{liked ? likes + 1 : likes}</span>
+            <span>{likesCount}</span>
           </button>
           <button
             onClick={() => setExpanded(!expanded)}
             className="flex items-center space-x-1.5 text-gray-400 hover:text-white"
           >
             <MessageCircle className="w-5 h-5" />
-            <span>{replies}</span>
+            <span>{commentsCount}</span>
           </button>
         </div>
         <button className="text-gray-400 hover:text-white">
@@ -64,7 +65,7 @@ export default function DiscussionThread({
         </button>
       </div>
 
-      {expanded && <ThreadReplies threadId="1" />}
+      {/* {expanded && <ThreadReplies threadId="1" />} */}
     </div>
   );
 }
