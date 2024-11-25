@@ -10,7 +10,7 @@ export function useUserSync() {
       if (isSignedIn && user) {
         try {
           await axios.post("http://localhost:8080/api/users", {
-            clerkId: user.id,
+            userId: user.id,
             email: user.primaryEmailAddress?.emailAddress,
             firstName: user.firstName,
             lastName: user.lastName,
@@ -25,7 +25,6 @@ export function useUserSync() {
         }
       }
     };
-
     syncUserToDatabase();
   }, [isSignedIn, user]);
 }

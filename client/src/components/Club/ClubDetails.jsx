@@ -39,7 +39,7 @@ export default function ClubDetails({ club, isMember, user }) {
                 <span className="text-sm">Members</span>
               </div>
               <span className="text-xl font-semibold text-white">
-                {club.currentMembers}
+                {club.membersCount}
               </span>
             </div>
 

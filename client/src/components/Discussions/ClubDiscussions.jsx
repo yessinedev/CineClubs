@@ -1,37 +1,23 @@
 import React from 'react';
 import { MessageSquarePlus } from 'lucide-react';
 import DiscussionThread from './DiscussionThread';
+import { fetchClubPosts } from '@/services/postService';
+import { useQuery } from '@tanstack/react-query';
 
-const SAMPLE_DISCUSSIONS = [
-  {
-    id: '1',
-    author: {
-      name: 'David Miller',
-      avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=100',
-    },
-    title: 'The Evolution of Visual Effects in Modern Cinema',
-    content: 'Looking back at the past decade, the advancement in VFX has been remarkable. From Avatar to the latest Marvel films, how do you think this has impacted storytelling?',
-    timestamp: '3 hours ago',
-    likes: 24,
-    replies: 8,
-  },
-  {
-    id: '2',
-    author: {
-      name: 'Emma Wilson',
-      avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=100',
-    },
-    title: 'Hidden Gems: Underrated Films of 2023',
-    content: 'While blockbusters dominate the box office, there have been some incredible smaller films this year that deserve more attention. What are your discoveries?',
-    timestamp: '5 hours ago',
-    likes: 15,
-    replies: 12,
-  },
-];
 
-export default function ClubDiscussions({id}) {
+
+export default function ClubDiscussions({clubId, user}) {
   const [showNewThread, setShowNewThread] = React.useState(false);
   const [newThread, setNewThread] = React.useState({ title: '', content: '' });
+
+  const {
+    data: clubPosts,
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: ["club", clubId],
+    queryFn: () => fetchClubPosts(clubId, user.id),
+  });
 
   const handleSubmitThread = (e) => {
     e.preventDefault();
@@ -89,8 +75,8 @@ export default function ClubDiscussions({id}) {
         )}
 
         <div className="space-y-6">
-          {SAMPLE_DISCUSSIONS.map((discussion) => (
-            <DiscussionThread key={discussion.id} {...discussion} />
+          {clubPosts?.map((post) => (
+            <DiscussionThread key={post.id} post={post} user={user} />
           ))}
         </div>
       </div>
