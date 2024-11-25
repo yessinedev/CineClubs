@@ -57,11 +57,14 @@ export default function DiscussionThread({ post, user, isExpanded = false }) {
 
       <div className="flex items-center justify-between pt-4 border-t border-gray-800">
         <div className="flex items-center space-x-4">
+          
           <button
-            onClick={() => likePostMutation()}
-            className={`flex items-center space-x-1.5 text-gray-400 hover:text-pink-500"`}
+            onClick={post.hasLiked ? () => unlikePostMutation() : () => likePostMutation()}
+            className={`flex items-center space-x-1.5 ${
+              post.hasLiked ? 'text-pink-500' : 'text-gray-400 hover:text-pink-500'
+            }`}
           >
-            <Heart className="w-5 h-5" />
+            <Heart className="w-5 h-5"  fill={post.hasliked ? 'currentColor' : 'none'} />
             <span>{post.likesCount}</span>
           </button>
           <button

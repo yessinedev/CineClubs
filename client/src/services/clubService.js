@@ -5,8 +5,8 @@ export const fetchClubs = async () => {
   return data;
 };
 
-export const fetchClub = async (id, includeMembers, includePosts) => {
-  const { data } = await axios.get(`http://localhost:8080/api/clubs/${id}?includeMembers=${includeMembers}&includePosts=${includePosts}`);
+export const fetchClub = async (id, includeMembers) => {
+  const { data } = await axios.get(`http://localhost:8080/api/clubs/${id}?includeMembers=${includeMembers}`);
   return data;
 };
 

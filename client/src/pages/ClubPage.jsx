@@ -15,7 +15,7 @@ export default function ClubPage() {
     error,
   } = useQuery({
     queryKey: ["club", id],
-    queryFn: () => fetchClub(id, true, true),
+    queryFn: () => fetchClub(id, true),
   });
 
   const isMember = isSignedIn && club?.members?.some((member) => member.userId === user?.id);
@@ -41,7 +41,7 @@ export default function ClubPage() {
           <ClubBanner imageUrl={club.imageUrl} />
           <div className="relative z-10 px-4 mx-auto -mt-52 max-w-7xl sm:px-6 lg:px-8">
             <ClubDetails club={club} isMember={isMember} user={user} />
-            {isMember && <ClubDiscussions posts={club.posts} user={user} />}
+            {isMember && <ClubDiscussions clubId={club.id} user={user} />}
           </div>
         </>
       )}
