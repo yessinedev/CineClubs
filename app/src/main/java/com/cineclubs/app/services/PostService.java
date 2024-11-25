@@ -19,9 +19,9 @@ public class PostService {
     private final SimpMessagingTemplate messagingTemplate;
 
     public PostService(PostRepository postRepository,
-                       UserService userService,
-                       ClubService clubService,
-                       SimpMessagingTemplate messagingTemplate) {
+            UserService userService,
+            ClubService clubService,
+            SimpMessagingTemplate messagingTemplate) {
         this.postRepository = postRepository;
         this.userService = userService;
         this.clubService = clubService;
@@ -53,6 +53,7 @@ public class PostService {
     }
 
     public List<PostDTO> getPostsForClub(Long clubId) {
+        clubService.getClubById(clubId);
         return postRepository.findByClubId(clubId).stream()
                 .map(PostDTO::new)
                 .toList();

@@ -20,6 +20,12 @@ public class UserService {
 
         if (!userRepository.existsByUserId(user.getuserId())) {
             user.setCreatedAt(LocalDateTime.now());
+        } else {
+            User existingUser = getUserByUserId(user.getuserId());
+            user.setPosts(existingUser.getPosts());
+            user.setComments(existingUser.getComments());
+            user.setLikedPosts(existingUser.getLikedPosts());
+            user.setLikedComments(existingUser.getLikedComments());
         }
 
         User savedUser = userRepository.save(user);

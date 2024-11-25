@@ -16,19 +16,26 @@ public class PostDTO {
     private int commentsCount;
     private int likesCount;
 
-    public PostDTO(Post post) {
+    public PostDTO(Post post, boolean includeAuthor) {
         this.id = post.getId();
         this.title = post.getTitle();
         this.content = post.getContent();
         this.createdAt = post.getCreatedAt();
-        this.authorId = post.getAuthor().getuserId();
-        this.authorName = post.getAuthor().getUsername();
-        this.authorImageUrl = post.getAuthor().getImageUrl();
+
+        if (includeAuthor) {
+            this.authorId = post.getAuthor().getuserId();
+            this.authorName = post.getAuthor().getUsername();
+            this.authorImageUrl = post.getAuthor().getImageUrl();
+        }
+
         this.clubId = post.getClub().getId();
         this.clubName = post.getClub().getName();
         this.commentsCount = post.getComments() != null ? post.getComments().size() : 0;
         this.likesCount = post.getLikes() != null ? post.getLikes().size() : 0;
+    }
 
+    public PostDTO(Post post) {
+        this(post, true);
     }
 
     public Long getId() {
@@ -118,6 +125,5 @@ public class PostDTO {
     public void setLikesCount(int likesCount) {
         this.likesCount = likesCount;
     }
-
 
 }

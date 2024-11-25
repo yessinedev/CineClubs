@@ -24,15 +24,11 @@ public class ClubController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Club> getClubById(@PathVariable Long id) {
-        return ResponseEntity.ok(clubService.getClubById(id));
-    }
-
-    @GetMapping("/{id}/with-members")
-    public ResponseEntity<ClubDTO> getClubByIdWithMembers(@PathVariable Long id) {
-        Club club = clubService.getClubById(id);
-
-        return ResponseEntity.ok(new ClubDTO(club, true));
+    public ResponseEntity<ClubDTO> getClubById(
+            @PathVariable Long id,
+            @RequestParam(defaultValue = "false") boolean includePosts,
+            @RequestParam(defaultValue = "false") boolean includeMembers) {
+        return ResponseEntity.ok(clubService.getClubDTO(id, includePosts, includeMembers));
     }
 
     @PostMapping
@@ -42,7 +38,7 @@ public class ClubController {
 
     @PutMapping("/{id}")
     public ResponseEntity<ClubDTO> updateClub(@PathVariable Long id, @RequestBody Club club,
-                                           @RequestParam String userId) {
+            @RequestParam String userId) {
         return ResponseEntity.ok(clubService.updateClub(id, club, userId));
     }
 
@@ -64,4 +60,3 @@ public class ClubController {
         return ResponseEntity.noContent().build();
     }
 }
-

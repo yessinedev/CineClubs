@@ -1,10 +1,9 @@
 package com.cineclubs.app.models;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
-
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
@@ -31,22 +30,24 @@ public class User {
     @Column(name = "updated_at")
     private java.time.LocalDateTime updatedAt;
 
-    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Post> posts;
+    @OneToMany(mappedBy = "author", cascade = { CascadeType.PERSIST, CascadeType.MERGE }, orphanRemoval = true)
+    private Set<Post> posts = new HashSet<>();
 
-    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Comment> comments;
+    @OneToMany(mappedBy = "author", cascade = { CascadeType.PERSIST, CascadeType.MERGE }, orphanRemoval = true)
+    private Set<Comment> comments = new HashSet<>();
 
-    @ManyToMany(mappedBy = "likes")
-    private Set<Post> likedPosts;
+    @ManyToMany(mappedBy = "likes", cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+    private Set<Post> likedPosts = new HashSet<>();
 
-    @ManyToMany(mappedBy = "likes")
-    private Set<Comment> likedComments;
+    @ManyToMany(mappedBy = "likes", cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+    private Set<Comment> likedComments = new HashSet<>();
 
     public User() {
     }
 
-    public User(String userId, String email, String firstName, String lastName, String imageUrl, String username, LocalDateTime createdAt, LocalDateTime updatedAt, Set<Post> posts, Set<Comment> comments, Set<Post> likedPosts, Set<Comment> likedComments) {
+    public User(String userId, String email, String firstName, String lastName, String imageUrl, String username,
+            LocalDateTime createdAt, LocalDateTime updatedAt, Set<Post> posts, Set<Comment> comments,
+            Set<Post> likedPosts, Set<Comment> likedComments) {
         this.userId = userId;
         this.email = email;
         this.firstName = firstName;
@@ -159,7 +160,8 @@ public class User {
 
     @Override
     public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
+        if (o == null || getClass() != o.getClass())
+            return false;
         User user = (User) o;
         return Objects.equals(userId, user.userId);
     }
