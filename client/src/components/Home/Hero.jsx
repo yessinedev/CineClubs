@@ -1,6 +1,12 @@
-import { Play, Users, MessageCircle } from 'lucide-react';
+import { fetchTotalClubsAndPosts } from "@/services/clubService";
+import { useQuery } from "@tanstack/react-query";
+import { Play, Users, MessageCircle } from "lucide-react";
 
 export default function Hero() {
+  const { data: stats } = useQuery({
+    queryKey: ["stats"],
+    queryFn: fetchTotalClubsAndPosts,
+  });
   return (
     <div className="relative flex justify-center min-h-screen overflow-hidden">
       <div className="absolute inset-0">
@@ -19,9 +25,10 @@ export default function Hero() {
             Community
           </span>
         </h1>
-        
+
         <p className="max-w-2xl mx-auto mb-8 text-xl text-gray-300">
-          Join passionate communities of film and TV enthusiasts. Discover, discuss, and celebrate your favorite content with like-minded fans.
+          Join passionate communities of film and TV enthusiasts. Discover,
+          discuss, and celebrate your favorite content with like-minded fans.
         </p>
 
         <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
@@ -34,17 +41,18 @@ export default function Hero() {
             Browse Clubs
           </button>
         </div>
-
-        <div className="flex items-center justify-center gap-8 mt-12 text-gray-400">
-          <div className="flex items-center gap-2">
-            <Users className="w-5 h-5 text-purple-400" />
-            <span>10k+ Members</span>
+        {stats && (
+          <div className="flex items-center justify-center gap-8 mt-12 text-gray-400">
+            <div className="flex items-center gap-2">
+              <Users className="w-5 h-5 text-purple-400" />
+              <span>{`${stats.totalPosts}+ Members`}</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <MessageCircle className="w-5 h-5 text-purple-400" />
+              <span>{`${stats.totalClubs}+ Active Clubs`}</span>
+            </div>
           </div>
-          <div className="flex items-center gap-2">
-            <MessageCircle className="w-5 h-5 text-purple-400" />
-            <span>500+ Active Clubs</span>
-          </div>
-        </div>
+        )}
       </div>
     </div>
   );

@@ -49,7 +49,7 @@ export default function FeaturedClubs() {
         </div>
 
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {clubs?.map((club) => (
+          {clubs && clubs.map((club) => (
             <ClubCard key={club.id} club={club}/>
           ))}
         </div>
