@@ -5,11 +5,21 @@ import UserClubs from '@/components/Profile/UserClubs';
 import UserThreads from '@/components/Profile/UserThreads';
 import ChangePasswordModal from '@/components/Profile/ChangePasswordModal';
 import ProfilePictureModal from '@/components/Profile/ProfilePictureModal';
+import { useUser } from '@clerk/clerk-react';
 
 export default function ProfilePage() {
   const [activeTab, setActiveTab] = useState('clubs');
   const [showPasswordModal, setShowPasswordModal] = useState(false);
   const [showProfilePictureModal, setShowProfilePictureModal] = useState(false);
+  const { isSignedIn, user } = useUser();
+
+  const getUserIdentifier = () => {
+    if (user?.firstName) {
+      const fullName = `${user.firstName.charAt(0).toUpperCase() + user.firstName.slice(1)} ${user?.lastName.charAt(0).toUpperCase() + user.lastName.slice(1)}`
+      return fullName;
+    }
+    return user?.primaryEmailAddress?.emailAddress || "User";
+  };
 
   return (
     <div className="min-h-screen bg-gray-950 pt-16">
@@ -20,8 +30,8 @@ export default function ProfilePage() {
             <div className="absolute -bottom-12 left-8 flex items-end space-x-6">
               <div className="relative">
                 <img
-                  src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=150"
-                  alt="Profile"
+                  src={user.imageUrl}
+                  alt={user.username}
                   className="w-24 h-24 rounded-xl border-4 border-gray-900 object-cover"
                 />
                 <button 
@@ -32,7 +42,7 @@ export default function ProfilePage() {
                 </button>
               </div>
               <div className="mb-2">
-                <h1 className="text-2xl font-bold text-white">David Miller</h1>
+                <h1 className="text-2xl font-bold text-white">{getUserIdentifier()}</h1>
                 <p className="text-gray-300">Joined March 2024</p>
               </div>
             </div>

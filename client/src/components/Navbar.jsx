@@ -20,6 +20,7 @@ export default function Navbar() {
     }
     return user?.primaryEmailAddress?.emailAddress || "User";
   };
+  
   return (
     <nav className="fixed top-0 z-50 w-full border-b border-gray-800 bg-black/95 backdrop-blur-sm">
       <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">

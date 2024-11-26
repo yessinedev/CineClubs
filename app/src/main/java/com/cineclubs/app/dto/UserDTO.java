@@ -43,6 +43,7 @@ public class UserDTO {
                     .map(PostDTO::new)
                     .collect(Collectors.toList());
         }
+
     }
 
     public String getUserId() {
