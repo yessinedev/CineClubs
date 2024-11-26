@@ -1,14 +1,14 @@
 import React from "react";
 import { MessageCircle, Heart, Share2, MoreHorizontal } from "lucide-react";
-import ThreadReplies from "./ThreadReplies";
 import { likePost, unlikePost } from "@/services/postService";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { formatCreatedAt } from "@/lib/dateUtils";
 
 export default function DiscussionThread({ post, user, isExpanded = false }) {
   const [expanded, setExpanded] = React.useState(isExpanded);
 
   const queryClient = useQueryClient();
-  
+
   const { mutate: likePostMutation } = useMutation({
     mutationFn: () => likePost(post.id, user.id),
     onSuccess: () => {
@@ -19,8 +19,7 @@ export default function DiscussionThread({ post, user, isExpanded = false }) {
     },
   });
 
-  
-  const { mutate: unlikePostMutation} = useMutation({
+  const { mutate: unlikePostMutation } = useMutation({
     mutationFn: () => unlikePost(post.id, user.id),
     onSuccess: () => {
       queryClient.invalidateQueries(["posts", post.id, user.id]); // Refetch club details
@@ -41,7 +40,9 @@ export default function DiscussionThread({ post, user, isExpanded = false }) {
           />
           <div>
             <h3 className="font-medium text-white">{post.authorName}</h3>
-            <span className="text-sm text-gray-400">{post.createdAt}</span>
+            <span className="text-sm text-gray-400">
+              {formatCreatedAt(post.createdAt)}
+            </span>
           </div>
         </div>
         <button className="text-gray-400 hover:text-white">
@@ -56,14 +57,22 @@ export default function DiscussionThread({ post, user, isExpanded = false }) {
 
       <div className="flex items-center justify-between pt-4 border-t border-gray-800">
         <div className="flex items-center space-x-4">
-          
           <button
-            onClick={post.hasLiked ? () => unlikePostMutation() : () => likePostMutation()}
+            onClick={
+              post.hasLiked
+                ? () => unlikePostMutation()
+                : () => likePostMutation()
+            }
             className={`flex items-center space-x-1.5 ${
-              post.hasLiked ? 'text-pink-500' : 'text-gray-400 hover:text-pink-500'
+              post.hasLiked
+                ? "text-pink-500"
+                : "text-gray-400 hover:text-pink-500"
             }`}
           >
-            <Heart className="w-5 h-5"  fill={post.hasLiked ? 'currentColor' : 'none'} />
+            <Heart
+              className="w-5 h-5"
+              fill={post.hasLiked ? "currentColor" : "none"}
+            />
             <span>{post.likesCount}</span>
           </button>
           <button
