@@ -63,7 +63,7 @@ export default function DiscussionThread({ post, user, isExpanded = false }) {
               post.hasLiked ? 'text-pink-500' : 'text-gray-400 hover:text-pink-500'
             }`}
           >
-            <Heart className="w-5 h-5"  fill={post.hasliked ? 'currentColor' : 'none'} />
+            <Heart className="w-5 h-5"  fill={post.hasLiked ? 'currentColor' : 'none'} />
             <span>{post.likesCount}</span>
           </button>
           <button
