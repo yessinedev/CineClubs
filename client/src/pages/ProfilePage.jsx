@@ -1,9 +1,8 @@
 import { useState } from 'react';
-import { Camera, Lock, Settings, LogOut } from 'lucide-react';
+import { Settings, LogOut } from 'lucide-react';
 import UserStats from '@/components/Profile/UserStats';
 import UserClubs from '@/components/Profile/UserClubs';
 import UserThreads from '@/components/Profile/UserThreads';
-import ChangePasswordModal from '@/components/Profile/ChangePasswordModal';
 import ProfilePictureModal from '@/components/Profile/ProfilePictureModal';
 import { SignOutButton, useUser } from '@clerk/clerk-react';
 import { useQuery } from '@tanstack/react-query';
@@ -11,8 +10,6 @@ import { fetchUserProfile } from '@/services/userService';
 
 export default function ProfilePage() {
   const [activeTab, setActiveTab] = useState('clubs');
-  const [showPasswordModal, setShowPasswordModal] = useState(false);
-  const [showProfilePictureModal, setShowProfilePictureModal] = useState(false);
   const {  user } = useUser();
 
   const {
@@ -45,12 +42,9 @@ export default function ProfilePage() {
                   alt={profileData.fullName}
                   className="w-24 h-24 rounded-xl border-4 border-gray-900 object-cover"
                 />
-                <button 
-                  onClick={() => setShowProfilePictureModal(true)}
-                  className="absolute -right-2 -bottom-2 p-1.5 bg-gray-900 text-white rounded-full hover:bg-gray-800 transition-colors"
-                >
-                  <Camera className="w-4 h-4" />
-                </button>
+                <div className="absolute -right-2 -bottom-2 p-1.5 bg-gray-900 text-white rounded-full hover:bg-gray-800 transition-colors">
+                  <ProfilePictureModal />
+                </div>
               </div>
               <div className="mb-2">
                 <h1 className="text-2xl font-bold text-white">{getUserIdentifier()}</h1>
@@ -58,21 +52,21 @@ export default function ProfilePage() {
               </div>
             </div>
             <div className="absolute top-4 right-4 flex space-x-2">
-              <button 
+              {/* <button 
                 onClick={() => setShowPasswordModal(true)}
                 className="flex items-center space-x-2 px-4 py-2 bg-black/20 hover:bg-black/40 text-white rounded-xl backdrop-blur-sm transition-colors"
               >
                 <Lock className="w-4 h-4" />
                 <span>Change Password</span>
-              </button>
+              </button> */}
               <button className="flex items-center space-x-2 px-4 py-2 bg-black/20 hover:bg-black/40 text-white rounded-xl backdrop-blur-sm transition-colors">
                 <Settings className="w-4 h-4" />
                 <span>Settings</span>
               </button>
-              <button className="flex items-center space-x-2 px-4 py-2 bg-black/20 hover:bg-black/40 text-white rounded-xl backdrop-blur-sm transition-colors">
+              <div className="flex items-center space-x-2 px-4 py-2 bg-black/20 hover:bg-black/40 text-white rounded-xl backdrop-blur-sm transition-colors">
                 <LogOut className="w-4 h-4" />
                 <SignOutButton />
-              </button>
+              </div>
             </div>
           </div>
 
@@ -113,14 +107,6 @@ export default function ProfilePage() {
           </div>
         </div>
       </div>
-      )}
-
-      {/* Modals */}
-      {showPasswordModal && (
-        <ChangePasswordModal onClose={() => setShowPasswordModal(false)} />
-      )}
-      {showProfilePictureModal && (
-        <ProfilePictureModal onClose={() => setShowProfilePictureModal(false)} />
       )}
     </div>
   );
