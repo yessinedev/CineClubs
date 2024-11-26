@@ -26,9 +26,9 @@ export const ClubCard = ({club}) => {
           </span>
           <Link
             to={`/clubs/${club.id}`}
-            className="px-4 py-2 text-white transition-colors bg-purple-500 rounded-xl hover:bg-purple-600"
+            className="px-8 py-3 bg-blue-500 hover:bg-blue-600 text-white rounded-xl flex items-center gap-2 transition-colors"
           >
-            View Club
+            View Community
           </Link>
         </div>
       </div>

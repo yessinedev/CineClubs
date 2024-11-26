@@ -50,7 +50,7 @@ export default function ClubDiscussions({clubId, user}) {
           <h2 className="text-2xl font-bold text-white">Discussions</h2>
           <button
             onClick={() => setShowNewThread(true)}
-            className="flex items-center gap-2 px-4 py-2 text-white transition-colors bg-purple-500 rounded-xl hover:bg-purple-600"
+            className="flex items-center gap-2 px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-xl transition-colors"
           >
             <MessageSquarePlus className="w-5 h-5" />
             New Thread
@@ -83,7 +83,7 @@ export default function ClubDiscussions({clubId, user}) {
               </button>
               <button
                 type="submit"
-                className="px-4 py-2 text-white transition-colors bg-purple-500 rounded-xl hover:bg-purple-600"
+                className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-xl transition-colors"
               >
                 Post Thread
               </button>

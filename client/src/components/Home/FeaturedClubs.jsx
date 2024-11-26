@@ -21,7 +21,7 @@ export default function FeaturedClubs() {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-lg font-semibold text-gray-600 animate-pulse">
-          Loading clubs...
+          Loading communities...
         </div>
       </div>
     );
@@ -40,7 +40,7 @@ export default function FeaturedClubs() {
         <div className="flex items-center justify-between mb-8">
           <h2 className="flex items-center gap-2 text-2xl font-bold text-white">
             <Star className="text-yellow-500" />
-            Featured Clubs
+            Featured Communities
           </h2>
           <Link to="/clubs" className="flex items-center gap-1 text-purple-400 hover:text-purple-300">
             <TrendingUp className="w-4 h-4" />
