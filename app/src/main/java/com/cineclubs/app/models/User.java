@@ -30,6 +30,14 @@ public class User {
     @Column(name = "updated_at")
     private java.time.LocalDateTime updatedAt;
 
+    @ManyToMany(fetch = FetchType.LAZY,
+            cascade = {
+                    CascadeType.PERSIST,
+                    CascadeType.MERGE
+            },
+            mappedBy = "members")
+    private Set<Club> joinedClubs = new HashSet<>();
+
     @OneToMany(mappedBy = "author", cascade = { CascadeType.PERSIST, CascadeType.MERGE }, orphanRemoval = true)
     private Set<Post> posts = new HashSet<>();
 
@@ -156,6 +164,15 @@ public class User {
 
     public void setLikedComments(Set<Comment> likedComments) {
         this.likedComments = likedComments;
+    }
+
+
+    public Set<Club> getJoinedClubs() {
+        return joinedClubs;
+    }
+
+    public void setJoinedClubs(Set<Club> joinedClubs) {
+        this.joinedClubs = joinedClubs;
     }
 
     @Override

@@ -21,15 +21,15 @@ const USER_THREADS = [
   }
 ];
 
-export default function UserThreads() {
+export default function UserThreads({posts}) {
   return (
     <div className="space-y-6">
-      {USER_THREADS.map((thread) => (
+      {posts.length > 0 && posts.map((thread) => (
         <div key={thread.id} className="bg-gray-800/50 rounded-lg p-6">
           <div className="mb-4">
             <div className="flex items-center justify-between mb-2">
-              <span className="text-sm text-purple-400">{thread.club}</span>
-              <span className="text-sm text-gray-400">{thread.timestamp}</span>
+              <span className="text-sm text-purple-400">{thread.clubName}</span>
+              <span className="text-sm text-gray-400">{thread.createdAt}</span>
             </div>
             <h3 className="text-xl font-semibold text-white mb-2">{thread.title}</h3>
             <p className="text-gray-300">{thread.content}</p>
@@ -39,11 +39,11 @@ export default function UserThreads() {
             <div className="flex items-center space-x-4">
               <button className="flex items-center space-x-1.5 text-gray-400 hover:text-pink-500">
                 <Heart className="w-5 h-5" />
-                <span>{thread.likes}</span>
+                <span>{thread.likesCount}</span>
               </button>
               <button className="flex items-center space-x-1.5 text-gray-400 hover:text-white">
                 <MessageCircle className="w-5 h-5" />
-                <span>{thread.replies}</span>
+                <span>{thread.commentsCount}</span>
               </button>
             </div>
             <button className="text-gray-400 hover:text-white">

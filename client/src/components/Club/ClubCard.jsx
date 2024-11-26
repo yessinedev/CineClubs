@@ -22,7 +22,7 @@ export const ClubCard = ({club}) => {
         <div className="flex items-center justify-between">
           <span className="flex items-center text-gray-300">
             <Users className="w-4 h-4 mr-1" />
-            {club.currentMembers} members
+            {club.membersCount} members
           </span>
           <Link
             to={`/clubs/${club.id}`}

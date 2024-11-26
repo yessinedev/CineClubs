@@ -14,17 +14,19 @@ public class UserDTO {
     private String username;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    private int joinedClubsCount;
     private int postsCount;
     private int commentsCount;
     private int likedPostsCount;
     private int likedCommentsCount;
     private List<PostDTO> posts;
+    private List<ClubDTO> joinedClubs;
 
     public UserDTO(User user) {
-        this(user, false);
+        this(user, false, false);
     }
 
-    public UserDTO(User user, boolean includePosts) {
+    public UserDTO(User user, boolean includePosts, boolean includeClubs) {
         this.userId = user.getuserId();
         this.email = user.getEmail();
         this.firstName = user.getFirstName();
@@ -33,6 +35,7 @@ public class UserDTO {
         this.username = user.getUsername();
         this.createdAt = user.getCreatedAt();
         this.updatedAt = user.getUpdatedAt();
+        this.joinedClubsCount = user.getJoinedClubs() != null ? user.getJoinedClubs().size() : 0;
         this.postsCount = user.getPosts() != null ? user.getPosts().size() : 0;
         this.commentsCount = user.getComments() != null ? user.getComments().size() : 0;
         this.likedPostsCount = user.getLikedPosts() != null ? user.getLikedPosts().size() : 0;
@@ -43,6 +46,11 @@ public class UserDTO {
                     .map(PostDTO::new)
                     .collect(Collectors.toList());
         }
+        if (includeClubs && user.getJoinedClubs() != null) {
+            this.joinedClubs = user.getJoinedClubs().stream().map(ClubDTO::new).collect(Collectors.toList());
+        }
+
+
 
     }
 
@@ -148,5 +156,21 @@ public class UserDTO {
 
     public void setPosts(List<PostDTO> posts) {
         this.posts = posts;
+    }
+
+    public int getJoinedClubsCount() {
+        return joinedClubsCount;
+    }
+
+    public void setJoinedClubsCount(int joinedClubsCount) {
+        this.joinedClubsCount = joinedClubsCount;
+    }
+
+    public List<ClubDTO> getJoinedClubs() {
+        return joinedClubs;
+    }
+
+    public void setJoinedClubs(List<ClubDTO> joinedClubs) {
+        this.joinedClubs = joinedClubs;
     }
 }
