@@ -41,7 +41,7 @@ public class PostService {
     }
 
     public List<PostDTO> getAllPosts() {
-        return postRepository.findAll().stream()
+        return postRepository.findAllByOrderByCreatedAtDesc().stream()
                 .map(PostDTO::new)
                 .toList();
     }
@@ -53,13 +53,13 @@ public class PostService {
     }
 
     public List<PostDTO> getPostsForClub(Long clubId, String currentUserId) {
-        return postRepository.findByClubId(clubId).stream()
+        return postRepository.findByClubIdOrderByCreatedAtDesc(clubId).stream()
                 .map(post -> currentUserId != null ? new PostDTO(post, currentUserId) : new PostDTO(post))
                 .toList();
     }
 
-    public List<PostDTO> getPostsForUser(String clerkId) {
-        return postRepository.findByAuthorUserId(clerkId).stream()
+    public List<PostDTO> getPostsForUser(String userId) {
+        return postRepository.findByAuthorUserIdOrderByCreatedAtDesc(userId).stream()
                 .map(PostDTO::new)
                 .toList();
     }
