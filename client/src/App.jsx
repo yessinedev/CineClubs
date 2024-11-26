@@ -5,6 +5,8 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import ClubPage from "./pages/ClubPage";
 import HomePage from "./pages/HomePage";
 import ClubList from "./pages/ClubList";
+import LeaderBoardPage from "./pages/LeaderBoardPage";
+import ProfilePage from "./pages/ProfilePage";
 
 function App() {
   useUserSync();
@@ -18,6 +20,8 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/clubs" element={<ClubList />} />
           <Route path="/clubs/:id" element={<ClubPage />} />
+          <Route path="/leaderboard" element={<LeaderBoardPage />} />
+          <Route path="/profile" element={<ProfilePage />} />
         </Routes>
       </Router>
     </div>
