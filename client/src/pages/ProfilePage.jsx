@@ -52,17 +52,6 @@ export default function ProfilePage() {
               </div>
             </div>
             <div className="absolute top-4 right-4 flex space-x-2">
-              {/* <button 
-                onClick={() => setShowPasswordModal(true)}
-                className="flex items-center space-x-2 px-4 py-2 bg-black/20 hover:bg-black/40 text-white rounded-xl backdrop-blur-sm transition-colors"
-              >
-                <Lock className="w-4 h-4" />
-                <span>Change Password</span>
-              </button> */}
-              <button className="flex items-center space-x-2 px-4 py-2 bg-black/20 hover:bg-black/40 text-white rounded-xl backdrop-blur-sm transition-colors">
-                <Settings className="w-4 h-4" />
-                <span>Settings</span>
-              </button>
               <div className="flex items-center space-x-2 px-4 py-2 bg-black/20 hover:bg-black/40 text-white rounded-xl backdrop-blur-sm transition-colors">
                 <LogOut className="w-4 h-4" />
                 <SignOutButton />
