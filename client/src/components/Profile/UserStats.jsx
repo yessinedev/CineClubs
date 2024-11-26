@@ -1,6 +1,6 @@
 import { Users, MessageCircle, Heart, Star } from 'lucide-react';
 
-export default function UserStats() {
+export default function UserStats({joinedClubsCount, postsCount, likedPostsCount}) {
   return (
     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
       <div className="bg-gray-800/50 p-4 rounded-xl">
@@ -8,7 +8,7 @@ export default function UserStats() {
           <Users className="w-4 h-4 mr-1" />
           <span className="text-sm">Clubs Joined</span>
         </div>
-        <span className="text-2xl font-semibold text-white">12</span>
+        <span className="text-2xl font-semibold text-white">{joinedClubsCount}</span>
       </div>
       
       <div className="bg-gray-800/50 p-4 rounded-xl">
@@ -16,7 +16,7 @@ export default function UserStats() {
           <MessageCircle className="w-4 h-4 mr-1" />
           <span className="text-sm">Threads</span>
         </div>
-        <span className="text-2xl font-semibold text-white">48</span>
+        <span className="text-2xl font-semibold text-white">{postsCount || 0}</span>
       </div>
       
       <div className="bg-gray-800/50 p-4 rounded-xl">
@@ -24,7 +24,7 @@ export default function UserStats() {
           <Heart className="w-4 h-4 mr-1" />
           <span className="text-sm">Likes</span>
         </div>
-        <span className="text-2xl font-semibold text-white">256</span>
+        <span className="text-2xl font-semibold text-white">{likedPostsCount || 0}</span>
       </div>
       
       {/* <div className="bg-gray-800/50 p-4 rounded-lg">
