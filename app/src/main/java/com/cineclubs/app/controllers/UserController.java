@@ -24,7 +24,8 @@ public class UserController {
     @GetMapping("/{userId}")
     public ResponseEntity<UserDTO> getUserByUserId(
             @PathVariable String userId,
-            @RequestParam(defaultValue = "false") boolean includePosts) {
-        return ResponseEntity.ok(userService.getUserDTO(userId, includePosts));
+            @RequestParam(defaultValue = "false") boolean includePosts,
+            @RequestParam(defaultValue = "false") boolean includeJoinedClubs) {
+        return ResponseEntity.ok(userService.getUserDTO(userId, includePosts, includeJoinedClubs));
     }
 }
