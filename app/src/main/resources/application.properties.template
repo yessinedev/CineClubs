@@ -1,8 +1,8 @@
 spring.application.name=app
 
-spring.datasource.url=jdbc:postgresql://localhost:5432/cineclubs
-spring.datasource.username=postgres
-spring.datasource.password=root
+spring.datasource.url=
+spring.datasource.username=
+spring.datasource.password=
 spring.jpa.hibernate.ddl-auto=update
 spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
 spring.mvc.pathmatch.matching-strategy=ANT_PATH_MATCHER
