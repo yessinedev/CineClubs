@@ -37,6 +37,15 @@ This platform fosters a vibrant community for fans of movies and TV shows, offer
 - Allow moderators to **pin important threads** (e.g., _Weekly Watch Recommendations_).
 
 ---
+### **User Pofile**
+- Profile Picture.
+- Banner
+- Change Password.
+- Joined Clubs.
+- Threads Posts.
+- Posts Liked.
+
+---
 
 ### **Club Moderation**
 
