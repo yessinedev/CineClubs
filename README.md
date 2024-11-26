@@ -26,7 +26,8 @@ This platform fosters a vibrant community for fans of movies and TV shows, offer
 ### **Join and Leave Clubs**
 
 - Users can **join** or **leave** clubs.
-- Display a list of clubs the user is a member of on their profile.
+- Display a list of clubs.
+- Display a **Leaderboard** of most active clubs.
 
 ---
 
@@ -76,7 +77,7 @@ This platform fosters a vibrant community for fans of movies and TV shows, offer
 ## 🛠️ Technologies Used
 
 - **Frontend**: React, Tailwind CSS, React Router.
-- **Backend**: SpringBoot, PostgreSQL.
+- **Backend**: SpringBoot, PostgreSQL, WebSocket.
 - **Authentication**: Clerk for user management.
 - **API Management**: React Query for efficient state handling.
 
