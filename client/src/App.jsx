@@ -7,6 +7,7 @@ import HomePage from "./pages/HomePage";
 import ClubList from "./pages/ClubList";
 import LeaderBoardPage from "./pages/LeaderBoardPage";
 import ProfilePage from "./pages/ProfilePage";
+import { Toaster } from "sonner";
 
 function App() {
   useUserSync();
@@ -24,6 +25,7 @@ function App() {
           <Route path="/profile" element={<ProfilePage />} />
         </Routes>
       </Router>
+      <Toaster />
     </div>
   );
 }
