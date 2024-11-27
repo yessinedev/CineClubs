@@ -1,12 +1,12 @@
 package com.cineclubs.app.controllers;
 
+import com.cineclubs.app.dto.PageRequest;
+import com.cineclubs.app.dto.PageResponse;
 import com.cineclubs.app.dto.PostDTO;
 import com.cineclubs.app.models.Post;
 import com.cineclubs.app.services.PostService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/posts")
@@ -27,11 +27,18 @@ public class PostController {
     }
 
     @GetMapping("/club/{clubId}")
-    public ResponseEntity<List<PostDTO>> getPostsByClub(
+    public ResponseEntity<PageResponse<PostDTO>> getPostsByClub(
             @PathVariable Long clubId,
-            @RequestParam(required = false) String userId) {
-        List<PostDTO> posts = postService.getPostsForClub(clubId, userId);
-        return ResponseEntity.ok(posts);
+            @RequestParam(required = false) String userId,
+            @RequestParam(required = false) Long cursor,
+            @RequestParam(required = false, defaultValue = "10") int limit) {
+
+        PageRequest pageRequest = new PageRequest();
+        pageRequest.setCursor(cursor);
+        pageRequest.setLimit(limit);
+
+        PageResponse<PostDTO> response = postService.getPostsForClub(clubId, userId, pageRequest);
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{postId}")
