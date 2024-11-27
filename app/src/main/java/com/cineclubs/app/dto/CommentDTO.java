@@ -8,6 +8,7 @@ public class CommentDTO {
     private String content;
     private LocalDateTime createdAt;
     private String authorName; // The name or identifier of the author
+    private String authorImage;
     private Long postId; // The ID of the post the comment belongs to (if applicable)
     private Long parentCommentId; // The ID of the parent comment (if it's a reply)
     private List<CommentDTO> replies; // Nested replies
@@ -16,11 +17,12 @@ public class CommentDTO {
     public CommentDTO() {
     }
 
-    public CommentDTO(Long id, String content, LocalDateTime createdAt, String authorName, Long postId, Long parentCommentId, List<CommentDTO> replies, int likeCount) {
+    public CommentDTO(Long id, String content, LocalDateTime createdAt, String authorName, String authorImage, Long postId, Long parentCommentId, List<CommentDTO> replies, int likeCount) {
         this.id = id;
         this.content = content;
         this.createdAt = createdAt;
         this.authorName = authorName;
+        this.authorImage = authorImage;
         this.postId = postId;
         this.parentCommentId = parentCommentId;
         this.replies = replies;
@@ -89,5 +91,13 @@ public class CommentDTO {
 
     public void setLikeCount(int likeCount) {
         this.likeCount = likeCount;
+    }
+
+    public String getAuthorImage() {
+        return authorImage;
+    }
+
+    public void setAuthorImage(String authorImage) {
+        this.authorImage = authorImage;
     }
 }

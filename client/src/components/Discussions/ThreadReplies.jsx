@@ -1,80 +1,85 @@
 import React from 'react';
 import { Heart, MoreHorizontal } from 'lucide-react';
+import { addComment, getCommentsForPost } from '@/services/commentService';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { formatCreatedAt } from '@/lib/dateUtils';
 
 
-const SAMPLE_REPLIES = [
-  {
-    id: '1',
-    author: {
-      name: 'Alex Thompson',
-      avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=100',
+
+
+
+export default function ThreadReplies({ postId, userId }) {
+  const [newComment, setNewComment] = React.useState('');
+
+  const { data: postComments } = useQuery({
+    queryKey: ["comments", postId],
+    queryFn: () => getCommentsForPost(postId),
+  });
+
+  const queryClient = useQueryClient();
+
+  const { mutate: addCommentMutation } = useMutation({
+    mutationFn: ({postId, userId, content}) => addComment(postId, userId, content),
+    onSuccess: () => {
+      queryClient.invalidateQueries(["comments", postId, userId]);
     },
-    content: 'The cinematography in this film was absolutely breathtaking. Every frame could be a painting!',
-    timestamp: '2 hours ago',
-    likes: 12,
-  },
-  {
-    id: '2',
-    author: {
-      name: 'Sarah Chen',
-      avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&q=80&w=100',
+    onError: (error) => {
+      console.error("Failed to create the comment:", error);
     },
-    content: 'I completely agree! The director really knows how to capture emotion through visual storytelling.',
-    timestamp: '1 hour ago',
-    likes: 8,
-  },
-];
+  });
 
-
-export default function ThreadReplies({ threadId }) {
-  const [newReply, setNewReply] = React.useState('');
-
-  const handleSubmitReply = (e) => {
+  const handleSubmitComment = (e) => {
     e.preventDefault();
     // Handle reply submission
-    setNewReply('');
+    console.log(newComment, postId, userId)
+    addCommentMutation({
+      postId: postId,
+      userId: userId,
+      content: newComment
+    })
+    setNewComment('');
   };
 
   return (
     <div className="pt-4 space-y-4">
-      <form onSubmit={handleSubmitReply} className="space-y-3">
+      <form onSubmit={handleSubmitComment} className="space-y-3">
         <textarea
-          value={newReply}
-          onChange={(e) => setNewReply(e.target.value)}
+          value={newComment}
+          onChange={(e) => setNewComment(e.target.value)}
           placeholder="Write a reply..."
           className="w-full px-4 py-3 text-white placeholder-gray-400 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500"
           rows={3}
         />
         <button
           type="submit"
-          className="px-4 py-2 text-white transition-colors bg-purple-500 rounded-lg hover:bg-purple-600"
+          className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-xl transition-colors"
         >
-          Post Reply
+          Post Comment
         </button>
       </form>
 
       <div className="space-y-4">
-        {SAMPLE_REPLIES.map((reply) => (
-          <div key={reply.id} className="flex p-4 space-x-3 rounded-lg bg-gray-800/50">
+        {postComments && postComments.map((comment) => (
+          <div key={comment.id} className="flex p-4 space-x-3 rounded-lg bg-gray-800/50">
             <img
-              src={reply.avatar}
-              alt={reply.author.name}
+              src={comment.authorImage}
+              alt={comment.authorName}
               className="object-cover w-8 h-8 rounded-full"
             />
             <div className="flex-1">
               <div className="flex items-start justify-between">
                 <div>
-                  <span className="font-medium text-white">{reply.author.name}</span>
-                  <span className="ml-2 text-sm text-gray-400">{reply.timestamp}</span>
+                  <span className="font-medium text-white">{comment.authorName}</span>
+                  <span className="ml-2 text-sm text-gray-400">{formatCreatedAt(comment.createdAt)}</span>
                 </div>
                 <button className="text-gray-400 hover:text-white">
                   <MoreHorizontal className="w-4 h-4" />
                 </button>
               </div>
-              <p className="mt-1 text-gray-300">{reply.content}</p>
+              <p className="mt-1 text-gray-300">{comment.content}</p>
               <button className="flex items-center mt-2 space-x-1 text-gray-400 hover:text-pink-500">
                 <Heart className="w-4 h-4" />
-                <span className="text-sm">{reply.likes}</span>
+                <span className="text-sm">{comment.likeCount}</span>
               </button>
             </div>
           </div>

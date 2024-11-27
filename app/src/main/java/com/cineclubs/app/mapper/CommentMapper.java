@@ -13,7 +13,8 @@ public class CommentMapper {
                 comment.getId(),
                 comment.getContent(),
                 comment.getCreatedAt(),
-                comment.getAuthor().getFirstName() + " " + comment.getAuthor().getLastName(), // Adjust field based on `User` structure
+                comment.getAuthor().getFirstName() + " " + comment.getAuthor().getLastName(),
+                comment.getAuthor().getImageUrl(),
                 comment.getPost() != null ? comment.getPost().getId() : null,
                 comment.getParentComment() != null ? comment.getParentComment().getId() : null,
                 comment.getReplies() != null
