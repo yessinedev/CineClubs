@@ -3,6 +3,7 @@ import { MessageCircle, Heart, Share2, MoreHorizontal } from "lucide-react";
 import { likePost, unlikePost } from "@/services/postService";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { formatCreatedAt } from "@/lib/dateUtils";
+import ThreadReplies from "./ThreadReplies";
 
 export default function DiscussionThread({ post, user, isExpanded = false }) {
   const [expanded, setExpanded] = React.useState(isExpanded);
@@ -88,7 +89,7 @@ export default function DiscussionThread({ post, user, isExpanded = false }) {
         </button>
       </div>
 
-      {/* {expanded && <ThreadReplies threadId="1" />} */}
+      {expanded && <ThreadReplies postId={post.id} userId={user.id} />}
     </div>
   );
 }

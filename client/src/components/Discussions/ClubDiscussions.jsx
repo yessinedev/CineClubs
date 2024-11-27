@@ -127,6 +127,7 @@ export default function ClubDiscussions({ clubId, user }) {
 
         <InfinitePostsList
           posts={allPosts}
+          user={user}
           hasNextPage={hasNextPage}
           fetchNextPage={fetchNextPage}
           isFetchingNextPage={isFetchingNextPage}

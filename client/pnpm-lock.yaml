@@ -11,6 +11,15 @@ importers:
       '@clerk/clerk-react':
         specifier: ^5.16.1
         version: 5.17.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@cloudinary/react':
+        specifier: ^1.13.1
+        version: 1.13.1(react@18.3.1)
+      '@cloudinary/url-gen':
+        specifier: ^1.21.0
+        version: 1.21.0
+      '@hookform/resolvers':
+        specifier: ^3.9.1
+        version: 3.9.1(react-hook-form@7.53.2(react@18.3.1))
       '@loadable/component':
         specifier: ^5.16.4
         version: 5.16.4(react@18.3.1)
@@ -20,6 +29,9 @@ importers:
       '@radix-ui/react-dropdown-menu':
         specifier: ^2.1.2
         version: 2.1.2(@types/react-dom@18.3.1)(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@radix-ui/react-label':
+        specifier: ^2.1.0
+        version: 2.1.0(@types/react-dom@18.3.1)(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@radix-ui/react-slot':
         specifier: ^1.1.0
         version: 1.1.0(@types/react@18.3.12)(react@18.3.1)
@@ -71,6 +83,9 @@ importers:
       tailwindcss-animate:
         specifier: ^1.0.7
         version: 1.0.7(tailwindcss@3.4.15)
+      zod:
+        specifier: ^3.23.8
+        version: 3.23.8
     devDependencies:
       '@eslint/js':
         specifier: ^9.13.0
@@ -227,6 +242,21 @@ packages:
   '@clerk/types@4.35.0':
     resolution: {integrity: sha512-sBSYCCIXcwI+JHQRqBtskw10+rQ1NcA9w1G6ndnS48F5C+if6xI9OpYaaDjhhvzLjBeZFydKAOhe35mgC7bmoA==}
     engines: {node: '>=18.17.0'}
+
+  '@cloudinary/html@1.13.1':
+    resolution: {integrity: sha512-DPCyfHnl3eoIH52zprJGJFMb6pQNw/8bXzcpvhnYBUrAr+vS71vjWLd2aojvq1WI2ylfGK/L41y6+0YRrSo3/A==}
+
+  '@cloudinary/react@1.13.1':
+    resolution: {integrity: sha512-un8oyTVhIWG4ys5/j43JPYsjo+oWscj+m565JlO7t35yCejy7193ztWOt2K5Z0sp8tsZncVeL9MxjWhVk0CmWg==}
+    engines: {node: '>=10'}
+    peerDependencies:
+      react: ^16.3.0 || ^17.0.0 || ^18.0.0
+
+  '@cloudinary/transformation-builder-sdk@1.16.1':
+    resolution: {integrity: sha512-Mh1qYMkoDxSAzbt0qY9NJaZrdH/vFBcrpeVWmbTXbPVDZHLaaLyJ2+RDFGger5lycbrehPLoNp2hh22BvhkvbQ==}
+
+  '@cloudinary/url-gen@1.21.0':
+    resolution: {integrity: sha512-ctYcCzX3G3vcgnESTU2ET3K1XsBiXcEnBddCGV0QbR3fJhLLrIShjSMEwZoepgh4LAFOHJu9DzvLFr+E8R7c7g==}
 
   '@esbuild/aix-ppc64@0.21.5':
     resolution: {integrity: sha512-1SDgH6ZSPTlggy1yI6+Dbkiz8xzpHJEVAlF/AM1tHPLsf5STom9rwtjE4hKAF20FfXXNTFqEYXyJNWh1GiZedQ==}
@@ -414,6 +444,11 @@ packages:
 
   '@floating-ui/utils@0.2.8':
     resolution: {integrity: sha512-kym7SodPp8/wloecOpcmSnWJsK7M0E5Wg8UcFA+uO4B9s5d0ywXOEro/8HM9x0rW+TljRzul/14UYz3TleT3ig==}
+
+  '@hookform/resolvers@3.9.1':
+    resolution: {integrity: sha512-ud2HqmGBM0P0IABqoskKWI6PEf6ZDDBZkFqe2Vnl+mTHCEHzr3ISjjZyCwTjC/qpL25JC9aIDkloQejvMeq0ug==}
+    peerDependencies:
+      react-hook-form: ^7.0.0
 
   '@humanfs/core@0.19.1':
     resolution: {integrity: sha512-5DyQ4+1JEUzejeK1JGICcideyfUbGixgS9jNgex5nqkW+cY7WZhxBigmieN5Qnw9ZosSNVC9KQKyb+GUaGyKUA==}
@@ -612,6 +647,19 @@ packages:
       react: ^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc
     peerDependenciesMeta:
       '@types/react':
+        optional: true
+
+  '@radix-ui/react-label@2.1.0':
+    resolution: {integrity: sha512-peLblDlFw/ngk3UWq0VnYaOLy6agTZZ+MUO/WhVfm14vJGML+xH4FAl2XQGLqdefjNb7ApRg6Yn7U42ZhmYXdw==}
+    peerDependencies:
+      '@types/react': '*'
+      '@types/react-dom': '*'
+      react: ^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc
+      react-dom: ^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+      '@types/react-dom':
         optional: true
 
   '@radix-ui/react-menu@2.1.2':
@@ -890,6 +938,18 @@ packages:
 
   '@types/json-schema@7.0.15':
     resolution: {integrity: sha512-5+fP8P8MFNC+AyZCDxrB2pkZFPGzqQWUzpSeuuVLvm8VMcorNYavBqoFcxK8bQz4Qsbn4oUEEem4wDLfcysGHA==}
+
+  '@types/lodash.clonedeep@4.5.9':
+    resolution: {integrity: sha512-19429mWC+FyaAhOLzsS8kZUsI+/GmBAQ0HFiCPsKGU+7pBXOQWhyrY6xNNDwUSX8SMZMJvuFVMF9O5dQOlQK9Q==}
+
+  '@types/lodash.debounce@4.0.9':
+    resolution: {integrity: sha512-Ma5JcgTREwpLRwMM+XwBR7DaWe96nC38uCBDFKZWbNKD+osjVzdpnUSwBcqCptrp16sSOLBAUb50Car5I0TCsQ==}
+
+  '@types/lodash@4.17.13':
+    resolution: {integrity: sha512-lfx+dftrEZcdBPczf9d0Qv0x+j/rfNCMuC6OcfXmO8gkfeNAY88PgKUbvG56whcN23gc27yenwF6oJZXGFpYxg==}
+
+  '@types/node@14.18.63':
+    resolution: {integrity: sha512-fAtCfv4jJg+ExtXhvCkCqUKZ+4ok/JQk01qDKhL5BDDoS3AxKXhV5/MAVUZyQnSEd2GT92fkgZl0pz0Q0AzcIQ==}
 
   '@types/prop-types@15.7.13':
     resolution: {integrity: sha512-hCZTSvwbzWGvhqxp/RqVqwU999pBf2vp7hzIjiYOsl8wqOmUxkQ6ddw1cV3l8811+kdUFus/q4d1Y3E3SyEifA==}
@@ -1613,6 +1673,12 @@ packages:
     resolution: {integrity: sha512-iPZK6eYjbxRu3uB4/WZ3EsEIMJFMqAoopl3R+zuq0UjcAm/MO6KCweDgPfP3elTztoKP3KtnVHxTn2NHBSDVUw==}
     engines: {node: '>=10'}
 
+  lodash.clonedeep@4.5.0:
+    resolution: {integrity: sha512-H5ZhCF25riFd9uB5UCkVKo61m3S/xZk1x4wA6yp/L3RFP6Z/eHH1ymQcGLo7J3GMPfm0V/7m1tryHuGVxpqEBQ==}
+
+  lodash.debounce@4.0.8:
+    resolution: {integrity: sha512-FT1yDzDYEoYWhnSGnpE/4Kj1fLZkDFyqRb7fNt6FdYOSxlUWAtp42Eh6Wb0rGIv/m9Bgo7x4GhQbm5Ys4SG5ow==}
+
   lodash.merge@4.6.2:
     resolution: {integrity: sha512-0KpjqXRVvrYyCsX1swR/XTK0va6VQkQM6MNo7PqW77ByjAhoARA8EfrP1N4+KlKj8YS0ZUCtRT/YUuhyYDujIQ==}
 
@@ -1836,6 +1902,12 @@ packages:
     resolution: {integrity: sha512-5m4nQKp+rZRb09LNH59GM4BxTh9251/ylbKIbpe7TpGxfJ+9kv6BLkLBXIjjspbgbnIBNqlI23tRnTWT0snUIw==}
     peerDependencies:
       react: ^18.3.1
+
+  react-hook-form@7.53.2:
+    resolution: {integrity: sha512-YVel6fW5sOeedd1524pltpHX+jgU2u3DSDtXEaBORNdqiNrsX/nUI/iGXONegttg0mJVnfrIkiV0cmTU6Oo2xw==}
+    engines: {node: '>=18.0.0'}
+    peerDependencies:
+      react: ^16.8.0 || ^17 || ^18 || ^19
 
   react-intersection-observer@9.13.1:
     resolution: {integrity: sha512-tSzDaTy0qwNPLJHg8XZhlyHTgGW6drFKTtvjdL+p6um12rcnp8Z5XstE+QNBJ7c64n5o0Lj4ilUleA41bmDoMw==}
@@ -2113,6 +2185,11 @@ packages:
     resolution: {integrity: sha512-3KS2b+kL7fsuk/eJZ7EQdnEmQoaho/r6KUef7hxvltNA5DR8NAUM+8wJMbJyZ4G9/7i3v5zPBIMN5aybAh2/Jg==}
     engines: {node: '>= 0.4'}
 
+  typescript@4.9.5:
+    resolution: {integrity: sha512-1FXk9E2Hm+QzZQ7z+McJiHL4NW1F2EzMu9Nq9i3zAaGqibafqYwCVU6WyWAuyQRRzOlxou8xZSyXLEN8oKj24g==}
+    engines: {node: '>=4.2.0'}
+    hasBin: true
+
   unbox-primitive@1.0.2:
     resolution: {integrity: sha512-61pPlCD9h51VoreyJ0BReideM3MDKMKnh6+V9L08331ipq6Q8OFXZYiqP6n/tbHx4s5I9uRhcye6BrbkizkBDw==}
 
@@ -2227,6 +2304,9 @@ packages:
   yocto-queue@0.1.0:
     resolution: {integrity: sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==}
     engines: {node: '>=10'}
+
+  zod@3.23.8:
+    resolution: {integrity: sha512-XBx9AXhXktjUqnepgTiE5flcKIYWi/rme0Eaj+5Y0lftuGBq+jyRu/md4WnuxqgP1ubdpNCsYEYPxrzVHD8d6g==}
 
 snapshots:
 
@@ -2375,6 +2455,28 @@ snapshots:
     dependencies:
       csstype: 3.1.1
 
+  '@cloudinary/html@1.13.1':
+    dependencies:
+      '@types/lodash.clonedeep': 4.5.9
+      '@types/lodash.debounce': 4.0.9
+      '@types/node': 14.18.63
+      lodash.clonedeep: 4.5.0
+      lodash.debounce: 4.0.8
+      typescript: 4.9.5
+
+  '@cloudinary/react@1.13.1(react@18.3.1)':
+    dependencies:
+      '@cloudinary/html': 1.13.1
+      react: 18.3.1
+
+  '@cloudinary/transformation-builder-sdk@1.16.1':
+    dependencies:
+      '@cloudinary/url-gen': 1.21.0
+
+  '@cloudinary/url-gen@1.21.0':
+    dependencies:
+      '@cloudinary/transformation-builder-sdk': 1.16.1
+
   '@esbuild/aix-ppc64@0.21.5':
     optional: true
 
@@ -2499,6 +2601,10 @@ snapshots:
       react-dom: 18.3.1(react@18.3.1)
 
   '@floating-ui/utils@0.2.8': {}
+
+  '@hookform/resolvers@3.9.1(react-hook-form@7.53.2(react@18.3.1))':
+    dependencies:
+      react-hook-form: 7.53.2(react@18.3.1)
 
   '@humanfs/core@0.19.1': {}
 
@@ -2681,6 +2787,15 @@ snapshots:
       react: 18.3.1
     optionalDependencies:
       '@types/react': 18.3.12
+
+  '@radix-ui/react-label@2.1.0(@types/react-dom@18.3.1)(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+    dependencies:
+      '@radix-ui/react-primitive': 2.0.0(@types/react-dom@18.3.1)(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
+    optionalDependencies:
+      '@types/react': 18.3.12
+      '@types/react-dom': 18.3.1
 
   '@radix-ui/react-menu@2.1.2(@types/react-dom@18.3.1)(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
@@ -2918,6 +3033,18 @@ snapshots:
   '@types/estree@1.0.6': {}
 
   '@types/json-schema@7.0.15': {}
+
+  '@types/lodash.clonedeep@4.5.9':
+    dependencies:
+      '@types/lodash': 4.17.13
+
+  '@types/lodash.debounce@4.0.9':
+    dependencies:
+      '@types/lodash': 4.17.13
+
+  '@types/lodash@4.17.13': {}
+
+  '@types/node@14.18.63': {}
 
   '@types/prop-types@15.7.13': {}
 
@@ -3759,6 +3886,10 @@ snapshots:
     dependencies:
       p-locate: 5.0.0
 
+  lodash.clonedeep@4.5.0: {}
+
+  lodash.debounce@4.0.8: {}
+
   lodash.merge@4.6.2: {}
 
   loose-envify@1.4.0:
@@ -3955,6 +4086,10 @@ snapshots:
       loose-envify: 1.4.0
       react: 18.3.1
       scheduler: 0.23.2
+
+  react-hook-form@7.53.2(react@18.3.1):
+    dependencies:
+      react: 18.3.1
 
   react-intersection-observer@9.13.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:
@@ -4319,6 +4454,8 @@ snapshots:
       possible-typed-array-names: 1.0.0
       reflect.getprototypeof: 1.0.7
 
+  typescript@4.9.5: {}
+
   unbox-primitive@1.0.2:
     dependencies:
       call-bind: 1.0.7
@@ -4427,3 +4564,5 @@ snapshots:
   yaml@2.6.1: {}
 
   yocto-queue@0.1.0: {}
+
+  zod@3.23.8: {}
