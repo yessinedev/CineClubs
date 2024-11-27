@@ -1,7 +1,8 @@
 import { ClubCard } from "@/components/Club/ClubCard";
+import CreateCommunityModal from "@/components/Club/CreateCommunityModal";
 import { fetchClubs } from "@/services/clubService";
 import { useQuery } from "@tanstack/react-query";
-
+import { Plus } from "lucide-react";
 
 const ClubList = () => {
   const {
@@ -30,9 +31,11 @@ const ClubList = () => {
       </div>
     );
   return (
-    <section className="py-32">
+    <section className="py-28">
+      
       <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+      <CreateCommunityModal />
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 mt-4">
           {clubs?.map((club) => (
             <ClubCard key={club.id} club={club} />
           ))}
