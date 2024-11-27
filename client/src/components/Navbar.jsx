@@ -1,5 +1,5 @@
 import { SignInButton, SignOutButton, useUser } from "@clerk/clerk-react";
-import { Film, UsersRound, Award, LogOut, User2 } from "lucide-react";
+import { UsersRound, Award, LogOut, User2 } from "lucide-react";
 import { Link } from "react-router-dom";
 import {
   DropdownMenu,

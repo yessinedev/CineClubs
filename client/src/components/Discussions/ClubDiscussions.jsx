@@ -1,28 +1,34 @@
 import React from "react";
 import { MessageSquarePlus } from "lucide-react";
-import DiscussionThread from "./DiscussionThread";
-import { createPost, fetchClubPosts } from "@/services/postService";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { createPost } from "@/services/postService";
 import { showToast } from "@/lib/toast";
+import InfinitePostsList from "./InfinitePostsList";
+import { useInfinitePosts } from "@/hooks/useInfinitePosts";
 
 export default function ClubDiscussions({ clubId, user }) {
   const [showNewThread, setShowNewThread] = React.useState(false);
   const [newThread, setNewThread] = React.useState({ title: "", content: "" });
-
   const queryClient = useQueryClient();
-  const { mutate: createPostMutation } = useMutation({
+
+  const {
+    data,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    status,
+    error,
+  } = useInfinitePosts({ clubId, userId: user.id });
+
+  const { mutateAsync: createPostMutation } = useMutation({
     mutationFn: ({ thread, userId, clubId }) =>
       createPost(thread, userId, clubId),
     onSuccess: () => {
-      queryClient.invalidateQueries(["posts", user.id, clubId]);
+      queryClient.invalidateQueries(["posts", clubId, user.id]);
     },
     onError: (error) => {
       console.error("Failed to create post:", error);
     },
-  });
-  const { data: clubPosts } = useQuery({
-    queryKey: ["club", clubId],
-    queryFn: () => fetchClubPosts(clubId, user.id),
   });
 
   const handleSubmitThread = async (e) => {
@@ -33,32 +39,36 @@ export default function ClubDiscussions({ clubId, user }) {
       return;
     }
 
-    showToast.promise(
-      new Promise((resolve, reject) => {
-        setTimeout(() => {
-          createPostMutation(
-            {
-              thread: newThread,
-              userId: user.id,
-              clubId: clubId,
-            },
-            {
-              onSuccess: (data) => resolve(data),
-              onError: (error) => reject(error),
-            }
-          );
-        }, 3000);
-      }),
-      {
-        loading: "Creating your post...",
-        success: "Post created successfully!",
-        error: "Failed to create post",
-      }
-    );
+    try {
+      await showToast.promise(
+        createPostMutation({
+          thread: newThread,
+          userId: user.id,
+          clubId: clubId,
+        }),
+        {
+          loading: "Creating your post...", // add delay to show loading state
+          success: "Post created successfully!",
+          error: "Failed to create post",
+        }
+      );
 
-    setShowNewThread(false);
-    setNewThread({ title: "", content: "" });
+      setShowNewThread(false);
+      setNewThread({ title: "", content: "" });
+    } catch (error) {
+      console.error("Error creating post:", error);
+    }
   };
+
+  if (status === "pending") {
+    return <div>Loading discussions...</div>;
+  }
+
+  if (status === "error") {
+    return <div>Error: {error.message}</div>;
+  }
+
+  const allPosts = data.pages.flatMap((page) => page.items);
 
   return (
     <section className="py-12 bg-gray-950">
@@ -97,29 +107,30 @@ export default function ClubDiscussions({ clubId, user }) {
               rows={4}
               className="w-full px-4 py-3 text-white placeholder-gray-400 bg-gray-800 border border-gray-700 rounded-xl focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500"
             />
-            <div className="flex justify-end space-x-3">
+            <div className="flex justify-end gap-4">
               <button
                 type="button"
                 onClick={() => setShowNewThread(false)}
-                className="px-4 py-2 text-gray-300 hover:text-white"
+                className="px-4 py-2 text-gray-300 bg-gray-800 rounded-xl hover:bg-gray-700"
               >
                 Cancel
               </button>
               <button
                 type="submit"
-                className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-xl transition-colors"
+                className="px-4 py-2 text-white bg-purple-500 rounded-xl hover:bg-purple-600"
               >
-                Post Thread
+                Post
               </button>
             </div>
           </form>
         )}
 
-        <div className="space-y-6">
-          {clubPosts?.map((post) => (
-            <DiscussionThread key={post.id} post={post} user={user} />
-          ))}
-        </div>
+        <InfinitePostsList
+          posts={allPosts}
+          hasNextPage={hasNextPage}
+          fetchNextPage={fetchNextPage}
+          isFetchingNextPage={isFetchingNextPage}
+        />
       </div>
     </section>
   );

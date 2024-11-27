@@ -8,9 +8,28 @@ export const unlikePost = async (postId, userId) => {
   return await apiClient.post(`/posts/${postId}/unlike?userId=${userId}`);
 };
 
-export const fetchClubPosts = async (clubId, userId) => {
+export const fetchClubPosts = async ({
+  clubId,
+  userId,
+  cursor,
+  limit = 10,
+}) => {
+  const params = new URLSearchParams({
+    userId,
+    limit: limit.toString(),
+  });
+
+  if (cursor) {
+    params.append("cursor", cursor.toString());
+  }
+
+  // Simulate a delay to show loading state
+  if (cursor) {
+    await new Promise((resolve) => setTimeout(resolve, 3000));
+  }
+
   const { data } = await apiClient.get(
-    `/posts/club/${clubId}?userId=${userId}`
+    `/posts/club/${clubId}?${params.toString()}`
   );
   return data;
 };

@@ -1,9 +1,11 @@
 import { fetchTotalClubsAndPosts } from "@/services/clubService";
+import { useUser } from "@clerk/clerk-react";
 import { useQuery } from "@tanstack/react-query";
 import { Code2 } from "lucide-react";
-import { Play, Users, MessageCircle } from "lucide-react";
-
+import { Users, MessageCircle } from "lucide-react";
+import { Link } from "react-router-dom";
 export default function Hero() {
+  const { isSignedIn } = useUser();
   const { data: stats } = useQuery({
     queryKey: ["stats"],
     queryFn: fetchTotalClubsAndPosts,
@@ -33,14 +35,16 @@ export default function Hero() {
         </p>
 
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-          <button className="px-8 py-3 bg-blue-500 hover:bg-blue-600 text-white rounded-xl flex items-center gap-2 transition-colors">
-            <Code2 className="w-5 h-5" />
-            Start Coding
-          </button>
-          <button className="px-8 py-3 bg-gray-800 hover:bg-gray-700 text-white rounded-xl flex items-center gap-2 transition-colors">
+          {!isSignedIn && (
+            <div className="px-8 py-3 bg-blue-500 hover:bg-blue-600 text-white rounded-xl flex items-center gap-2 transition-colors">
+              <Code2 className="w-5 h-5" />
+              Start Coding
+            </div>
+          )}
+          <Link className="px-8 py-3 bg-gray-800 hover:bg-gray-700 text-white rounded-xl flex items-center gap-2 transition-colors">
             <Users className="w-5 h-5" />
             Browse Communities
-          </button>
+          </Link>
         </div>
         {stats && (
           <div className="flex items-center justify-center gap-8 mt-12 text-gray-400">

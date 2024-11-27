@@ -5,6 +5,8 @@ import com.cineclubs.app.models.Post;
 import com.cineclubs.app.models.User;
 import com.cineclubs.app.repository.PostRepository;
 import com.cineclubs.app.dto.PostDTO;
+import com.cineclubs.app.dto.PageRequest;
+import com.cineclubs.app.dto.PageResponse;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
@@ -52,10 +54,27 @@ public class PostService {
         return new PostDTO(post, currentUserId);
     }
 
-    public List<PostDTO> getPostsForClub(Long clubId, String currentUserId) {
-        return postRepository.findByClubIdOrderByCreatedAtDesc(clubId).stream()
+    public PageResponse<PostDTO> getPostsForClub(Long clubId, String currentUserId, PageRequest pageRequest) {
+        List<Post> posts;
+        if (pageRequest.getCursor() == null) {
+            posts = postRepository.findFirstByClubIdOrderByIdDesc(clubId, pageRequest.getLimit() + 1);
+        } else {
+            posts = postRepository.findByClubIdAndIdLessThanOrderByIdDesc(
+                    clubId,
+                    pageRequest.getCursor(),
+                    pageRequest.getLimit() + 1);
+        }
+
+        boolean hasMore = posts.size() > pageRequest.getLimit();
+        List<Post> postsToReturn = hasMore ? posts.subList(0, pageRequest.getLimit()) : posts;
+
+        List<PostDTO> postDTOs = postsToReturn.stream()
                 .map(post -> currentUserId != null ? new PostDTO(post, currentUserId) : new PostDTO(post))
                 .toList();
+
+        Long nextCursor = hasMore ? posts.get(pageRequest.getLimit() - 1).getId() : null;
+
+        return new PageResponse<>(postDTOs, nextCursor, hasMore);
     }
 
     public List<PostDTO> getPostsForUser(String userId) {
