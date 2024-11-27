@@ -31,7 +31,7 @@ export default function InfinitePostsList({
 
   return (
     <div className="space-y-6">
-      {posts.map((post) => (
+      {posts && posts.length > 0 && posts.map((post) => (
         <DiscussionThread key={post.id} post={post} />
       ))}
 
