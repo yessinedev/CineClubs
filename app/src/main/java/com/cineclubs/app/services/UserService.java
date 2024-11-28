@@ -3,6 +3,7 @@ package com.cineclubs.app.services;
 import com.cineclubs.app.dto.UserDTO;
 import com.cineclubs.app.models.User;
 import com.cineclubs.app.repository.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -40,5 +41,13 @@ public class UserService {
     public User getUserByUserId(String userId) {
         return userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
+    }
+
+    public UserDTO updateProfilePicture(String userId, String imageUrl) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("User not found with ID: " + userId));
+        user.setImageUrl(imageUrl);
+        userRepository.save(user);
+        return new UserDTO(user);
     }
 }

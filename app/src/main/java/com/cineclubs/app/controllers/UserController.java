@@ -28,4 +28,8 @@ public class UserController {
             @RequestParam(defaultValue = "false") boolean includeJoinedClubs) {
         return ResponseEntity.ok(userService.getUserDTO(userId, includePosts, includeJoinedClubs));
     }
+    @PutMapping("/change/{userId}")
+    public ResponseEntity<UserDTO> updateProfilePicture(@PathVariable String userId, @RequestBody String imageUrl) {
+        return ResponseEntity.ok(userService.updateProfilePicture(userId, imageUrl));
+    }
 }
