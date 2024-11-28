@@ -34,7 +34,7 @@ export default function ClubDetails({ club, isMember, user }) {
 
           <div className="grid grid-cols-2 gap-4 mb-6 md:grid-cols-4">
             <div className="p-3 rounded-xl bg-gray-800/50">
-              <div className="flex items-center mb-1 text-purple-400">
+              <div className="flex items-center mb-1 text-blue-500">
                 <Users className="w-4 h-4 mr-1" />
                 <span className="text-sm">Members</span>
               </div>
@@ -44,7 +44,7 @@ export default function ClubDetails({ club, isMember, user }) {
             </div>
 
             <div className="p-3 rounded-xl bg-gray-800/50">
-              <div className="flex items-center mb-1 text-purple-400">
+              <div className="flex items-center mb-1 text-blue-500">
                 <MessageCircle className="w-4 h-4 mr-1" />
                 <span className="text-sm">Discussions</span>
               </div>
