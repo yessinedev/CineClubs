@@ -119,8 +119,7 @@ export default function CreateCommunityModal() {
             Create a New Community
           </DialogTitle>
           <DialogDescription className="text-gray-400">
-            Create a space for people to discuss and share their favorite movies
-            and TV shows.
+            Create a space for people to discuss and share their ideas and news about tech & programming
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
@@ -132,7 +131,7 @@ export default function CreateCommunityModal() {
               id="name"
               {...register("name")}
               className="bg-gray-800 border-gray-700 text-white"
-              placeholder="e.g., Classic Film Enthusiasts"
+              placeholder="e.g., Javascript Enthusiasts"
             />
             {errors.name && (
               <p className="text-sm text-red-500">{errors.name.message}</p>
