@@ -6,7 +6,7 @@ import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { useUser } from "@clerk/clerk-react";
 import { useState } from "react";
-import MembersList from "@/components/Club/MembersList";
+import MembersList from "@/components/Club/Club Members/MembersList";
 
 export default function ClubPage() {
   const { id } = useParams();
@@ -75,7 +75,7 @@ export default function ClubPage() {
                 {activeTab === "discussions" ? (
                   <ClubDiscussions clubId={club.id} user={user} />
                 ) : (
-                  <MembersList />
+                  <MembersList members={club.members} />
                 )}
               </div>
             ) : (

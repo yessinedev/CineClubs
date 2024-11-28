@@ -32,7 +32,7 @@ export default function ClubDetails({ club, isMember, user }) {
         <div className="flex-1">
           <div className="flex items-center gap-4">
             <h1 className="mb-2 text-3xl font-bold text-white">{club.name}</h1>
-            <ProfilePictureModal modalTitle="Change your community banner image" />
+            <ProfilePictureModal modalTitle="Change your community banner image" id={club.id} />
           </div>
           <p className="mb-6 text-gray-400">{club.description}</p>
           <div className="grid grid-cols-2 gap-4 mb-6 md:grid-cols-4">

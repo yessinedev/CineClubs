@@ -88,7 +88,7 @@ export default function ProfilePictureModal({
             )}
 
             <label className="cursor-pointer">
-              <span className="px-4 py-2 bg-purple-500 hover:bg-purple-600 text-white rounded-xl transition-colors inline-block">
+              <span className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-xl transition-colors inline-block">
                 Choose Image
               </span>
               <input
@@ -104,7 +104,7 @@ export default function ProfilePictureModal({
             <button
               type="submit"
               disabled={!selectedFile}
-              className="px-4 py-2 bg-purple-500 hover:bg-purple-600 text-white rounded-xl transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-xl transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Update Picture
             </button>
