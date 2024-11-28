@@ -5,7 +5,6 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
@@ -35,7 +34,8 @@ export default function Navbar() {
             </span>
           </Link>
 
-          <div className="flex items-center gap-4">
+          {/* Desktop Navigation */}
+          <div className="hidden md:flex items-center gap-4">
             <div className="flex items-center gap-2 border px-3 py-2 border-gray-800 rounded-xl hover:border-purple-500/50">
               <UsersRound size={18} />
               <Link to="/clubs">Communities</Link>
@@ -45,35 +45,58 @@ export default function Navbar() {
               <Link to="/leaderboard">LeaderBoard</Link>
             </div>
           </div>
+
           <div>
             {isSignedIn ? (
-              <div className="flex items-center gap-4 px-3 py-2 border border-gray-800 rounded-xl hover:border-purple-500/50">
-                <span>Welcome, {getUserIdentifier()}</span>
+              <div className="flex items-center gap-4">
                 <DropdownMenu>
-                  <DropdownMenuTrigger className="outline-none">
+                  <DropdownMenuTrigger className="flex items-center gap-4 outline-none">
+                    <span className="text-sm md:text-base cursor-pointer hover:text-blue-400 transition-colors">
+                      Welcome, {getUserIdentifier()}
+                    </span>
                     <img
                       src={user.imageUrl}
                       alt={getUserIdentifier()}
                       className="w-8 h-8 rounded-full"
                     />
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent>
-                    <DropdownMenuLabel>My Account</DropdownMenuLabel>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem>
+                  <DropdownMenuContent sideOffset={8} className="z-[101]">
+                    {/* Mobile: Navigation Links */}
+                    <DropdownMenuItem asChild className="md:hidden">
+                      <Link
+                        to="/clubs"
+                        className="flex w-full items-center gap-2 bg-black/20 hover:bg-black/40 text-white rounded-lg backdrop-blur-sm transition-colors cursor-pointer"
+                      >
+                        <UsersRound className="w-4 h-4" />
+                        <span>Communities</span>
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild className="md:hidden">
+                      <Link
+                        to="/leaderboard"
+                        className="flex w-full items-center gap-2 bg-black/20 hover:bg-black/40 text-white rounded-lg backdrop-blur-sm transition-colors cursor-pointer"
+                      >
+                        <Award className="w-4 h-4" />
+                        <span>LeaderBoard</span>
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator className="bg-gray-800" />
+
+                    {/* Common Menu Items */}
+                    <DropdownMenuItem asChild>
                       <Link
                         to="/profile"
-                        className="flex items-center justify-center space-x-2 bg-black/20 hover:bg-black/40 text-white rounded-lg backdrop-blur-sm transition-colors"
+                        className="flex w-full items-center gap-2 bg-black/20 hover:bg-black/40 text-white rounded-lg backdrop-blur-sm transition-colors cursor-pointer"
                       >
-                        <User2 className="w-2 h-2" />
+                        <User2 className="w-4 h-4" />
                         <span>Profile</span>
                       </Link>
                     </DropdownMenuItem>
-                    <DropdownMenuItem>
-                      <button className="flex items-center justify-center space-x-2 bg-black/20 hover:bg-black/40 text-white rounded-lg backdrop-blur-sm transition-colors">
-                        <LogOut className="w-2 h-2" />
-                        <SignOutButton />
-                      </button>
+                    <DropdownMenuItem asChild>
+                      <div className="flex w-full items-center gap-2 bg-black/20 hover:bg-black/40 text-white rounded-lg backdrop-blur-sm transition-colors">
+                        <LogOut className="w-4 h-4" />
+                        <SignOutButton className="w-full text-left" />
+                      </div>
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
