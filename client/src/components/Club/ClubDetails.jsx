@@ -1,6 +1,7 @@
 import { joinClub, leaveClub } from "@/services/clubService";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Film, MessageCircle, Star, Users } from "lucide-react";
+import ProfilePictureModal from "../Profile/ProfilePictureModal";
 
 export default function ClubDetails({ club, isMember, user }) {
   const queryClient = useQueryClient();
@@ -29,9 +30,11 @@ export default function ClubDetails({ club, isMember, user }) {
     <div className="p-6 bg-gray-900 border border-gray-800 shadow-xl rounded-xl">
       <div className="flex items-start justify-between">
         <div className="flex-1">
-          <h1 className="mb-2 text-3xl font-bold text-white">{club.name}</h1>
+          <div className="flex items-center gap-4">
+            <h1 className="mb-2 text-3xl font-bold text-white">{club.name}</h1>
+            <ProfilePictureModal modalTitle="Change your community banner image" />
+          </div>
           <p className="mb-6 text-gray-400">{club.description}</p>
-
           <div className="grid grid-cols-2 gap-4 mb-6 md:grid-cols-4">
             <div className="p-3 rounded-xl bg-gray-800/50">
               <div className="flex items-center mb-1 text-purple-400">
