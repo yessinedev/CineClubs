@@ -43,7 +43,7 @@ export default function ProfilePage() {
                   className="w-24 h-24 rounded-xl border-4 border-gray-900 object-cover"
                 />
                 <div className="absolute -right-2 -bottom-2 p-1.5 bg-gray-900 text-white rounded-full hover:bg-gray-800 transition-colors">
-                  <ProfilePictureModal />
+                  <ProfilePictureModal modalTitle="Change your profile picture" isProfile={true} id={user.id} />
                 </div>
               </div>
               <div className="mb-2">

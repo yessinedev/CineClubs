@@ -9,8 +9,15 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Camera } from "lucide-react";
+import { handleImageUpload } from "@/lib/utils";
+import { updateProfilePicture } from "@/services/userService";
+import { showToast } from "@/lib/toast";
 
-export default function ProfilePictureModal() {
+export default function ProfilePictureModal({
+  modalTitle,
+  isProfile = false,
+  id,
+}) {
   const [selectedFile, setSelectedFile] = useState(null);
   const [preview, setPreview] = useState(null);
 
@@ -26,8 +33,31 @@ export default function ProfilePictureModal() {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (isProfile) {
+      try {
+        const imgUrl = await handleImageUpload(selectedFile);
+        console.log("Image URL:", imgUrl);
+
+        console.log("Calling updateProfilePicture with ID:", id); // Debugging log
+
+        await showToast.promise(
+          updateProfilePicture(id, imgUrl).then(() => {
+            console.log("updateProfilePicture invoked successfully");
+          }),
+          {
+            loading: "Updating your profile image...", // Add delay to show loading state
+            success: "Profile image updated successfully!",
+            error: "Failed to update image",
+          }
+        );
+      } catch (error) {
+        console.error("Error occurred during submission:", error);
+        throw error;
+      }
+    }
   };
 
   return (
@@ -37,7 +67,7 @@ export default function ProfilePictureModal() {
       </DialogTrigger>
       <DialogContent>
         <DialogHeader className="flex items-center justify-center text-white">
-          <DialogTitle> Update Profile Picture</DialogTitle>
+          <DialogTitle>{modalTitle}</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="flex flex-col items-center">
