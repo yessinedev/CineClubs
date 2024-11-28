@@ -1,9 +1,8 @@
-import { X, Upload } from "lucide-react";
+import { Upload } from "lucide-react";
 import { useState } from "react";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -12,6 +11,7 @@ import { Camera } from "lucide-react";
 import { handleImageUpload } from "@/lib/utils";
 import { updateProfilePicture } from "@/services/userService";
 import { showToast } from "@/lib/toast";
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function ProfilePictureModal({
   modalTitle,
@@ -20,6 +20,8 @@ export default function ProfilePictureModal({
 }) {
   const [selectedFile, setSelectedFile] = useState(null);
   const [preview, setPreview] = useState(null);
+  const [isOpen, setIsOpen] = useState(false);
+  const queryClient = useQueryClient();
 
   const handleFileChange = (e) => {
     const file = e.target.files?.[0];
@@ -36,19 +38,19 @@ export default function ProfilePictureModal({
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (isProfile) {
+    if (isProfile && selectedFile) {
       try {
         const imgUrl = await handleImageUpload(selectedFile);
-        console.log("Image URL:", imgUrl);
-
-        console.log("Calling updateProfilePicture with ID:", id); // Debugging log
 
         await showToast.promise(
           updateProfilePicture(id, imgUrl).then(() => {
-            console.log("updateProfilePicture invoked successfully");
+            queryClient.invalidateQueries(["users"]);
+            setIsOpen(false);
+            setSelectedFile(null);
+            setPreview(null);
           }),
           {
-            loading: "Updating your profile image...", // Add delay to show loading state
+            loading: "Updating your profile image...",
             success: "Profile image updated successfully!",
             error: "Failed to update image",
           }
@@ -61,9 +63,11 @@ export default function ProfilePictureModal({
   };
 
   return (
-    <Dialog>
-      <DialogTrigger>
-        <Camera className="w-4 h-4" />
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+      <DialogTrigger asChild>
+        <button className="p-1.5 bg-gray-900 text-white rounded-full hover:bg-gray-800 transition-colors">
+          <Camera className="w-4 h-4" />
+        </button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader className="flex items-center justify-center text-white">
