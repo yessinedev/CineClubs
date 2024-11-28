@@ -1,18 +1,27 @@
-import { X, Upload } from "lucide-react";
+import { Upload } from "lucide-react";
 import { useState } from "react";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Camera } from "lucide-react";
+import { handleImageUpload } from "@/lib/utils";
+import { updateProfilePicture } from "@/services/userService";
+import { showToast } from "@/lib/toast";
+import { useQueryClient } from "@tanstack/react-query";
 
-export default function ProfilePictureModal() {
+export default function ProfilePictureModal({
+  modalTitle,
+  isProfile = false,
+  id,
+}) {
   const [selectedFile, setSelectedFile] = useState(null);
   const [preview, setPreview] = useState(null);
+  const [isOpen, setIsOpen] = useState(false);
+  const queryClient = useQueryClient();
 
   const handleFileChange = (e) => {
     const file = e.target.files?.[0];
@@ -26,18 +35,43 @@ export default function ProfilePictureModal() {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (isProfile && selectedFile) {
+      try {
+        const imgUrl = await handleImageUpload(selectedFile);
+
+        await showToast.promise(
+          updateProfilePicture(id, imgUrl).then(() => {
+            queryClient.invalidateQueries(["users"]);
+            setIsOpen(false);
+            setSelectedFile(null);
+            setPreview(null);
+          }),
+          {
+            loading: "Updating your profile image...",
+            success: "Profile image updated successfully!",
+            error: "Failed to update image",
+          }
+        );
+      } catch (error) {
+        console.error("Error occurred during submission:", error);
+        throw error;
+      }
+    }
   };
 
   return (
-    <Dialog>
-      <DialogTrigger>
-        <Camera className="w-4 h-4" />
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+      <DialogTrigger asChild>
+        <button className="p-1.5 bg-gray-900 text-white rounded-full hover:bg-gray-800 transition-colors">
+          <Camera className="w-4 h-4" />
+        </button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader className="flex items-center justify-center text-white">
-          <DialogTitle> Update Profile Picture</DialogTitle>
+          <DialogTitle>{modalTitle}</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="flex flex-col items-center">

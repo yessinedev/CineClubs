@@ -3,6 +3,9 @@ package com.cineclubs.app.controllers;
 import com.cineclubs.app.dto.UserDTO;
 import com.cineclubs.app.models.User;
 import com.cineclubs.app.services.UserService;
+
+import jakarta.persistence.EntityNotFoundException;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,5 +30,19 @@ public class UserController {
             @RequestParam(defaultValue = "false") boolean includePosts,
             @RequestParam(defaultValue = "false") boolean includeJoinedClubs) {
         return ResponseEntity.ok(userService.getUserDTO(userId, includePosts, includeJoinedClubs));
+    }
+
+    @PutMapping("/change/{userId}")
+    public ResponseEntity<UserDTO> updateProfilePicture(
+            @PathVariable String userId,
+            @RequestBody String imageUrl) {
+        try {
+            UserDTO updatedUser = userService.updateProfilePicture(userId, imageUrl);
+            return ResponseEntity.ok(updatedUser);
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().build();
+        }
     }
 }

@@ -18,6 +18,7 @@ import { Plus } from "lucide-react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useUser } from "@clerk/clerk-react";
 import { createClub } from "@/services/clubService";
+import { handleImageUpload } from "@/lib/utils";
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 const ACCEPTED_IMAGE_TYPES = [
@@ -65,43 +66,20 @@ export default function CreateCommunityModal() {
     resolver: zodResolver(formSchema),
   });
 
-  const handleImageUpload = async (file) => {
-    const formData = new FormData();
-    formData.append("file", file);
-    formData.append("upload_preset", import.meta.env.VITE_UPLOAD_PRESET_NAME);
-
-    try {
-      const response = await fetch(
-        `https://api.cloudinary.com/v1_1/${import.meta.env.VITE_CLOUD_NAME}/image/upload`,
-        {
-          method: "POST",
-          body: formData,
-        }
-      );
-
-      const data = await response.json();
-      if (response.ok) {
-        return data.secure_url;
-      } else {
-        return null;
-      }
-    } catch (error) {
-      console.error("Upload failed:", error);
-      throw error;
-    }
-  };
-
   const onSubmit = async (data) => {
     console.log("Form submitted:", data);
-    const imageUrl = await handleImageUpload(data.imageUrl[0]);
-    if (imageUrl != null) {
-      const club = {
-        name: data.name,
-        description: data.description,
-        imageUrl: imageUrl,
-      };
-      createCommunityMutation({ userId: user.id, club: club });
-    }
+    await handleImageUpload(data.imageUrl[0])
+      .then((res) => {
+        const club = {
+          name: data.name,
+          description: data.description,
+          imageUrl: res,
+        };
+        createCommunityMutation({ userId: user.id, club: club })
+      })
+      .then((error) => {
+        throw error;
+      })
     reset();
   };
 
@@ -119,7 +97,8 @@ export default function CreateCommunityModal() {
             Create a New Community
           </DialogTitle>
           <DialogDescription className="text-gray-400">
-            Create a space for people to discuss and share their ideas and news about tech & programming
+            Create a space for people to discuss and share their ideas and news
+            about tech & programming
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
