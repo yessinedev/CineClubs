@@ -1,6 +1,9 @@
 package com.cineclubs.app.dto;
 
+import com.cineclubs.app.models.Comment;
+
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 public class CommentDTO {
@@ -12,21 +15,37 @@ public class CommentDTO {
     private Long postId; // The ID of the post the comment belongs to (if applicable)
     private Long parentCommentId; // The ID of the parent comment (if it's a reply)
     private List<CommentDTO> replies; // Nested replies
-    private int likeCount; // Number of likes on the comment
+    private int likesCount; // Number of likes on the comment
+    private boolean hasLiked;
 
     public CommentDTO() {
     }
 
-    public CommentDTO(Long id, String content, LocalDateTime createdAt, String authorName, String authorImage, Long postId, Long parentCommentId, List<CommentDTO> replies, int likeCount) {
-        this.id = id;
-        this.content = content;
-        this.createdAt = createdAt;
-        this.authorName = authorName;
-        this.authorImage = authorImage;
-        this.postId = postId;
-        this.parentCommentId = parentCommentId;
-        this.replies = replies;
-        this.likeCount = likeCount;
+    public CommentDTO(Comment comment, String currentUserId) {
+        this.id = comment.getId();
+        this.content = comment.getContent();
+        this.createdAt = comment.getCreatedAt();
+        this.authorName = comment.getAuthor().getFirstName() + " " + comment.getAuthor().getLastName();
+        this.authorImage = comment.getAuthor().getImageUrl();
+        this.postId = comment.getPost().getId();
+        this.parentCommentId = comment.getParentComment() != null ? comment.getParentComment().getId() : null;
+        this.likesCount = comment.getLikes() != null ? comment.getLikes().size() : 0;
+
+        this.hasLiked = comment.getLikes() != null &&
+                comment.getLikes().stream().anyMatch(user -> user.getuserId().equals(currentUserId));
+    }
+
+    public CommentDTO(Comment comment) {
+        this.id = comment.getId();
+        this.content = comment.getContent();
+        this.createdAt = comment.getCreatedAt();
+        this.authorName = comment.getAuthor().getFirstName() + " " + comment.getAuthor().getLastName();
+        this.authorImage = comment.getAuthor().getImageUrl();
+        this.postId = comment.getPost().getId();
+        this.parentCommentId = comment.getParentComment() != null ? comment.getParentComment().getId() : null;
+        this.likesCount = comment.getLikes() != null ? comment.getLikes().size() : 0;
+
+        this.hasLiked = false;
     }
 
     public Long getId() {
@@ -85,12 +104,12 @@ public class CommentDTO {
         this.replies = replies;
     }
 
-    public int getLikeCount() {
-        return likeCount;
+    public int getLikesCount() {
+        return likesCount;
     }
 
-    public void setLikeCount(int likeCount) {
-        this.likeCount = likeCount;
+    public void setLikesCount(int likeCount) {
+        this.likesCount = likeCount;
     }
 
     public String getAuthorImage() {
@@ -99,5 +118,13 @@ public class CommentDTO {
 
     public void setAuthorImage(String authorImage) {
         this.authorImage = authorImage;
+    }
+
+    public boolean isHasLiked() {
+        return hasLiked;
+    }
+
+    public void setHasLiked(boolean hasLiked) {
+        this.hasLiked = hasLiked;
     }
 }

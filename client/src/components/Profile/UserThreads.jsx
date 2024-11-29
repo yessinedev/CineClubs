@@ -1,26 +1,7 @@
 import { formatCreatedAt } from '@/lib/dateUtils';
 import { MessageCircle, Heart, Share2 } from 'lucide-react';
 
-const USER_THREADS = [
-  {
-    id: 1,
-    title: "The Evolution of Visual Effects in Modern Cinema",
-    content: "Looking back at the past decade, the advancement in VFX has been remarkable...",
-    club: "Classic Cinema Club",
-    timestamp: "3 days ago",
-    likes: 24,
-    replies: 8
-  },
-  {
-    id: 2,
-    title: "Hidden Gems: Underrated Films of 2023",
-    content: "While blockbusters dominate the box office, there have been some incredible smaller films...",
-    club: "Indie Movie Lovers",
-    timestamp: "1 week ago",
-    likes: 15,
-    replies: 12
-  }
-];
+
 
 export default function UserThreads({posts}) {
   return (
