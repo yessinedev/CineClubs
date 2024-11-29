@@ -1,3 +1,4 @@
+import { formatCreatedAt } from '@/lib/dateUtils';
 import { MessageCircle, Heart, Share2 } from 'lucide-react';
 
 const USER_THREADS = [
@@ -25,11 +26,11 @@ export default function UserThreads({posts}) {
   return (
     <div className="space-y-6">
       {posts.length > 0 && posts.map((thread) => (
-        <div key={thread.id} className="bg-gray-800/50 rounded-lg p-6">
+        <div key={thread.id} className="bg-gray-800/50 rounded-xl p-6">
           <div className="mb-4">
             <div className="flex items-center justify-between mb-2">
               <span className="text-sm text-purple-400">{thread.clubName}</span>
-              <span className="text-sm text-gray-400">{thread.createdAt}</span>
+              <span className="text-sm text-gray-400">{formatCreatedAt(thread.createdAt)}</span>
             </div>
             <h3 className="text-xl font-semibold text-white mb-2">{thread.title}</h3>
             <p className="text-gray-300">{thread.content}</p>
