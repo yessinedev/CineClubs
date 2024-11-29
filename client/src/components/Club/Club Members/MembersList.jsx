@@ -65,7 +65,7 @@ export default function MembersList({members}) {
       <div className="p-4 space-y-3">
         {filteredMembers.length > 0 ? (
           filteredMembers.map(member => (
-            <MemberCard key={member.id} member={member} />
+            <MemberCard key={member.userId} member={member} />
           ))
         ) : (
           <div className="text-center py-8">
