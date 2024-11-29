@@ -96,7 +96,7 @@ export default function ClubDiscussions({ clubId, user }) {
                 setNewThread({ ...newThread, title: e.target.value })
               }
               placeholder="Thread title"
-              className="w-full px-4 py-2 text-white placeholder-gray-400 bg-gray-800 border border-gray-700 rounded-xl focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500"
+              className="w-full px-4 py-2 text-white placeholder-gray-400 bg-gray-800 border border-gray-700 rounded-xl focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
             />
             <textarea
               value={newThread.content}
@@ -105,7 +105,7 @@ export default function ClubDiscussions({ clubId, user }) {
               }
               placeholder="What's on your mind?"
               rows={4}
-              className="w-full px-4 py-3 text-white placeholder-gray-400 bg-gray-800 border border-gray-700 rounded-xl focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500"
+              className="w-full px-4 py-3 text-white placeholder-gray-400 bg-gray-800 border border-gray-700 rounded-xl focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
             />
             <div className="flex justify-end gap-4">
               <button
@@ -117,7 +117,7 @@ export default function ClubDiscussions({ clubId, user }) {
               </button>
               <button
                 type="submit"
-                className="px-4 py-2 text-white bg-purple-500 rounded-xl hover:bg-purple-600"
+                className="px-4 py-2 text-white bg-blue-500 rounded-xl hover:bg-blue-600"
               >
                 Post
               </button>

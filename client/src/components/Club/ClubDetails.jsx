@@ -52,7 +52,7 @@ export default function ClubDetails({ club, isMember, user }) {
                 <span className="text-sm">Discussions</span>
               </div>
               <span className="text-xl font-semibold text-white">
-                {club.posts != null ? club.posts.length : 0}
+                {club.postsCount}
               </span>
             </div>
 
