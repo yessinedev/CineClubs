@@ -155,7 +155,7 @@ export default function CreateCommunityModal() {
                 Cancel
               </Button>
             </DialogTrigger>
-            <Button type="submit" className="bg-purple-600 hover:bg-purple-700">
+            <Button type="submit" className="bg-blue-600 hover:bg-blue-700 rounded-xl">
               Create Community
             </Button>
           </div>
