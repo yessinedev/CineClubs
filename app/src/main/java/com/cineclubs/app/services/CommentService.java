@@ -100,8 +100,19 @@ public class CommentService {
         Comment likedComment = commentRepository.save(comment);
         CommentDTO commentDTO = new CommentDTO(likedComment, userId);
         commentDTO.setHasLiked(true);
-        messagingTemplate.convertAndSend("/topic/posts", commentDTO);
+        messagingTemplate.convertAndSend("/topic/comments", commentDTO);
 
+        return commentDTO;
+    }
+
+    public CommentDTO unlikecomment(Long commentId, String userId) {
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new IllegalArgumentException("Comment not found"));
+        User user = userService.getUserByUserId(userId);
+        comment.getLikes().remove(user);
+        Comment unlikedComment = commentRepository.save(comment);
+        CommentDTO commentDTO = new CommentDTO(unlikedComment, userId);
+        messagingTemplate.convertAndSend("/topic/comments", commentDTO);
         return commentDTO;
     }
 }

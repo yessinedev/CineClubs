@@ -47,8 +47,14 @@ public class CommentController {
     }
 
     @PostMapping("/{commentId}/like")
-    public ResponseEntity<CommentDTO> likePost(@PathVariable Long commentId, @RequestParam String userId) {
+    public ResponseEntity<CommentDTO> likeComment(@PathVariable Long commentId, @RequestParam String userId) {
         CommentDTO comment = commentService.likeComment(commentId, userId);
+        return ResponseEntity.ok(comment);
+    }
+
+    @PostMapping("/{commentId}/unlike")
+    public ResponseEntity<CommentDTO> unlikeComment(@PathVariable Long commentId, @RequestParam String userId) {
+        CommentDTO comment = commentService.unlikecomment(commentId, userId);
         return ResponseEntity.ok(comment);
     }
 }

@@ -26,3 +26,7 @@ export const getCommentsForPost = async (postId, userId) => {
 export const likeComment = async (commentId, userId) => {
   return await apiClient.post(`/comments/${commentId}/like?userId=${userId}`);
 };
+
+export const unlikeComment = async (commentId, userId) => {
+  return await apiClient.post(`/comments/${commentId}/unlike?userId=${userId}`);
+};

@@ -3,6 +3,7 @@ import {
   addComment,
   getCommentsForPost,
   likeComment,
+  unlikeComment,
 } from "@/services/commentService";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { formatCreatedAt } from "@/lib/dateUtils";
@@ -31,6 +32,16 @@ export default function ThreadReplies({ postId, userId }) {
 
   const { mutate: likeCommentMutation } = useMutation({
     mutationFn: ({ commentId, userId }) => likeComment(commentId, userId),
+    onSuccess: () => {
+      queryClient.invalidateQueries(["comments", postId, userId]); // Refetch club details
+    },
+    onError: (error) => {
+      console.error("Failed to like the comment:", error);
+    },
+  });
+
+  const { mutate: unlikeCommentMutation } = useMutation({
+    mutationFn: ({ commentId, userId }) => unlikeComment(commentId, userId),
     onSuccess: () => {
       queryClient.invalidateQueries(["comments", postId, userId]); // Refetch club details
     },
@@ -104,7 +115,19 @@ export default function ThreadReplies({ postId, userId }) {
                       ? "text-pink-500"
                       : "text-gray-400 hover:text-pink-500"
                   }`}
-                  onClick={() => likeCommentMutation({commentId: comment.id, userId:userId})}
+                  onClick={
+                    comment.hasLiked
+                      ? () =>
+                          unlikeCommentMutation({
+                            commentId: comment.id,
+                            userId: userId,
+                          })
+                      : () =>
+                          likeCommentMutation({
+                            commentId: comment.id,
+                            userId: userId,
+                          })
+                  }
                 >
                   <Heart className="w-3 h-3 sm:w-4 sm:h-4" />
                   <span className="text-xs sm:text-sm">
