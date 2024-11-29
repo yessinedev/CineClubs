@@ -40,7 +40,7 @@ public class ClubDTO {
 
         if (includeMembers && club.getMembers() != null) {
             this.members = club.getMembers().stream()
-                    .map(UserDTO::new)
+                    .map(user ->  new UserDTO(user, club.getId()))
                     .collect(Collectors.toList());
         }
     }
