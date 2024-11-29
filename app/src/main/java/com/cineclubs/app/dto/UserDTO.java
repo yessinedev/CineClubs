@@ -69,10 +69,6 @@ public class UserDTO {
         this.likedPostsCount = user.getLikedPosts() != null ? user.getLikedPosts().size() : 0;
         this.likedCommentsCount = user.getLikedComments() != null ? user.getLikedComments().size() : 0;
 
-
-
-
-
     }
 
     public String getUserId() {

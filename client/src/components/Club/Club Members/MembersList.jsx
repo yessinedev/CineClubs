@@ -3,40 +3,6 @@ import { Search, Users } from 'lucide-react';
 import MemberCard from './MemberCard';
 import MembersListHeader from './MembersListHeader';
 
-const SAMPLE_MEMBERS = [
-  {
-    id: '1',
-    name: 'Sarah Chen',
-    avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=100',
-    role: 'Admin',
-    joinDate: '2 years ago',
-    contributions: 342,
-  },
-  {
-    id: '2',
-    name: 'Alex Thompson',
-    avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=100',
-    role: 'Moderator',
-    joinDate: '1 year ago',
-    contributions: 156,
-  },
-  {
-    id: '3',
-    name: 'Emma Wilson',
-    avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&q=80&w=100',
-    role: 'Member',
-    joinDate: '6 months ago',
-    contributions: 89,
-  },
-  {
-    id: '4',
-    name: 'David Miller',
-    avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=100',
-    role: 'Member',
-    joinDate: '3 months ago',
-    contributions: 45,
-  },
-];
 
 export default function MembersList({members}) {
   const [searchQuery, setSearchQuery] = React.useState('');
