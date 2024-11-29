@@ -144,24 +144,52 @@ public class DatabaseSeeder {
     }
 
     private String generateClubName() {
-        String[] prefixes = { "Classic", "Modern", "International", "Indie", "Documentary" };
-        String[] suffixes = { "Film Society", "Cinema Club", "Movie Buffs", "Film Collective", "Cinephiles" };
+        String[] prefixes = {
+                "JavaScript",
+                "Pythonic",
+                "Ruby",
+                "React",
+                "Angular",
+                "Spring Boot",
+                "Node.js",
+                "Flutter",
+                "Django",
+                "Kubernetes"
+        };
+
+
+        String[] suffixes = {
+                "Developers Club",
+                "Hackers Collective",
+                "Programming Wizards",
+                "Tech Innovators",
+                "Framework Enthusiasts",
+                "Backend Pioneers",
+                "Frontend Builders",
+                "Cloud Architects",
+                "AI Thinkers",
+                "Code Innovators"
+        };
+
+
         return prefixes[faker.random().nextInt(prefixes.length)] + " " +
                 suffixes[faker.random().nextInt(suffixes.length)];
     }
 
     private String generateClubDescription() {
         String[] templates = {
-                "A community dedicated to exploring %s cinema and fostering meaningful discussions about film.",
-                "Join us in celebrating the art of %s filmmaking through screenings, discussions, and events.",
-                "A gathering place for enthusiasts of %s movies to share their passion and insights.",
-                "Discover and discuss the best of %s cinema with fellow movie lovers.",
-                "A vibrant community for fans of %s films to connect and share their perspectives."
+                "A community dedicated to exploring the world of %s and fostering meaningful discussions about technology.",
+                "Join us in celebrating the art of %s development through meetups, projects, and events.",
+                "A gathering place for enthusiasts of %s to share their knowledge, passion, and insights.",
+                "Discover and discuss the best practices of %s with like-minded tech enthusiasts.",
+                "A vibrant community for fans of %s to connect, collaborate, and innovate."
         };
+
         String[] genres = { "classic", "contemporary", "independent", "international", "avant-garde" };
 
         String template = templates[faker.random().nextInt(templates.length)];
-        String genre = genres[faker.random().nextInt(genres.length)];
+        String[] genre = { "frontend", "backend", "fullstack", "AI/ML", "cybersecurity", "game development", "web development", "mobile development", "cloud computing", "open source" };
+
 
         return String.format(template, genre);
     }

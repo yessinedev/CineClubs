@@ -138,7 +138,7 @@
 					<driver>org.postgresql.Driver</driver>
 					<url>jdbc:postgresql://localhost:5432/cineclubs</url>
 					<user>postgres</user>
-					<password>password</password>
+					<password>root</password>
 					<baselineOnMigrate>true</baselineOnMigrate>
 					<schemas>public</schemas>
 					<locations>classpath:db/migration</locations>
