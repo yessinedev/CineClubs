@@ -52,6 +52,27 @@ public class UserDTO {
 
 
 
+
+    }
+    public UserDTO(User user, Long clubId) {
+        this.userId = user.getuserId();
+        this.email = user.getEmail();
+        this.firstName = user.getFirstName();
+        this.lastName = user.getLastName();
+        this.imageUrl = user.getImageUrl();
+        this.username = user.getUsername();
+        this.createdAt = user.getCreatedAt();
+        this.updatedAt = user.getUpdatedAt();
+        this.joinedClubsCount = user.getJoinedClubs() != null ? user.getJoinedClubs().size() : 0;
+        this.postsCount = user.getPosts() != null ? (int) user.getPosts().stream().filter(post -> post.getClub().getId().equals(clubId)).count() : 0;
+        this.commentsCount = user.getComments() != null ? user.getComments().size() : 0;
+        this.likedPostsCount = user.getLikedPosts() != null ? user.getLikedPosts().size() : 0;
+        this.likedCommentsCount = user.getLikedComments() != null ? user.getLikedComments().size() : 0;
+
+
+
+
+
     }
 
     public String getUserId() {
