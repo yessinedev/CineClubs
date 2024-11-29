@@ -39,3 +39,10 @@ export const fetchTotalClubsAndPosts = async () => {
   const { data } = await apiClient.get("/stats/summary");
   return data;
 };
+
+export const updateBanner = async (clubId, imageUrl) => {
+  const { data } = await apiClient.put(`/clubs/banner/${clubId}`, imageUrl, {
+    headers: { "Content-Type": "text/plain" },
+  });
+  return data;
+};

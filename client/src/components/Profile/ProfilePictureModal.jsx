@@ -12,6 +12,7 @@ import { handleImageUpload } from "@/lib/utils";
 import { updateProfilePicture } from "@/services/userService";
 import { showToast } from "@/lib/toast";
 import { useQueryClient } from "@tanstack/react-query";
+import { updateBanner } from "@/services/clubService";
 
 export default function ProfilePictureModal({
   modalTitle,
@@ -37,11 +38,9 @@ export default function ProfilePictureModal({
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    const imgUrl = await handleImageUpload(selectedFile);
     if (isProfile && selectedFile) {
       try {
-        const imgUrl = await handleImageUpload(selectedFile);
-
         await showToast.promise(
           updateProfilePicture(id, imgUrl).then(() => {
             queryClient.invalidateQueries(["users"]);
@@ -53,6 +52,25 @@ export default function ProfilePictureModal({
             loading: "Updating your profile image...",
             success: "Profile image updated successfully!",
             error: "Failed to update image",
+          }
+        );
+      } catch (error) {
+        console.error("Error occurred during submission:", error);
+        throw error;
+      }
+    } else {
+      try {
+        await showToast.promise(
+          updateBanner(id, imgUrl).then(() => {
+            queryClient.invalidateQueries(["club"]);
+            setIsOpen(false);
+            setSelectedFile(null);
+            setPreview(null);
+          }),
+          {
+            loading: "Updating your banner image...",
+            success: "Banner image updated successfully!",
+            error: "Failed to update banner",
           }
         );
       } catch (error) {

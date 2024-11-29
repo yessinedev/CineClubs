@@ -1,8 +1,10 @@
 package com.cineclubs.app.controllers;
 
 import com.cineclubs.app.dto.ClubDTO;
+import com.cineclubs.app.dto.UserDTO;
 import com.cineclubs.app.models.Club;
 import com.cineclubs.app.services.ClubService;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -58,5 +60,19 @@ public class ClubController {
     public ResponseEntity<Void> leaveClub(@RequestParam String userId, @RequestParam Long clubId) {
         clubService.leaveClub(userId, clubId);
         return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/banner/{clubId}")
+    public ResponseEntity<ClubDTO> updateBanner(
+            @PathVariable Long clubId,
+            @RequestBody String imageUrl) {
+        try {
+            ClubDTO updatedClub = clubService.updateBanner(clubId, imageUrl);
+            return ResponseEntity.ok(updatedClub);
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().build();
+        }
     }
 }

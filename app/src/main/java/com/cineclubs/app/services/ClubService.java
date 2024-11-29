@@ -1,6 +1,7 @@
 package com.cineclubs.app.services;
 
 import com.cineclubs.app.dto.ClubDTO;
+import com.cineclubs.app.dto.UserDTO;
 import com.cineclubs.app.models.Club;
 import com.cineclubs.app.models.User;
 import com.cineclubs.app.repository.ClubRepository;
@@ -8,6 +9,7 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 
@@ -105,5 +107,16 @@ public class ClubService {
     public ClubDTO getClubDTO(Long id, boolean includePosts, boolean includeMembers) {
         Club club = getClubById(id);
         return new ClubDTO(club, includePosts, includeMembers);
+    }
+
+    public ClubDTO updateBanner(Long clubId, String imageUrl) {
+        Club club = clubRepository.findById(clubId)
+                .orElseThrow(() -> new EntityNotFoundException("Club not found with ID: " + clubId));
+
+        String cleanImageUrl = imageUrl.replace("\"", "");
+        club.setImageUrl(cleanImageUrl);
+
+        Club updatedClub = clubRepository.save(club);
+        return new ClubDTO(updatedClub);
     }
 }
