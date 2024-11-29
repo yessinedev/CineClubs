@@ -1,6 +1,7 @@
 package com.cineclubs.app.services;
 
 import com.cineclubs.app.dto.CommentDTO;
+import com.cineclubs.app.dto.PostDTO;
 import com.cineclubs.app.mapper.CommentMapper;
 import com.cineclubs.app.models.Comment;
 import com.cineclubs.app.models.Post;
@@ -8,6 +9,7 @@ import com.cineclubs.app.models.User;
 import com.cineclubs.app.repository.CommentRepository;
 import com.cineclubs.app.repository.PostRepository;
 import com.cineclubs.app.repository.UserRepository;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,11 +22,15 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final PostRepository postRepository;
     private final UserRepository userRepository;
+    private final UserService userService;
+    private final SimpMessagingTemplate messagingTemplate;
 
-    public CommentService(CommentRepository commentRepository, PostRepository postRepository, UserRepository userRepository) {
+    public CommentService(CommentRepository commentRepository, PostRepository postRepository, UserRepository userRepository, UserService userService, SimpMessagingTemplate messagingTemplate) {
         this.commentRepository = commentRepository;
         this.postRepository = postRepository;
         this.userRepository = userRepository;
+        this.userService = userService;
+        this.messagingTemplate = messagingTemplate;
     }
 
     // Create a new comment
@@ -55,10 +61,10 @@ public class CommentService {
     }
 
     // Retrieve all comments for a specific post
-    public List<CommentDTO> getCommentsForPost(Long postId) {
+    public List<CommentDTO> getCommentsForPost(Long postId, String userId) {
         List<Comment> comments = commentRepository.findByPostId(postId);
         return comments.stream()
-                .map(CommentMapper::toDTO)
+                .map(comment -> CommentMapper.toDTO(comment, userId))
                 .collect(Collectors.toList());
     }
 
@@ -83,5 +89,30 @@ public class CommentService {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new IllegalArgumentException("Comment not found"));
         commentRepository.delete(comment);
+    }
+
+    public CommentDTO likeComment(Long commentId, String userId) {
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new IllegalArgumentException("Comment not found"));
+        User user = userService.getUserByUserId(userId);
+
+        comment.getLikes().add(user);
+        Comment likedComment = commentRepository.save(comment);
+        CommentDTO commentDTO = new CommentDTO(likedComment, userId);
+        commentDTO.setHasLiked(true);
+        messagingTemplate.convertAndSend("/topic/comments", commentDTO);
+
+        return commentDTO;
+    }
+
+    public CommentDTO unlikecomment(Long commentId, String userId) {
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new IllegalArgumentException("Comment not found"));
+        User user = userService.getUserByUserId(userId);
+        comment.getLikes().remove(user);
+        Comment unlikedComment = commentRepository.save(comment);
+        CommentDTO commentDTO = new CommentDTO(unlikedComment, userId);
+        messagingTemplate.convertAndSend("/topic/comments", commentDTO);
+        return commentDTO;
     }
 }

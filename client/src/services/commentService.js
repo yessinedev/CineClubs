@@ -14,11 +14,19 @@ export const addComment = async (postId, userId, content) => {
     }
 };
 
-export const getCommentsForPost = async (postId) => {
+export const getCommentsForPost = async (postId, userId) => {
     try {
-        const { data } = await apiClient.get(`/comments/${postId}`,);
+        const { data } = await apiClient.get(`/comments/${postId}?userId=${userId}`,);
         return data;
     } catch (error) {
         throw error;
     }
 }
+
+export const likeComment = async (commentId, userId) => {
+  return await apiClient.post(`/comments/${commentId}/like?userId=${userId}`);
+};
+
+export const unlikeComment = async (commentId, userId) => {
+  return await apiClient.post(`/comments/${commentId}/unlike?userId=${userId}`);
+};

@@ -1,21 +1,27 @@
-import { Heart, MoreHorizontal } from 'lucide-react';
-import { addComment, getCommentsForPost } from '@/services/commentService';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { formatCreatedAt } from '@/lib/dateUtils';
-import { useState } from 'react';
+import { Heart, MoreHorizontal } from "lucide-react";
+import {
+  addComment,
+  getCommentsForPost,
+  likeComment,
+  unlikeComment,
+} from "@/services/commentService";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { formatCreatedAt } from "@/lib/dateUtils";
+import { useState } from "react";
 
 export default function ThreadReplies({ postId, userId }) {
-  const [newComment, setNewComment] = useState('');
+  const [newComment, setNewComment] = useState("");
 
   const { data: postComments } = useQuery({
     queryKey: ["comments", postId],
-    queryFn: () => getCommentsForPost(postId),
+    queryFn: () => getCommentsForPost(postId, userId),
   });
 
   const queryClient = useQueryClient();
 
   const { mutate: addCommentMutation } = useMutation({
-    mutationFn: ({postId, userId, content}) => addComment(postId, userId, content),
+    mutationFn: ({ postId, userId, content }) =>
+      addComment(postId, userId, content),
     onSuccess: () => {
       queryClient.invalidateQueries(["comments", postId, userId]);
     },
@@ -24,16 +30,36 @@ export default function ThreadReplies({ postId, userId }) {
     },
   });
 
+  const { mutate: likeCommentMutation } = useMutation({
+    mutationFn: ({ commentId, userId }) => likeComment(commentId, userId),
+    onSuccess: () => {
+      queryClient.invalidateQueries(["comments", postId, userId]); // Refetch club details
+    },
+    onError: (error) => {
+      console.error("Failed to like the comment:", error);
+    },
+  });
+
+  const { mutate: unlikeCommentMutation } = useMutation({
+    mutationFn: ({ commentId, userId }) => unlikeComment(commentId, userId),
+    onSuccess: () => {
+      queryClient.invalidateQueries(["comments", postId, userId]); // Refetch club details
+    },
+    onError: (error) => {
+      console.error("Failed to like the comment:", error);
+    },
+  });
+
   const handleSubmitComment = (e) => {
     e.preventDefault();
     // Handle reply submission
-    console.log(newComment, postId, userId)
+    console.log(newComment, postId, userId);
     addCommentMutation({
       postId: postId,
       userId: userId,
-      content: newComment
-    })
-    setNewComment('');
+      content: newComment,
+    });
+    setNewComment("");
   };
 
   return (
@@ -55,33 +81,63 @@ export default function ThreadReplies({ postId, userId }) {
       </form>
 
       <div className="space-y-3 sm:space-y-4">
-        {postComments && postComments.map((comment) => (
-          <div key={comment.id} className="flex p-3 sm:p-4 space-x-2 sm:space-x-3 rounded-lg bg-gray-800/50">
-            <img
-              src={comment.authorImage}
-              alt={comment.authorName}
-              className="object-cover w-8 h-8 rounded-full"
-            />
-            <div className="flex-1 space-y-1 sm:space-y-2">
-              <div className="flex items-start justify-between">
-                <div className="flex flex-col sm:flex-row sm:items-center">
-                  <span className="font-medium text-sm sm:text-base text-white">{comment.authorName}</span>
-                  <span className="text-xs sm:text-sm text-gray-400 sm:ml-2">{formatCreatedAt(comment.createdAt)}</span>
+        {postComments &&
+          postComments.map((comment) => (
+            <div
+              key={comment.id}
+              className="flex p-3 sm:p-4 space-x-2 sm:space-x-3 rounded-lg bg-gray-800/50"
+            >
+              <img
+                src={comment.authorImage}
+                alt={comment.authorName}
+                className="object-cover w-8 h-8 rounded-full"
+              />
+              <div className="flex-1 space-y-1 sm:space-y-2">
+                <div className="flex items-start justify-between">
+                  <div className="flex flex-col sm:flex-row sm:items-center">
+                    <span className="font-medium text-sm sm:text-base text-white">
+                      {comment.authorName}
+                    </span>
+                    <span className="text-xs sm:text-sm text-gray-400 sm:ml-2">
+                      {formatCreatedAt(comment.createdAt)}
+                    </span>
+                  </div>
+                  <button className="text-gray-400 hover:text-white">
+                    <MoreHorizontal className="w-4 h-4" />
+                  </button>
                 </div>
-                <button className="text-gray-400 hover:text-white">
-                  <MoreHorizontal className="w-4 h-4" />
+                <p className="text-sm sm:text-base text-gray-300">
+                  {comment.content}
+                </p>
+                <button
+                  className={`flex items-center space-x-1 sm:space-x-1.5 ${
+                    comment.hasLiked
+                      ? "text-pink-500"
+                      : "text-gray-400 hover:text-pink-500"
+                  }`}
+                  onClick={
+                    comment.hasLiked
+                      ? () =>
+                          unlikeCommentMutation({
+                            commentId: comment.id,
+                            userId: userId,
+                          })
+                      : () =>
+                          likeCommentMutation({
+                            commentId: comment.id,
+                            userId: userId,
+                          })
+                  }
+                >
+                  <Heart className="w-3 h-3 sm:w-4 sm:h-4" />
+                  <span className="text-xs sm:text-sm">
+                    {comment.likesCount}
+                  </span>
                 </button>
               </div>
-              <p className="text-sm sm:text-base text-gray-300">{comment.content}</p>
-              <button className="flex items-center space-x-1 text-gray-400 hover:text-pink-500">
-                <Heart className="w-3 h-3 sm:w-4 sm:h-4" />
-                <span className="text-xs sm:text-sm">{comment.likeCount}</span>
-              </button>
             </div>
-          </div>
-        ))}
+          ))}
       </div>
     </div>
   );
 }
-

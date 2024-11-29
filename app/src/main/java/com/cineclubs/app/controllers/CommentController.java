@@ -1,7 +1,9 @@
 package com.cineclubs.app.controllers;
 
 import com.cineclubs.app.dto.CommentDTO;
+import com.cineclubs.app.dto.PostDTO;
 import com.cineclubs.app.services.CommentService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,8 +27,8 @@ public class CommentController {
     }
 
     @GetMapping("/{postId}")
-    public List<CommentDTO> getCommentsForPost(@PathVariable Long postId) {
-        return commentService.getCommentsForPost(postId);
+    public List<CommentDTO> getCommentsForPost(@PathVariable Long postId, @RequestParam(required = false) String userId) {
+        return commentService.getCommentsForPost(postId, userId);
     }
 
     @GetMapping("/comment/{commentId}")
@@ -42,5 +44,17 @@ public class CommentController {
     @DeleteMapping("/{commentId}")
     public void deleteComment(@PathVariable Long commentId) {
         commentService.deleteComment(commentId);
+    }
+
+    @PostMapping("/{commentId}/like")
+    public ResponseEntity<CommentDTO> likeComment(@PathVariable Long commentId, @RequestParam String userId) {
+        CommentDTO comment = commentService.likeComment(commentId, userId);
+        return ResponseEntity.ok(comment);
+    }
+
+    @PostMapping("/{commentId}/unlike")
+    public ResponseEntity<CommentDTO> unlikeComment(@PathVariable Long commentId, @RequestParam String userId) {
+        CommentDTO comment = commentService.unlikecomment(commentId, userId);
+        return ResponseEntity.ok(comment);
     }
 }
