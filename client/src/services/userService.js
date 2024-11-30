@@ -17,3 +17,19 @@ export const updateProfilePicture = async (userId, imageUrl) => {
   });
   return data;
 };
+
+export const quickSearchUsers = async (query) => {
+  if (!query?.trim()) return [];
+  const { data } = await apiClient.get(
+    `/users/quick-search?query=${encodeURIComponent(query)}`
+  );
+  return data;
+};
+
+export const searchUsers = async (query) => {
+  if (!query?.trim()) return [];
+  const { data } = await apiClient.get(
+    `/users/search?query=${encodeURIComponent(query)}`
+  );
+  return data;
+};

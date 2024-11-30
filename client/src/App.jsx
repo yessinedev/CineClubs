@@ -7,6 +7,7 @@ import HomePage from "./pages/HomePage";
 import ClubList from "./pages/ClubList";
 import LeaderBoardPage from "./pages/LeaderBoardPage";
 import ProfilePage from "./pages/ProfilePage";
+import SearchPage from "./pages/SearchPage";
 import { Toaster } from "sonner";
 
 function App() {
@@ -23,6 +24,7 @@ function App() {
           <Route path="/clubs/:id" element={<ClubPage />} />
           <Route path="/leaderboard" element={<LeaderBoardPage />} />
           <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/search" element={<SearchPage />} />
         </Routes>
       </Router>
       <Toaster />

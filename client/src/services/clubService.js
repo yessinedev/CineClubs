@@ -5,7 +5,7 @@ export const createClub = async (userId, club) => {
     const { data } = await apiClient.post(`/clubs?userId=${userId}`, club);
     return data;
   } catch (error) {
-    throw error;
+    console.error(error);
   }
 };
 
@@ -44,5 +44,21 @@ export const updateBanner = async (clubId, imageUrl) => {
   const { data } = await apiClient.put(`/clubs/banner/${clubId}`, imageUrl, {
     headers: { "Content-Type": "text/plain" },
   });
+  return data;
+};
+
+export const quickSearchClubs = async (query) => {
+  if (!query?.trim()) return [];
+  const { data } = await apiClient.get(
+    `/clubs/quick-search?query=${encodeURIComponent(query)}`
+  );
+  return data;
+};
+
+export const searchClubs = async (query) => {
+  if (!query?.trim()) return [];
+  const { data } = await apiClient.get(
+    `/clubs/search?query=${encodeURIComponent(query)}`
+  );
   return data;
 };

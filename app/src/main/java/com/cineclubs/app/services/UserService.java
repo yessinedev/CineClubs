@@ -4,9 +4,12 @@ import com.cineclubs.app.dto.UserDTO;
 import com.cineclubs.app.models.User;
 import com.cineclubs.app.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class UserService {
@@ -56,5 +59,26 @@ public class UserService {
 
         User updatedUser = userRepository.save(user);
         return new UserDTO(updatedUser);
+    }
+
+    public List<UserDTO> quickSearchUsers(String query) {
+        if (query == null || query.trim().isEmpty()) {
+            return List.of();
+        }
+
+        Pageable limit = PageRequest.of(0, 4); // Limit to 4 results
+        return userRepository.quickSearchUsers(query.trim(), limit).stream()
+                .map(user -> new UserDTO(user))
+                .toList();
+    }
+
+    public List<UserDTO> searchUsers(String query) {
+        if (query == null || query.trim().isEmpty()) {
+            return List.of();
+        }
+
+        return userRepository.searchUsers(query.trim()).stream()
+                .map(user -> new UserDTO(user))
+                .toList();
     }
 }
