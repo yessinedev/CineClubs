@@ -49,11 +49,11 @@ export default function Hero() {
         {stats && (
           <div className="flex items-center justify-center gap-8 mt-12 text-gray-400">
             <div className="flex items-center gap-2">
-              <Users className="w-5 h-5 text-purple-400" />
+              <Users className="w-5 h-5 text-blue-400" />
               <span>{`${stats.totalPosts}+ Developers`}</span>
             </div>
             <div className="flex items-center gap-2">
-              <MessageCircle className="w-5 h-5 text-purple-400" />
+              <MessageCircle className="w-5 h-5 text-blue-400" />
               <span>{`${stats.totalClubs}+ Active Communities`}</span>
             </div>
           </div>

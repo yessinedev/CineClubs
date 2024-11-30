@@ -6,7 +6,7 @@ export const ClubCard = ({club}) => {
   return (
     <div
       key={club.id}
-      className="overflow-hidden transition-all duration-300 bg-gray-900 border border-gray-800 rounded-xl hover:border-purple-500/50 group"
+      className="overflow-hidden transition-all duration-300 bg-gray-900 border border-gray-800 rounded-xl hover:border-blue-500/50 group"
     >
       <div className="relative h-36 sm:h-48 overflow-hidden">
         <img

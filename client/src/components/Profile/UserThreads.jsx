@@ -10,7 +10,7 @@ export default function UserThreads({posts}) {
         <div key={thread.id} className="bg-gray-800/50 rounded-xl p-6">
           <div className="mb-4">
             <div className="flex items-center justify-between mb-2">
-              <span className="text-sm text-purple-400">{thread.clubName}</span>
+              <span className="text-sm text-blue-400">{thread.clubName}</span>
               <span className="text-sm text-gray-400">{formatCreatedAt(thread.createdAt)}</span>
             </div>
             <h3 className="text-xl font-semibold text-white mb-2">{thread.title}</h3>

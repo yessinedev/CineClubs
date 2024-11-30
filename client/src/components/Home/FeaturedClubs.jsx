@@ -42,7 +42,7 @@ export default function FeaturedClubs() {
             <Star className="text-yellow-500" />
             Featured Communities
           </h2>
-          <Link to="/clubs" className="flex items-center gap-1 text-purple-400 hover:text-purple-300">
+          <Link to="/clubs" className="flex items-center gap-1 text-blue-400 hover:text-blue-300">
             <TrendingUp className="w-4 h-4" />
             View All
           </Link>

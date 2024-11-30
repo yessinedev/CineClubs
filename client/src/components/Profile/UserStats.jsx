@@ -4,7 +4,7 @@ export default function UserStats({joinedClubsCount, postsCount, likedPostsCount
   return (
     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
       <div className="bg-gray-800/50 p-4 rounded-xl">
-        <div className="flex items-center text-purple-400 mb-1">
+        <div className="flex items-center text-blue-400 mb-1">
           <Users className="w-4 h-4 mr-1" />
           <span className="text-sm">Clubs Joined</span>
         </div>
@@ -12,7 +12,7 @@ export default function UserStats({joinedClubsCount, postsCount, likedPostsCount
       </div>
       
       <div className="bg-gray-800/50 p-4 rounded-xl">
-        <div className="flex items-center text-purple-400 mb-1">
+        <div className="flex items-center text-blue-400 mb-1">
           <MessageCircle className="w-4 h-4 mr-1" />
           <span className="text-sm">Threads</span>
         </div>
@@ -20,7 +20,7 @@ export default function UserStats({joinedClubsCount, postsCount, likedPostsCount
       </div>
       
       <div className="bg-gray-800/50 p-4 rounded-xl">
-        <div className="flex items-center text-purple-400 mb-1">
+        <div className="flex items-center text-blue-400 mb-1">
           <Heart className="w-4 h-4 mr-1" />
           <span className="text-sm">Likes</span>
         </div>
@@ -28,7 +28,7 @@ export default function UserStats({joinedClubsCount, postsCount, likedPostsCount
       </div>
       
       {/* <div className="bg-gray-800/50 p-4 rounded-lg">
-        <div className="flex items-center text-purple-400 mb-1">
+        <div className="flex items-center text-blue-400 mb-1">
           <Star className="w-4 h-4 mr-1" />
           <span className="text-sm">Reputation</span>
         </div>

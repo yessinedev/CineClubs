@@ -41,7 +41,7 @@ export default function ProfilePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="bg-gray-900 rounded-xl overflow-hidden">
             {/* Profile Header */}
-            <div className="relative h-48 bg-gradient-to-r from-purple-600 to-pink-500">
+            <div className="relative h-48 bg-gradient-to-r from-blue-600 to-pink-500">
               <div className="absolute -bottom-12 left-8 flex items-end space-x-6">
                 <div className="relative">
                   <img
@@ -88,7 +88,7 @@ export default function ProfilePage() {
                   onClick={() => setActiveTab("clubs")}
                   className={`px-4 py-4 font-medium ${
                     activeTab === "clubs"
-                      ? "text-purple-500 border-b-2 border-purple-500"
+                      ? "text-blue-500 border-b-2 border-blue-500"
                       : "text-gray-400 hover:text-white"
                   }`}
                 >
@@ -98,7 +98,7 @@ export default function ProfilePage() {
                   onClick={() => setActiveTab("threads")}
                   className={`px-4 py-4 font-medium ${
                     activeTab === "threads"
-                      ? "text-purple-500 border-b-2 border-purple-500"
+                      ? "text-blue-500 border-b-2 border-blue-500"
                       : "text-gray-400 hover:text-white"
                   }`}
                 >

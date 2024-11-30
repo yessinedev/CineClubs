@@ -36,11 +36,11 @@ export default function Navbar() {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-4">
-            <div className="flex items-center gap-2 border px-3 py-2 border-gray-800 rounded-xl hover:border-purple-500/50">
+            <div className="flex items-center gap-2 border px-3 py-2 border-gray-800 rounded-xl hover:border-blue-500/50">
               <UsersRound size={18} />
               <Link to="/clubs">Communities</Link>
             </div>
-            <div className="flex items-center gap-2 border px-3 py-2 border-gray-800 rounded-xl hover:border-purple-500/50">
+            <div className="flex items-center gap-2 border px-3 py-2 border-gray-800 rounded-xl hover:border-blue-500/50">
               <Award size={18} />
               <Link to="/leaderboard">LeaderBoard</Link>
             </div>
