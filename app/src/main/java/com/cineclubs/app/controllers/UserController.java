@@ -9,6 +9,8 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
@@ -44,5 +46,15 @@ public class UserController {
         } catch (Exception e) {
             return ResponseEntity.internalServerError().build();
         }
+    }
+
+    @GetMapping("/quick-search")
+    public ResponseEntity<List<UserDTO>> quickSearchUsers(@RequestParam String query) {
+        return ResponseEntity.ok(userService.quickSearchUsers(query));
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<UserDTO>> searchUsers(@RequestParam String query) {
+        return ResponseEntity.ok(userService.searchUsers(query));
     }
 }

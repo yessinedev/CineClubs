@@ -62,6 +62,16 @@ public class ClubController {
         return ResponseEntity.noContent().build();
     }
 
+    @GetMapping("/quick-search")
+    public ResponseEntity<List<ClubDTO>> quickSearchClubs(@RequestParam String query) {
+        return ResponseEntity.ok(clubService.quickSearchClubs(query));
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<ClubDTO>> searchClubs(@RequestParam String query) {
+        return ResponseEntity.ok(clubService.searchClubs(query));
+    }
+
     @PutMapping("/banner/{clubId}")
     public ResponseEntity<ClubDTO> updateBanner(
             @PathVariable Long clubId,

@@ -9,6 +9,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Code2 } from "lucide-react";
+import SearchBar from "./Search/SearchBar";
 
 export default function Navbar() {
   const { isSignedIn, user } = useUser();
@@ -27,14 +28,16 @@ export default function Navbar() {
     <nav className="fixed top-0 z-50 w-full border-b border-gray-800 bg-black/95 backdrop-blur-sm">
       <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          <Link to="/" className="flex items-center space-x-3">
-            <Code2 className="w-8 h-8 text-blue-500" />
-            <span className="text-xl font-bold bg-gradient-to-r from-blue-400 to-emerald-500 text-transparent bg-clip-text">
-              DevHub
-            </span>
-          </Link>
+          <div className="flex items-center gap-4">
+            <Link to="/" className="flex items-center space-x-3">
+              <Code2 className="w-8 h-8 text-blue-500" />
+              <span className="text-xl font-bold bg-gradient-to-r from-blue-400 to-emerald-500 text-transparent bg-clip-text">
+                DevHub
+              </span>
+            </Link>
+            <SearchBar />
+          </div>
 
-          {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-4">
             <div className="flex items-center gap-2 border px-3 py-2 border-gray-800 rounded-xl hover:border-blue-500/50">
               <UsersRound size={18} />
@@ -61,7 +64,6 @@ export default function Navbar() {
                     />
                   </DropdownMenuTrigger>
                   <DropdownMenuContent sideOffset={8} className="z-[101]">
-                    {/* Mobile: Navigation Links */}
                     <DropdownMenuItem asChild className="md:hidden">
                       <Link
                         to="/clubs"
@@ -82,7 +84,6 @@ export default function Navbar() {
                     </DropdownMenuItem>
                     <DropdownMenuSeparator className="bg-gray-800" />
 
-                    {/* Common Menu Items */}
                     <DropdownMenuItem asChild>
                       <Link
                         to="/profile"

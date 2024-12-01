@@ -6,6 +6,8 @@ import com.cineclubs.app.models.Club;
 import com.cineclubs.app.models.User;
 import com.cineclubs.app.repository.ClubRepository;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
@@ -118,5 +120,26 @@ public class ClubService {
 
         Club updatedClub = clubRepository.save(club);
         return new ClubDTO(updatedClub);
+    }
+
+    public List<ClubDTO> quickSearchClubs(String query) {
+        if (query == null || query.trim().isEmpty()) {
+            return List.of();
+        }
+
+        Pageable limit = PageRequest.of(0, 4); // Limit to 4 results
+        return clubRepository.quickSearchClubs(query.trim(), limit).stream()
+                .map(club -> new ClubDTO(club, false, false))
+                .toList();
+    }
+
+    public List<ClubDTO> searchClubs(String query) {
+        if (query == null || query.trim().isEmpty()) {
+            return List.of();
+        }
+
+        return clubRepository.searchClubs(query.trim()).stream()
+                .map(club -> new ClubDTO(club, false, false))
+                .toList();
     }
 }
