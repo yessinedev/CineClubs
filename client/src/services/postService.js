@@ -44,6 +44,9 @@ export const createPost = async (post, userId, clubId) => {
     console.log("Post created successfully:", data);
     return data;
   } catch (error) {
+    if (error.response?.status === 403) {
+      throw new Error("You must be a member of this club to create posts");
+    }
     console.error(
       "Error creating post:",
       error.response?.data || error.message

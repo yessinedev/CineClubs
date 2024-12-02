@@ -34,6 +34,10 @@ public class PostService {
         User author = userService.getUserByUserId(userId);
         Club club = clubService.getClubById(clubId);
 
+        if (!clubService.isUserJoined(club, author)) {
+            throw new RuntimeException("Only club members can create posts");
+        }
+
         post.setAuthor(author);
         post.setClub(club);
         Post savedPost = postRepository.save(post);

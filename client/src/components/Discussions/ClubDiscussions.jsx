@@ -1,5 +1,5 @@
 import React from "react";
-import { MessageSquarePlus } from 'lucide-react';
+import { MessageSquarePlus } from "lucide-react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createPost } from "@/services/postService";
 import { showToast } from "@/lib/toast";
@@ -26,9 +26,6 @@ export default function ClubDiscussions({ clubId, user }) {
     onSuccess: () => {
       queryClient.invalidateQueries(["posts", clubId, user.id]);
     },
-    onError: (error) => {
-      console.error("Failed to create post:", error);
-    },
   });
 
   const handleSubmitThread = async (e) => {
@@ -49,7 +46,7 @@ export default function ClubDiscussions({ clubId, user }) {
         {
           loading: "Creating your post...",
           success: "Post created successfully!",
-          error: "Failed to create post",
+          error: (err) => err?.message || "Failed to create post",
         }
       );
 
@@ -61,11 +58,17 @@ export default function ClubDiscussions({ clubId, user }) {
   };
 
   if (status === "pending") {
-    return <div className="text-center py-8 text-white">Loading discussions...</div>;
+    return (
+      <div className="text-center py-8 text-white">Loading discussions...</div>
+    );
   }
 
   if (status === "error") {
-    return <div className="text-center py-8 text-red-500">Error: {error.message}</div>;
+    return (
+      <div className="text-center py-8 text-red-500">
+        Error: {error.message}
+      </div>
+    );
   }
 
   const allPosts = data.pages.flatMap((page) => page.items);
@@ -136,4 +139,3 @@ export default function ClubDiscussions({ clubId, user }) {
     </section>
   );
 }
-
