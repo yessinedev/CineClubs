@@ -10,7 +10,7 @@ import MembersList from "@/components/Club/Club Members/MembersList";
 import { SignInButton } from "@clerk/clerk-react";
 
 export default function ClubPage() {
-  const { id } = useParams();
+  const { slug } = useParams();
   const { isSignedIn, user } = useUser();
   const [activeTab, setActiveTab] = useState("discussions");
 
@@ -19,8 +19,8 @@ export default function ClubPage() {
     isLoading,
     error,
   } = useQuery({
-    queryKey: ["club", id],
-    queryFn: () => fetchClub(id, true),
+    queryKey: ["club", slug],
+    queryFn: () => fetchClub(slug, true),
   });
 
   const isMember =

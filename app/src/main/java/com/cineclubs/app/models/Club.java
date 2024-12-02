@@ -33,6 +33,9 @@ public class Club {
     @OneToMany(mappedBy = "club", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Post> posts;
 
+    @Column(nullable = false, unique = true)
+    private String slug;
+
     public Club() {
     }
 
@@ -101,6 +104,14 @@ public class Club {
 
     public void setPosts(Set<Post> posts) {
         this.posts = posts;
+    }
+
+    public String getSlug() {
+        return slug;
+    }
+
+    public void setSlug(String slug) {
+        this.slug = slug;
     }
 
     @Override
