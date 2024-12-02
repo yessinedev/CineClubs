@@ -336,7 +336,7 @@ export default function SearchBar() {
                         {club.category}
                       </span>
                       <span className="text-xs text-gray-500">
-                        {club.members.toLocaleString()} members
+                        {club.membersCount?.toLocaleString() || 0} members
                       </span>
                     </div>
                   </div>
