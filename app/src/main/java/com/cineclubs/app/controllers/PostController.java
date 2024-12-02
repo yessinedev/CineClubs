@@ -22,8 +22,15 @@ public class PostController {
     public ResponseEntity<PostDTO> createPost(@RequestParam Long clubId,
             @RequestParam String userId,
             @RequestBody Post post) {
-        PostDTO createdPost = postService.createPost(clubId, userId, post);
-        return ResponseEntity.ok(createdPost);
+        try {
+            PostDTO createdPost = postService.createPost(clubId, userId, post);
+            return ResponseEntity.ok(createdPost);
+        } catch (RuntimeException e) {
+            if (e.getMessage().contains("Only club members can create posts")) {
+                return ResponseEntity.status(403).build();
+            }
+            throw e;
+        }
     }
 
     @GetMapping("/club/{clubId}")
