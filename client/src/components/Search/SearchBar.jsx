@@ -323,7 +323,7 @@ export default function SearchBar() {
                   onClick={closeMobileSearch}
                 >
                   <img
-                    src={club.avatar}
+                    src={club.imageUrl}
                     alt={club.name}
                     className="w-10 h-10 rounded-lg"
                   />
@@ -332,11 +332,11 @@ export default function SearchBar() {
                       {club.name}
                     </p>
                     <div className="flex items-center gap-2">
-                      <span className="text-xs text-purple-400">
+                      {/* <span className="text-xs text-purple-400">
                         {club.category}
-                      </span>
+                      </span> */}
                       <span className="text-xs text-gray-500">
-                        {club.members.toLocaleString()} members
+                        {club.membersCount.toLocaleString()} members
                       </span>
                     </div>
                   </div>
