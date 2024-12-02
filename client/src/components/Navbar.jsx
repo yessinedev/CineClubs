@@ -55,7 +55,7 @@ export default function Navbar() {
                 <DropdownMenu>
                   <DropdownMenuTrigger className="flex items-center gap-4 outline-none">
                     <span className="text-sm md:text-base cursor-pointer hover:text-blue-400 transition-colors">
-                      Welcome, {getUserIdentifier()}
+                      {getUserIdentifier()}
                     </span>
                     <img
                       src={user.imageUrl}
