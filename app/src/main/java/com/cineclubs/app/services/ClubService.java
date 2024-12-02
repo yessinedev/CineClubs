@@ -139,7 +139,7 @@ public class ClubService {
         }
 
         return clubRepository.searchClubs(query.trim()).stream()
-                .map(club -> new ClubDTO(club, false, false))
+                .map(club -> new ClubDTO(club, false, true))
                 .toList();
     }
 }

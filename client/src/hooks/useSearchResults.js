@@ -31,6 +31,8 @@ export function useSearchResults(query, filter = "all") {
     users: filter === "clubs" ? [] : usersQuery.data || [],
   };
 
+  console.log(data.clubs)
+
   return {
     data,
     isLoading,
