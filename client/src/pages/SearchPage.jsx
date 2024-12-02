@@ -2,11 +2,16 @@ import { useSearchParams } from "react-router-dom";
 import { Users2, Blocks, LayoutGrid } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useSearchResults } from "@/hooks/useSearchResults";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { SignInButton, useUser } from "@clerk/clerk-react";
+import { joinClub, leaveClub } from "@/services/clubService";
 
 export default function SearchPage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const query = searchParams.get("q") || "";
   const filter = searchParams.get("filter") || "all";
+  const { isSignedIn, user } = useUser();
+  const queryClient = useQueryClient();
 
   const {
     data: { clubs = [], users = [] },
@@ -44,6 +49,30 @@ export default function SearchPage() {
       <p className="text-gray-400">Searching...</p>
     </div>
   );
+
+  const isMember = (club, userId) => {
+    return club.members?.some((member) => member.userId === userId);;
+  };
+
+  const { mutate: joinClubMutation, isLoading:isJoining} = useMutation({
+    mutationFn: ({ userId, clubId }) => joinClub(userId, clubId),
+    onSuccess: () => {
+      queryClient.invalidateQueries(["club"]);
+    },
+    onError: (error) => {
+      console.error("Failed to join the club:", error);
+    },
+  });
+
+  const { mutate: leaveClubMutation, isLoading:isLeaving} = useMutation({
+    mutationFn: ({ userId, clubId }) => leaveClub(userId, clubId),
+    onSuccess: () => {
+      queryClient.invalidateQueries(["club"]);
+    },
+    onError: (error) => {
+      console.error("Failed to leave the club:", error);
+    },
+  });
 
   return (
     <div className="container mx-auto px-4 py-8 mt-16">
@@ -183,9 +212,41 @@ export default function SearchPage() {
                                   </span>
                                 </div>
                               </div>
-                              <button className="px-4 py-1.5 bg-blue-600 hover:bg-blue-500 text-sm text-white rounded-xl transition-colors flex-shrink-0">
-                                Join
-                              </button>
+                              {isSignedIn ? (
+                                isMember(club, user.id) ? (
+                                  <button
+                                    onClick={() =>
+                                      leaveClubMutation({
+                                        userId: user.id,
+                                        clubId: club.id,
+                                      })
+                                    }
+                                    disabled={isLeaving}
+                                    className="w-full sm:w-auto px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-xl flex items-center justify-center gap-2 transition-colors"
+                                  >
+                                    Leave Club
+                                  </button>
+                                ) : (
+                                  <button
+                                    onClick={() =>
+                                      joinClubMutation({
+                                        userId: user.id,
+                                        clubId: club.id,
+                                      })
+                                    }
+                                    disabled={isJoining}
+                                    className="w-full sm:w-auto px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-xl flex items-center justify-center gap-2 transition-colors"
+                                  >
+                                    Join Club
+                                  </button>
+                                )
+                              ) : (
+                                <SignInButton mode="modal">
+                                  <button className="w-full sm:w-auto px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-xl transition-colors">
+                                    Join Club
+                                  </button>
+                                </SignInButton>
+                              )}
                             </div>
                           </div>
                         </div>
