@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ClubRepository extends JpaRepository<Club, Long> {
@@ -19,4 +20,8 @@ public interface ClubRepository extends JpaRepository<Club, Long> {
 
     @Query(value = "SELECT c FROM Club c WHERE LOWER(c.name) LIKE LOWER(CONCAT('%', :query, '%'))")
     List<Club> quickSearchClubs(@Param("query") String query, Pageable pageable);
+
+    boolean existsBySlug(String slug);
+
+    Optional<Club> findBySlug(String slug);
 }

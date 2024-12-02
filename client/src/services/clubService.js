@@ -14,9 +14,13 @@ export const fetchClubs = async () => {
   return data;
 };
 
-export const fetchClub = async (id, includeMembers) => {
+export const fetchClub = async (identifier, includeMembers = false) => {
+  const endpoint = isNaN(identifier)
+    ? `/clubs/slug/${identifier}`
+    : `/clubs/id/${identifier}`;
+
   const { data } = await apiClient.get(
-    `/clubs/${id}?includeMembers=${includeMembers}`
+    `${endpoint}?includeMembers=${includeMembers}`
   );
   return data;
 };
