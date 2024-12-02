@@ -1,17 +1,16 @@
 package com.cineclubs.app.services;
 
 import com.cineclubs.app.dto.ClubDTO;
-import com.cineclubs.app.dto.UserDTO;
 import com.cineclubs.app.models.Club;
 import com.cineclubs.app.models.User;
 import com.cineclubs.app.repository.ClubRepository;
+import com.cineclubs.app.utils.SlugGenerator;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 
@@ -43,12 +42,14 @@ public class ClubService {
     public ClubDTO createClub(Club club, String clerkId) {
         User user = userService.getUserByUserId(clerkId);
         club.setUser(user);
+        club.setSlug(SlugGenerator.generateUniqueSlug(club.getName()));
+
         if (club.getMembers() == null) {
             club.setMembers(new HashSet<>());
         }
         club.getMembers().add(user);
-        Club savedClub = clubRepository.save(club);
 
+        Club savedClub = clubRepository.save(club);
         messagingTemplate.convertAndSend("/topic/clubs", new ClubDTO(savedClub, false, false));
         return new ClubDTO(savedClub, false, false);
     }
@@ -58,6 +59,10 @@ public class ClubService {
 
         if (!club.getUser().getuserId().equals(clerkId)) {
             throw new RuntimeException("Unauthorized to update this club");
+        }
+
+        if (!club.getName().equals(clubDetails.getName())) {
+            club.setSlug(SlugGenerator.generateUniqueSlug(clubDetails.getName()));
         }
 
         club.setName(clubDetails.getName());
@@ -141,5 +146,11 @@ public class ClubService {
         return clubRepository.searchClubs(query.trim()).stream()
                 .map(club -> new ClubDTO(club, false, true))
                 .toList();
+    }
+
+    public ClubDTO getClubDTOBySlug(String slug, boolean includePosts, boolean includeMembers) {
+        Club club = clubRepository.findBySlug(slug)
+                .orElseThrow(() -> new EntityNotFoundException("Club not found with slug: " + slug));
+        return new ClubDTO(club, includePosts, includeMembers);
     }
 }

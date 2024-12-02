@@ -18,6 +18,7 @@ public class ClubDTO {
     private int postsCount;
     private List<PostDTO> posts;
     private List<UserDTO> members;
+    private String slug;
 
     public ClubDTO(Club club) {
         this(club, false, false);
@@ -33,6 +34,7 @@ public class ClubDTO {
         this.ownerImageUrl = club.getUser().getImageUrl();
         this.membersCount = club.getMembers() != null ? club.getMembers().size() : 0;
         this.postsCount = club.getPosts() != null ? club.getPosts().size() : 0;
+        this.slug = club.getSlug();
 
         if (includePosts && club.getPosts() != null) {
             this.posts = club.getPosts().stream()
@@ -42,7 +44,7 @@ public class ClubDTO {
 
         if (includeMembers && club.getMembers() != null) {
             this.members = club.getMembers().stream()
-                    .map(user ->  new UserDTO(user, club.getId()))
+                    .map(user -> new UserDTO(user, club.getId()))
                     .sorted(Comparator.comparingInt(UserDTO::getPostsCount).reversed())
                     .collect(Collectors.toList());
         }
@@ -134,6 +136,14 @@ public class ClubDTO {
 
     public void setMembers(List<UserDTO> members) {
         this.members = members;
+    }
+
+    public String getSlug() {
+        return slug;
+    }
+
+    public void setSlug(String slug) {
+        this.slug = slug;
     }
 
 }

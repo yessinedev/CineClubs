@@ -25,7 +25,7 @@ public class ClubController {
         return ResponseEntity.ok(clubService.getAllClubs());
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/id/{id}")
     public ResponseEntity<ClubDTO> getClubById(
             @PathVariable Long id,
             @RequestParam(defaultValue = "false") boolean includePosts,
@@ -84,5 +84,13 @@ public class ClubController {
         } catch (Exception e) {
             return ResponseEntity.internalServerError().build();
         }
+    }
+
+    @GetMapping("/slug/{slug}")
+    public ResponseEntity<ClubDTO> getClubBySlug(
+            @PathVariable String slug,
+            @RequestParam(defaultValue = "false") boolean includePosts,
+            @RequestParam(defaultValue = "false") boolean includeMembers) {
+        return ResponseEntity.ok(clubService.getClubDTOBySlug(slug, includePosts, includeMembers));
     }
 }
