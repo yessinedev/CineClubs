@@ -1,5 +1,6 @@
 package com.cineclubs.app.seeder;
 
+import com.cineclubs.app.utils.SlugGenerator;
 import com.github.javafaker.Faker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -120,6 +121,7 @@ public class DatabaseSeeder {
             Club club = new Club();
             club.setName(generateClubName());
             club.setDescription(generateClubDescription());
+            club.setSlug(SlugGenerator.generateUniqueSlug(club.getName()));
             club.setImageUrl(CLUB_COVER_IMAGES[i % CLUB_COVER_IMAGES.length] + "?w=1200&h=630&fit=crop");
             club.setUser(users.get(faker.random().nextInt(users.size())));
             club.setMembers(new HashSet<>(users.subList(0, faker.random().nextInt(2, users.size()))));
