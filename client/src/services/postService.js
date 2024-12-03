@@ -56,5 +56,20 @@ export const createPost = async (post, userId, clubId) => {
 };
 
 export const deletePost = async (postId, userId) => {
-  return await apiClient.delete(`/posts/${postId}?userId=${userId}`)
-}
+  return await apiClient.delete(`/posts/${postId}?userId=${userId}`);
+};
+
+export const updatePost = async (postId, postData, userId) => {
+  try {
+    const { data } = await apiClient.put(
+      `/posts/${postId}?userId=${userId}`,
+      postData
+    );
+    return data;
+  } catch (error) {
+    if (error.response?.status === 403) {
+      throw new Error("You don't have permission to edit this post");
+    }
+    throw error;
+  }
+};

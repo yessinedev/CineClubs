@@ -1,6 +1,7 @@
 package com.cineclubs.app.services;
 
 import com.cineclubs.app.exceptions.UnauthorizedActionException;
+import com.cineclubs.app.exceptions.ValidationException;
 import com.cineclubs.app.models.Club;
 import com.cineclubs.app.models.Post;
 import com.cineclubs.app.models.User;
@@ -120,5 +121,28 @@ public class PostService {
         }
         postRepository.deleteById(postId);
         messagingTemplate.convertAndSend("/topic/posts/delete", postId);
+    }
+
+    public PostDTO updatePost(Long postId, String userId, Post postDetails) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new EntityNotFoundException("Post not found with id: " + postId));
+
+        if (!post.getAuthor().getUserId().equals(userId)) {
+            throw new UnauthorizedActionException("POST", "update");
+        }
+
+        if (postDetails.getTitle() == null || postDetails.getTitle().trim().isEmpty()) {
+            throw new ValidationException("POST", "Post title is required");
+        }
+        if (postDetails.getContent() == null || postDetails.getContent().trim().isEmpty()) {
+            throw new ValidationException("POST", "Post content is required");
+        }
+
+        post.setTitle(postDetails.getTitle().trim());
+        post.setContent(postDetails.getContent().trim());
+
+        Post updatedPost = postRepository.save(post);
+        messagingTemplate.convertAndSend("/topic/posts", new PostDTO(updatedPost));
+        return new PostDTO(updatedPost);
     }
 }
