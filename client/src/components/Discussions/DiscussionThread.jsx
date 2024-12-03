@@ -1,4 +1,13 @@
-import { MessageCircle, Heart, Share2, MoreHorizontal } from "lucide-react";
+import {
+  MessageCircle,
+  Heart,
+  Share2,
+  MoreHorizontal,
+  Trash2,
+  PencilLine,
+  Flag,
+  BookmarkPlus,
+} from "lucide-react";
 import { deletePost, likePost, unlikePost } from "@/services/postService";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { formatCreatedAt } from "@/lib/dateUtils";
@@ -9,10 +18,9 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
+  DropdownMenuSeparator,
 } from "../ui/dropdown-menu";
 import { Button } from "../ui/button";
-import { Trash } from "lucide-react";
-import { Pencil } from "lucide-react";
 import { showToast } from "@/lib/toast";
 
 export default function DiscussionThread({
@@ -28,7 +36,7 @@ export default function DiscussionThread({
   const { mutate: likePostMutation } = useMutation({
     mutationFn: () => likePost(post.id, user.id),
     onSuccess: () => {
-      queryClient.invalidateQueries(["posts", post.id, user.id]); 
+      queryClient.invalidateQueries(["posts", post.id, user.id]);
     },
     onError: (error) => {
       console.error("Failed to like the post:", error);
@@ -57,18 +65,14 @@ export default function DiscussionThread({
 
   const handleDeletePost = async () => {
     try {
-      await showToast.promise(
-        deletePostMutation(),
-        {
-          loading: "Deleting your post...",
-          success: "Post deleted successfully!",
-          error: (err) => err?.message || "Failed to delete post",
-        }
-      );
+      await showToast.promise(deletePostMutation(), {
+        loading: "Deleting your post...",
+        success: "Post deleted successfully!",
+        error: (err) => err?.message || "Failed to delete post",
+      });
     } catch (error) {
-      console.error("Error deleting post:", error)
+      console.error("Error deleting post:", error);
     }
-    
   };
 
   return (
@@ -92,40 +96,55 @@ export default function DiscussionThread({
             <DropdownMenuTrigger asChild>
               <Button
                 variant="ghost"
-                className="self-end sm:self-auto text-gray-400 hover:text-white"
+                className="self-end sm:self-auto w-9 h-9 p-0 relative hover:bg-gray-700/20 rounded-full transition-colors"
               >
-                <span className="sr-only">Open menu</span>
-                <MoreHorizontal className="w-5 h-5" />
+                <MoreHorizontal className="w-5 h-5 text-gray-400 mx-auto" />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
+            <DropdownMenuContent
+              className="w-56 bg-gray-900 border border-gray-800 shadow-[0_2px_12px_0_rgba(0,0,0,0.5)] mt-2"
+              align="end"
+            >
               {user.id === post.authorId && (
-                <DropdownMenuItem>
-                  <Button
-                    variant="ghost"
-                    className="px-0"
-                    onClick={() => console.log({ edit: post })}
-                  >
-                    <Pencil />
-                    Edit
-                  </Button>
+                <DropdownMenuItem
+                  className="flex items-center px-3 py-2.5 text-sm text-gray-300 hover:bg-gray-800 cursor-pointer"
+                  onClick={() => console.log({ edit: post })}
+                >
+                  <PencilLine className="w-4 h-4 mr-2" />
+                  Edit post
                 </DropdownMenuItem>
               )}
-              <DropdownMenuItem>
-                <Button
-                  variant="ghost"
-                  className="px-0"
-                  onClick={() => handleDeletePost()}
-                >
-                  <Trash />
-                  Delete
-                </Button>
+
+              <DropdownMenuItem className="flex items-center px-3 py-2.5 text-sm text-gray-300 hover:bg-gray-800 cursor-pointer">
+                <BookmarkPlus className="w-4 h-4 mr-2" />
+                Save post
               </DropdownMenuItem>
+
+              {user.id === post.authorId && (
+                <>
+                  <DropdownMenuSeparator className="bg-gray-800" />
+                  <DropdownMenuItem
+                    className="flex items-center px-3 py-2.5 text-sm text-red-400 hover:bg-gray-800 cursor-pointer"
+                    onClick={handleDeletePost}
+                  >
+                    <Trash2 className="w-4 h-4 mr-2" />
+                    Delete post
+                  </DropdownMenuItem>
+                </>
+              )}
+
+              {user.id !== post.authorId && (
+                <>
+                  <DropdownMenuSeparator className="bg-gray-800" />
+                  <DropdownMenuItem className="flex items-center px-3 py-2.5 text-sm text-red-400 hover:bg-gray-800 cursor-pointer">
+                    <Flag className="w-4 h-4 mr-2" />
+                    Report post
+                  </DropdownMenuItem>
+                </>
+              )}
             </DropdownMenuContent>
           </DropdownMenu>
-        ) : (
-          <></>
-        )}
+        ) : null}
       </div>
 
       <div>
