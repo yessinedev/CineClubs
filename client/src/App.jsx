@@ -8,6 +8,7 @@ import ClubList from "./pages/ClubList";
 import LeaderBoardPage from "./pages/LeaderBoardPage";
 import ProfilePage from "./pages/ProfilePage";
 import SearchPage from "./pages/SearchPage";
+import ErrorPage from "./components/ErrorPage";
 import { Toaster } from "sonner";
 
 function App() {
@@ -25,6 +26,7 @@ function App() {
           <Route path="/leaderboard" element={<LeaderBoardPage />} />
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/search" element={<SearchPage />} />
+          <Route path="*" element={<ErrorPage />} />
         </Routes>
       </Router>
       <Toaster />

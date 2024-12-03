@@ -8,6 +8,7 @@ import { useUser } from "@clerk/clerk-react";
 import { useState } from "react";
 import MembersList from "@/components/Club/Club Members/MembersList";
 import { SignInButton } from "@clerk/clerk-react";
+import ErrorPage from "../components/ErrorPage";
 
 export default function ClubPage() {
   const { slug } = useParams();
@@ -21,7 +22,30 @@ export default function ClubPage() {
   } = useQuery({
     queryKey: ["club", slug],
     queryFn: () => fetchClub(slug, true),
+    retry: false,
+    staleTime: 1000 * 60 * 5,
+    refetchOnWindowFocus: false,
   });
+
+  if (error?.response?.status === 404) {
+    return (
+      <ErrorPage
+        title="Club Not Found"
+        message="Sorry, we couldn't find the club you're looking for. It might have been deleted or the URL might be incorrect."
+        code="404"
+      />
+    );
+  }
+
+  if (error) {
+    return (
+      <ErrorPage
+        title="Something went wrong"
+        message="We're having trouble loading this club. Please try again later."
+        code="500"
+      />
+    );
+  }
 
   const isMember =
     isSignedIn && club?.members?.some((member) => member.userId === user?.id);
@@ -66,16 +90,6 @@ export default function ClubPage() {
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-lg font-semibold text-gray-600 animate-pulse">
           Loading club...
-        </div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="p-4 text-red-500 bg-red-100 rounded-lg shadow">
-          Error: {error.message}
         </div>
       </div>
     );

@@ -1,11 +1,11 @@
 package com.cineclubs.app.services;
 
 import com.cineclubs.app.dto.ClubDTO;
+import com.cineclubs.app.exceptions.*;
 import com.cineclubs.app.models.Club;
 import com.cineclubs.app.models.User;
 import com.cineclubs.app.repository.ClubRepository;
 import com.cineclubs.app.utils.SlugGenerator;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -15,7 +15,6 @@ import java.util.HashSet;
 import java.util.List;
 
 @Service
-
 public class ClubService {
     private final ClubRepository clubRepository;
     private final UserService userService;
@@ -36,13 +35,25 @@ public class ClubService {
 
     public Club getClubById(Long id) {
         return clubRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Club not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("CLUB", id.toString()));
     }
 
     public ClubDTO createClub(Club club, String clerkId) {
+        if (club.getName() == null || club.getName().trim().isEmpty()) {
+            throw new ValidationException("CLUB", "Club name is required");
+        }
+        if (club.getDescription() == null || club.getDescription().trim().isEmpty()) {
+            throw new ValidationException("CLUB", "Club description is required");
+        }
+        if (club.getImageUrl() == null || club.getImageUrl().trim().isEmpty()) {
+            throw new ValidationException("CLUB", "Club image URL is required");
+        }
+
+        String slug = SlugGenerator.generateUniqueSlug(club.getName());
+
         User user = userService.getUserByUserId(clerkId);
         club.setUser(user);
-        club.setSlug(SlugGenerator.generateUniqueSlug(club.getName()));
+        club.setSlug(slug);
 
         if (club.getMembers() == null) {
             club.setMembers(new HashSet<>());
@@ -58,11 +69,19 @@ public class ClubService {
         Club club = getClubById(id);
 
         if (!club.getUser().getuserId().equals(clerkId)) {
-            throw new RuntimeException("Unauthorized to update this club");
+            throw new UnauthorizedActionException("CLUB", "update");
+        }
+
+        if (clubDetails.getName() == null || clubDetails.getName().trim().isEmpty()) {
+            throw new ValidationException("CLUB", "Club name is required");
+        }
+        if (clubDetails.getDescription() == null || clubDetails.getDescription().trim().isEmpty()) {
+            throw new ValidationException("CLUB", "Club description is required");
         }
 
         if (!club.getName().equals(clubDetails.getName())) {
-            club.setSlug(SlugGenerator.generateUniqueSlug(clubDetails.getName()));
+            String newSlug = SlugGenerator.generateUniqueSlug(clubDetails.getName());
+            club.setSlug(newSlug);
         }
 
         club.setName(clubDetails.getName());
@@ -74,8 +93,13 @@ public class ClubService {
         return new ClubDTO(updatedClub, false, false);
     }
 
-    public void deleteClub(Long id) {
+    public void deleteClub(Long id, String clerkId) {
         Club club = getClubById(id);
+
+        if (!club.getUser().getuserId().equals(clerkId)) {
+            throw new UnauthorizedActionException("CLUB", "delete");
+        }
+
         clubRepository.delete(club);
         messagingTemplate.convertAndSend("/topic/clubs/delete", id);
     }
@@ -85,30 +109,33 @@ public class ClubService {
     }
 
     public void joinClub(String clerkId, Long clubId) {
-        Club club = getClubEntityById(clubId);
+        Club club = getClubById(clubId);
         User user = userService.getUserByUserId(clerkId);
-        boolean isJoined = isUserJoined(club, user);
-        if (!isJoined) {
-            club.getMembers().add(user);
-            Club joinedClub = clubRepository.save(club);
-            messagingTemplate.convertAndSend("/topic/clubs", new ClubDTO(joinedClub, false, false));
+
+        if (isUserJoined(club, user)) {
+            throw new ValidationException("CLUB", "User is already a member of this club");
         }
+
+        club.getMembers().add(user);
+        Club joinedClub = clubRepository.save(club);
+        messagingTemplate.convertAndSend("/topic/clubs", new ClubDTO(joinedClub, false, false));
     }
 
     public void leaveClub(String clerkId, Long clubId) {
         Club club = getClubById(clubId);
         User user = userService.getUserByUserId(clerkId);
-        boolean isJoined = isUserJoined(club, user);
-        if (isJoined) {
-            club.getMembers().remove(user);
-            Club leftClub = clubRepository.save(club);
-            messagingTemplate.convertAndSend("/topic/clubs", new ClubDTO(leftClub, false, false));
-        }
-    }
 
-    private Club getClubEntityById(Long id) {
-        return clubRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Club not found with id: " + id));
+        if (!isUserJoined(club, user)) {
+            throw new ValidationException("CLUB", "User is not a member of this club");
+        }
+
+        if (club.getUser().getuserId().equals(clerkId)) {
+            throw new ValidationException("CLUB", "Club owner cannot leave the club");
+        }
+
+        club.getMembers().remove(user);
+        Club leftClub = clubRepository.save(club);
+        messagingTemplate.convertAndSend("/topic/clubs", new ClubDTO(leftClub, false, false));
     }
 
     public ClubDTO getClubDTO(Long id, boolean includePosts, boolean includeMembers) {
@@ -117,8 +144,11 @@ public class ClubService {
     }
 
     public ClubDTO updateBanner(Long clubId, String imageUrl) {
-        Club club = clubRepository.findById(clubId)
-                .orElseThrow(() -> new EntityNotFoundException("Club not found with ID: " + clubId));
+        Club club = getClubById(clubId);
+
+        if (imageUrl == null || imageUrl.trim().isEmpty()) {
+            throw new ValidationException("CLUB", "Banner image URL is required");
+        }
 
         String cleanImageUrl = imageUrl.replace("\"", "");
         club.setImageUrl(cleanImageUrl);
@@ -150,7 +180,7 @@ public class ClubService {
 
     public ClubDTO getClubDTOBySlug(String slug, boolean includePosts, boolean includeMembers) {
         Club club = clubRepository.findBySlug(slug)
-                .orElseThrow(() -> new EntityNotFoundException("Club not found with slug: " + slug));
+                .orElseThrow(() -> new ResourceNotFoundException("CLUB", "slug: " + slug));
         return new ClubDTO(club, includePosts, includeMembers);
     }
 }
