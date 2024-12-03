@@ -6,6 +6,7 @@ import PostSkeleton from "./PostSkeleton";
 export default function InfinitePostsList({
   posts,
   user,
+  club,
   hasNextPage,
   fetchNextPage,
   isFetchingNextPage,
@@ -33,7 +34,7 @@ export default function InfinitePostsList({
   return (
     <div className="space-y-6">
       {posts && posts.length > 0 && posts.map((post) => (
-        <DiscussionThread key={post.id} post={post} user={user} />
+        <DiscussionThread key={post.id} post={post} user={user} clubOwner={club.ownerId} />
       ))}
 
       {isFetchingNextPage && <PostSkeleton />}

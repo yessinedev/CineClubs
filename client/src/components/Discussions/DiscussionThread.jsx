@@ -1,11 +1,26 @@
-import { MessageCircle, Heart, Share2, MoreHorizontal } from 'lucide-react';
+import { MessageCircle, Heart, Share2, MoreHorizontal } from "lucide-react";
 import { likePost, unlikePost } from "@/services/postService";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { formatCreatedAt } from "@/lib/dateUtils";
 import ThreadReplies from "./ThreadReplies";
-import { useState } from 'react';
+import { useState } from "react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuTrigger,
+} from "../ui/dropdown-menu";
+import { Button } from "../ui/button";
+import { Trash } from "lucide-react";
+import { Pencil } from "lucide-react";
 
-export default function DiscussionThread({ post, user, isExpanded = false }) {
+export default function DiscussionThread({
+  post,
+  user,
+  isExpanded = false,
+  clubOwner,
+}) {
   const [expanded, setExpanded] = useState(isExpanded);
 
   const queryClient = useQueryClient();
@@ -46,13 +61,51 @@ export default function DiscussionThread({ post, user, isExpanded = false }) {
             </span>
           </div>
         </div>
-        <button className="self-end sm:self-auto text-gray-400 hover:text-white">
-          <MoreHorizontal className="w-5 h-5" />
-        </button>
+        {user.id === post.authorId || user.id === clubOwner ? (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="ghost"
+                className="self-end sm:self-auto text-gray-400 hover:text-white"
+              >
+                <span className="sr-only">Open menu</span>
+                <MoreHorizontal className="w-5 h-5" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              {user.id === post.authorId && (
+                <DropdownMenuItem>
+                  <Button
+                    variant="ghost"
+                    className="px-0"
+                    onClick={() => console.log({ edit: post })}
+                  >
+                    <Pencil />
+                    Edit
+                  </Button>
+                </DropdownMenuItem>
+              )}
+              <DropdownMenuItem>
+                <Button
+                  variant="ghost"
+                  className="px-0"
+                  onClick={() => console.log({ delete: post })}
+                >
+                  <Trash />
+                  Delete
+                </Button>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        ) : (
+          <></>
+        )}
       </div>
 
       <div>
-        <h2 className="mb-2 text-lg sm:text-xl font-semibold text-white">{post.title}</h2>
+        <h2 className="mb-2 text-lg sm:text-xl font-semibold text-white">
+          {post.title}
+        </h2>
         <p className="text-sm sm:text-base text-gray-300">{post.content}</p>
       </div>
 
@@ -93,4 +146,3 @@ export default function DiscussionThread({ post, user, isExpanded = false }) {
     </div>
   );
 }
-

@@ -77,7 +77,7 @@ export default function ClubDetails({ club, isMember }) {
               <button
                 onClick={() => leaveClubMutation()}
                 disabled={isLeaving}
-                className="w-full sm:w-auto px-8 py-3 bg-blue-500 hover:bg-blue-600 text-white rounded-xl flex items-center justify-center gap-2 transition-colors"
+                className="w-full sm:w-auto px-8 py-3 bg-red-500 hover:bg-red-600 text-white rounded-xl flex items-center justify-center gap-2 transition-colors"
               >
                 Leave Club
               </button>

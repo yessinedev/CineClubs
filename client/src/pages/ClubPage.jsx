@@ -77,7 +77,7 @@ export default function ClubPage() {
     return (
       <div className="p-8">
         {activeTab === "discussions" ? (
-          <ClubDiscussions clubId={club.id} user={user} />
+          <ClubDiscussions club={club} user={user} />
         ) : (
           <MembersList members={club.members} />
         )}

@@ -6,7 +6,7 @@ import { showToast } from "@/lib/toast";
 import InfinitePostsList from "./InfinitePostsList";
 import { useInfinitePosts } from "@/hooks/useInfinitePosts";
 
-export default function ClubDiscussions({ clubId, user }) {
+export default function ClubDiscussions({ club, user }) {
   const [showNewThread, setShowNewThread] = React.useState(false);
   const [newThread, setNewThread] = React.useState({ title: "", content: "" });
   const queryClient = useQueryClient();
@@ -18,13 +18,13 @@ export default function ClubDiscussions({ clubId, user }) {
     isFetchingNextPage,
     status,
     error,
-  } = useInfinitePosts({ clubId, userId: user.id });
+  } = useInfinitePosts({ clubId:club.id, userId: user.id });
 
   const { mutateAsync: createPostMutation } = useMutation({
     mutationFn: ({ thread, userId, clubId }) =>
       createPost(thread, userId, clubId),
     onSuccess: () => {
-      queryClient.invalidateQueries(["posts", clubId, user.id]);
+      queryClient.invalidateQueries(["posts", club.id, user.id]);
     },
   });
 
@@ -41,7 +41,7 @@ export default function ClubDiscussions({ clubId, user }) {
         createPostMutation({
           thread: newThread,
           userId: user.id,
-          clubId: clubId,
+          clubId: club.id,
         }),
         {
           loading: "Creating your post...",
@@ -131,6 +131,7 @@ export default function ClubDiscussions({ clubId, user }) {
         <InfinitePostsList
           posts={allPosts}
           user={user}
+          club={club}
           hasNextPage={hasNextPage}
           fetchNextPage={fetchNextPage}
           isFetchingNextPage={isFetchingNextPage}
