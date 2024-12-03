@@ -45,8 +45,8 @@ public class ClubController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteClub(@PathVariable Long id) {
-        clubService.deleteClub(id);
+    public ResponseEntity<Void> deleteClub(@PathVariable Long id, @RequestParam String userId) {
+        clubService.deleteClub(id, userId);
         return ResponseEntity.noContent().build();
     }
 
