@@ -119,5 +119,6 @@ public class PostService {
             throw new UnauthorizedActionException("POST", "delete");
         }
         postRepository.deleteById(postId);
+        messagingTemplate.convertAndSend("/topic/posts/delete", postId);
     }
 }

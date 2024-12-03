@@ -45,7 +45,7 @@ export default function DiscussionThread({
     },
   });
 
-  const { mutate: deletePostMutation } = useMutation({
+  const { mutateAsync: deletePostMutation } = useMutation({
     mutationFn: () => deletePost(post.id, user.id),
     onSuccess: () => {
       queryClient.invalidateQueries(["posts", post.id, user.id]);
