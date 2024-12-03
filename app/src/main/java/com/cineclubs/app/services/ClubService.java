@@ -68,7 +68,7 @@ public class ClubService {
     public ClubDTO updateClub(Long id, Club clubDetails, String clerkId) {
         Club club = getClubById(id);
 
-        if (!club.getUser().getuserId().equals(clerkId)) {
+        if (!club.getUser().getUserId().equals(clerkId)) {
             throw new UnauthorizedActionException("CLUB", "update");
         }
 
@@ -96,7 +96,7 @@ public class ClubService {
     public void deleteClub(Long id, String clerkId) {
         Club club = getClubById(id);
 
-        if (!club.getUser().getuserId().equals(clerkId)) {
+        if (!club.getUser().getUserId().equals(clerkId)) {
             throw new UnauthorizedActionException("CLUB", "delete");
         }
 
@@ -129,7 +129,7 @@ public class ClubService {
             throw new ValidationException("CLUB", "User is not a member of this club");
         }
 
-        if (club.getUser().getuserId().equals(clerkId)) {
+        if (club.getUser().getUserId().equals(clerkId)) {
             throw new ValidationException("CLUB", "Club owner cannot leave the club");
         }
 

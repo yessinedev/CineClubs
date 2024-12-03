@@ -102,7 +102,7 @@ public class DatabaseSeeder {
         List<User> users = new ArrayList<>();
         for (int i = 0; i < count; i++) {
             User user = new User();
-            user.setuserId(UUID.randomUUID().toString());
+            user.setUserId(UUID.randomUUID().toString());
             user.setEmail(faker.internet().emailAddress());
             user.setFirstName(faker.name().firstName());
             user.setLastName(faker.name().lastName());

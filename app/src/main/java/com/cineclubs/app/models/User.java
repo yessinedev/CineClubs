@@ -70,11 +70,11 @@ public class User {
         this.likedComments = likedComments;
     }
 
-    public String getuserId() {
+    public String getUserId() {
         return userId;
     }
 
-    public void setuserId(String userId) {
+    public void setUserId(String userId) {
         this.userId = userId;
     }
 

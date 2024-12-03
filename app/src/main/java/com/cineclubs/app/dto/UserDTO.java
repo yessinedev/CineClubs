@@ -27,7 +27,7 @@ public class UserDTO {
     }
 
     public UserDTO(User user, boolean includePosts, boolean includeClubs) {
-        this.userId = user.getuserId();
+        this.userId = user.getUserId();
         this.email = user.getEmail();
         this.firstName = user.getFirstName();
         this.lastName = user.getLastName();
@@ -55,7 +55,7 @@ public class UserDTO {
 
     }
     public UserDTO(User user, Long clubId) {
-        this.userId = user.getuserId();
+        this.userId = user.getUserId();
         this.email = user.getEmail();
         this.firstName = user.getFirstName();
         this.lastName = user.getLastName();

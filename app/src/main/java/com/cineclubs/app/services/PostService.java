@@ -1,5 +1,6 @@
 package com.cineclubs.app.services;
 
+import com.cineclubs.app.exceptions.UnauthorizedActionException;
 import com.cineclubs.app.models.Club;
 import com.cineclubs.app.models.Post;
 import com.cineclubs.app.models.User;
@@ -111,7 +112,12 @@ public class PostService {
         return postDTO;
     }
 
-    public void deletePost(Long postId) {
+    public void deletePost(Long postId, String userId) {
+        User user = userService.getUserByUserId(userId);
+        Post post = postRepository.findById(postId).orElseThrow(() -> new IllegalArgumentException("Post not found"));
+        if (!user.getUserId().equals(post.getAuthor().getUserId())) {
+            throw new UnauthorizedActionException("POST", "delete");
+        }
         postRepository.deleteById(postId);
     }
 }

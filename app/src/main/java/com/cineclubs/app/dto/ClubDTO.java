@@ -29,7 +29,7 @@ public class ClubDTO {
         this.name = club.getName();
         this.description = club.getDescription();
         this.imageUrl = club.getImageUrl();
-        this.ownerId = club.getUser().getuserId();
+        this.ownerId = club.getUser().getUserId();
         this.ownerUsername = club.getUser().getUsername();
         this.ownerImageUrl = club.getUser().getImageUrl();
         this.membersCount = club.getMembers() != null ? club.getMembers().size() : 0;

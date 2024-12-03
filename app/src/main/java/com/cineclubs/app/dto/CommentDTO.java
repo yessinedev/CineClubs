@@ -32,7 +32,7 @@ public class CommentDTO {
         this.likesCount = comment.getLikes() != null ? comment.getLikes().size() : 0;
 
         this.hasLiked = comment.getLikes() != null &&
-                comment.getLikes().stream().anyMatch(user -> user.getuserId().equals(currentUserId));
+                comment.getLikes().stream().anyMatch(user -> user.getUserId().equals(currentUserId));
     }
 
     public CommentDTO(Comment comment) {

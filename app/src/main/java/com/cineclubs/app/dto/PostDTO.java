@@ -23,7 +23,7 @@ public class PostDTO {
         this.content = post.getContent();
         this.createdAt = post.getCreatedAt();
 
-        this.authorId = post.getAuthor().getuserId();
+        this.authorId = post.getAuthor().getUserId();
         this.authorName = post.getAuthor().getFirstName() + " " + post.getAuthor().getLastName();
         this.authorImageUrl = post.getAuthor().getImageUrl();
 
@@ -33,7 +33,7 @@ public class PostDTO {
         this.likesCount = post.getLikes() != null ? post.getLikes().size() : 0;
 
         this.hasLiked = post.getLikes() != null &&
-                post.getLikes().stream().anyMatch(user -> user.getuserId().equals(currentUserId));
+                post.getLikes().stream().anyMatch(user -> user.getUserId().equals(currentUserId));
     }
 
     public PostDTO(Post post) {
@@ -42,7 +42,7 @@ public class PostDTO {
         this.content = post.getContent();
         this.createdAt = post.getCreatedAt();
 
-        this.authorId = post.getAuthor().getuserId();
+        this.authorId = post.getAuthor().getUserId();
         this.authorName = post.getAuthor().getUsername();
         this.authorImageUrl = post.getAuthor().getImageUrl();
 

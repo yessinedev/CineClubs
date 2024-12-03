@@ -1,5 +1,5 @@
 import { MessageCircle, Heart, Share2, MoreHorizontal } from "lucide-react";
-import { likePost, unlikePost } from "@/services/postService";
+import { deletePost, likePost, unlikePost } from "@/services/postService";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { formatCreatedAt } from "@/lib/dateUtils";
 import ThreadReplies from "./ThreadReplies";
@@ -8,12 +8,12 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import { Button } from "../ui/button";
 import { Trash } from "lucide-react";
 import { Pencil } from "lucide-react";
+import { showToast } from "@/lib/toast";
 
 export default function DiscussionThread({
   post,
@@ -28,7 +28,7 @@ export default function DiscussionThread({
   const { mutate: likePostMutation } = useMutation({
     mutationFn: () => likePost(post.id, user.id),
     onSuccess: () => {
-      queryClient.invalidateQueries(["posts", post.id, user.id]); // Refetch club details
+      queryClient.invalidateQueries(["posts", post.id, user.id]); 
     },
     onError: (error) => {
       console.error("Failed to like the post:", error);
@@ -38,12 +38,38 @@ export default function DiscussionThread({
   const { mutate: unlikePostMutation } = useMutation({
     mutationFn: () => unlikePost(post.id, user.id),
     onSuccess: () => {
-      queryClient.invalidateQueries(["posts", post.id, user.id]); // Refetch club details
+      queryClient.invalidateQueries(["posts", post.id, user.id]);
     },
     onError: (error) => {
       console.error("Failed to unlike the post:", error);
     },
   });
+
+  const { mutate: deletePostMutation } = useMutation({
+    mutationFn: () => deletePost(post.id, user.id),
+    onSuccess: () => {
+      queryClient.invalidateQueries(["posts", post.id, user.id]);
+    },
+    onError: (error) => {
+      console.error("Failed to like the post:", error);
+    },
+  });
+
+  const handleDeletePost = async () => {
+    try {
+      await showToast.promise(
+        deletePostMutation(),
+        {
+          loading: "Deleting your post...",
+          success: "Post deleted successfully!",
+          error: (err) => err?.message || "Failed to delete post",
+        }
+      );
+    } catch (error) {
+      console.error("Error deleting post:", error)
+    }
+    
+  };
 
   return (
     <div className="p-4 sm:p-6 space-y-3 sm:space-y-4 bg-gray-900 border border-gray-800 rounded-xl">
@@ -89,7 +115,7 @@ export default function DiscussionThread({
                 <Button
                   variant="ghost"
                   className="px-0"
-                  onClick={() => console.log({ delete: post })}
+                  onClick={() => handleDeletePost()}
                 >
                   <Trash />
                   Delete

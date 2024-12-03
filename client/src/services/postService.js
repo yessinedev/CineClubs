@@ -54,3 +54,7 @@ export const createPost = async (post, userId, clubId) => {
     throw error;
   }
 };
+
+export const deletePost = async (postId, userId) => {
+  return await apiClient.delete(`/posts/${postId}?userId=${userId}`)
+}

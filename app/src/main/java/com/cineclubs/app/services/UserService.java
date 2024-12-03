@@ -22,10 +22,10 @@ public class UserService {
     public UserDTO createOrUpdateUser(User user) {
         user.setUpdatedAt(LocalDateTime.now());
 
-        if (!userRepository.existsByUserId(user.getuserId())) {
+        if (!userRepository.existsByUserId(user.getUserId())) {
             user.setCreatedAt(LocalDateTime.now());
         } else {
-            User existingUser = getUserByUserId(user.getuserId());
+            User existingUser = getUserByUserId(user.getUserId());
             if (existingUser.getImageUrl() != null && !existingUser.getImageUrl().contains("clerk.com")) {
                 user.setImageUrl(existingUser.getImageUrl());
             }
