@@ -23,6 +23,7 @@ import {
 import { Button } from "../ui/button";
 import { showToast } from "@/lib/toast";
 import { ConfirmationDialog } from "@/components/ui/ConfirmationDialog";
+import { EditPostDialog } from "./EditPostDialog";
 
 export default function DiscussionThread({
   post,
@@ -32,6 +33,7 @@ export default function DiscussionThread({
 }) {
   const [expanded, setExpanded] = useState(isExpanded);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [showEditDialog, setShowEditDialog] = useState(false);
 
   const queryClient = useQueryClient();
 
@@ -115,7 +117,7 @@ export default function DiscussionThread({
                 {user.id === post.authorId && (
                   <DropdownMenuItem
                     className="flex items-center px-3 py-2.5 text-sm text-gray-300 hover:bg-gray-800 cursor-pointer"
-                    onClick={() => console.log({ edit: post })}
+                    onClick={() => setShowEditDialog(true)}
                   >
                     <PencilLine className="w-4 h-4 mr-2" />
                     Edit post
@@ -203,6 +205,12 @@ export default function DiscussionThread({
         onConfirm={handleDeletePost}
         title="Permanently delete post?"
         description="Deleting this post will also delete all the associated reactions and comments. This can't be undone. If you need a record of the content, take a screenshot before deleting it."
+      />
+
+      <EditPostDialog
+        isOpen={showEditDialog}
+        onClose={() => setShowEditDialog(false)}
+        post={post}
       />
     </>
   );

@@ -3,8 +3,13 @@ package com.cineclubs.app.controllers;
 import com.cineclubs.app.dto.PageRequest;
 import com.cineclubs.app.dto.PageResponse;
 import com.cineclubs.app.dto.PostDTO;
+import com.cineclubs.app.exceptions.UnauthorizedActionException;
+import com.cineclubs.app.exceptions.ValidationException;
 import com.cineclubs.app.models.Post;
 import com.cineclubs.app.services.PostService;
+
+import jakarta.persistence.EntityNotFoundException;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -72,5 +77,22 @@ public class PostController {
     public ResponseEntity<Void> deletePost(@PathVariable Long postId, @RequestParam String userId) {
         postService.deletePost(postId, userId);
         return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/{postId}")
+    public ResponseEntity<PostDTO> updatePost(
+            @PathVariable Long postId,
+            @RequestParam String userId,
+            @RequestBody Post postDetails) {
+        try {
+            PostDTO updatedPost = postService.updatePost(postId, userId, postDetails);
+            return ResponseEntity.ok(updatedPost);
+        } catch (UnauthorizedActionException e) {
+            return ResponseEntity.status(403).build();
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        } catch (ValidationException e) {
+            return ResponseEntity.badRequest().body(null);
+        }
     }
 }
