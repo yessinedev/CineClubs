@@ -9,6 +9,7 @@ import lombok.Data;
 @ConfigurationProperties(prefix = "seeder")
 public class DataSeederConfig {
     private int userCount = 10;
+    private int categoryCount = 8;
     private int clubCount = 5;
     private int postCount = 20;
     private boolean enabled = true;

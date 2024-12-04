@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Code2 } from "lucide-react";
 import SearchBar from "./Search/SearchBar";
+import { Globe2 } from "lucide-react";
 
 export default function Navbar() {
   const { isSignedIn, user } = useUser();
@@ -30,10 +31,10 @@ export default function Navbar() {
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center gap-4">
             <Link to="/" className="flex items-center space-x-3">
-              <Code2 className="w-8 h-8 text-blue-500" />
-              <span className="text-xl font-bold bg-gradient-to-r from-blue-400 to-emerald-500 text-transparent bg-clip-text">
-                DevHub
-              </span>
+            <Globe2 className="w-8 h-8 text-gradient-to-r from-teal-400 via-blue-500 to-pink-500" />
+            <span className="text-xl font-bold bg-gradient-to-r from-teal-400 via-blue-500 to-pink-500 text-transparent bg-clip-text">
+              TuniClubs
+            </span>
             </Link>
             <SearchBar />
           </div>

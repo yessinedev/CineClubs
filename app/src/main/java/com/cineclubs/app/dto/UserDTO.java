@@ -50,9 +50,6 @@ public class UserDTO {
             this.joinedClubs = user.getJoinedClubs().stream().map(ClubDTO::new).collect(Collectors.toList());
         }
 
-
-
-
     }
     public UserDTO(User user, Long clubId) {
         this.userId = user.getUserId();

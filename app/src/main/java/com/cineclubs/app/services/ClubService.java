@@ -1,8 +1,11 @@
 package com.cineclubs.app.services;
 
 import com.cineclubs.app.dto.ClubDTO;
+import com.cineclubs.app.enums.ClubRole;
+import com.cineclubs.app.enums.MemberStatus;
 import com.cineclubs.app.exceptions.*;
 import com.cineclubs.app.models.Club;
+import com.cineclubs.app.models.ClubMember;
 import com.cineclubs.app.models.User;
 import com.cineclubs.app.repository.ClubRepository;
 import com.cineclubs.app.utils.SlugGenerator;
@@ -21,7 +24,7 @@ public class ClubService {
     private final SimpMessagingTemplate messagingTemplate;
 
     public ClubService(ClubRepository clubRepository, UserService userService,
-            SimpMessagingTemplate messagingTemplate) {
+                       SimpMessagingTemplate messagingTemplate) {
         this.clubRepository = clubRepository;
         this.userService = userService;
         this.messagingTemplate = messagingTemplate;
@@ -58,7 +61,12 @@ public class ClubService {
         if (club.getMembers() == null) {
             club.setMembers(new HashSet<>());
         }
-        club.getMembers().add(user);
+        ClubMember member = new ClubMember();
+        member.setClub(club);
+        member.setUser(user);
+        member.setRole(ClubRole.ADMIN);
+        member.setStatus(MemberStatus.APPROVED);
+        club.getMembers().add(member);
 
         Club savedClub = clubRepository.save(club);
         messagingTemplate.convertAndSend("/topic/clubs", new ClubDTO(savedClub, false, false));
@@ -105,7 +113,7 @@ public class ClubService {
     }
 
     public boolean isUserJoined(Club club, User user) {
-        return club.getMembers().contains(user);
+        return club.getMembers().stream().anyMatch(member -> member.getUser().equals(user));
     }
 
     public void joinClub(String clerkId, Long clubId) {
@@ -116,7 +124,17 @@ public class ClubService {
             throw new ValidationException("CLUB", "User is already a member of this club");
         }
 
-        club.getMembers().add(user);
+        ClubMember member = new ClubMember();
+        member.setClub(club);
+        member.setUser(user);
+        if (club.isPublic()) {
+            member.setRole(ClubRole.MEMBER);
+            member.setStatus(MemberStatus.APPROVED);
+        } else {
+            member.setRole(ClubRole.MEMBER);
+            member.setStatus(MemberStatus.PENDING);
+        }
+        club.getMembers().add(member);
         Club joinedClub = clubRepository.save(club);
         messagingTemplate.convertAndSend("/topic/clubs", new ClubDTO(joinedClub, false, false));
     }
@@ -132,8 +150,7 @@ public class ClubService {
         if (club.getUser().getUserId().equals(clerkId)) {
             throw new ValidationException("CLUB", "Club owner cannot leave the club");
         }
-
-        club.getMembers().remove(user);
+        club.getMembers().removeIf(member -> member.getUser().equals(user));
         Club leftClub = clubRepository.save(club);
         messagingTemplate.convertAndSend("/topic/clubs", new ClubDTO(leftClub, false, false));
     }

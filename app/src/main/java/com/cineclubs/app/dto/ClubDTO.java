@@ -44,7 +44,7 @@ public class ClubDTO {
 
         if (includeMembers && club.getMembers() != null) {
             this.members = club.getMembers().stream()
-                    .map(user -> new UserDTO(user, club.getId()))
+                    .map(user -> new UserDTO(user.getUser(), club.getId()))
                     .sorted(Comparator.comparingInt(UserDTO::getPostsCount).reversed())
                     .collect(Collectors.toList());
         }
