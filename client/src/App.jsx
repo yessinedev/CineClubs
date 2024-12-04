@@ -10,6 +10,7 @@ import ProfilePage from "./pages/ProfilePage";
 import SearchPage from "./pages/SearchPage";
 import ErrorPage from "./components/ErrorPage";
 import { Toaster } from "sonner";
+import ClubChatPage from "./pages/ClubChatPage";
 
 function App() {
   useUserSync();
@@ -23,6 +24,7 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/clubs" element={<ClubList />} />
           <Route path="/clubs/:slug" element={<ClubPage />} />
+          <Route path="/clubs/:slug/chat" element={<ClubChatPage />} />
           <Route path="/leaderboard" element={<LeaderBoardPage />} />
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/search" element={<SearchPage />} />
