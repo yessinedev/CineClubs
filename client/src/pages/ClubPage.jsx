@@ -2,16 +2,18 @@ import ClubDiscussions from "../components/Discussions/ClubDiscussions";
 import ClubBanner from "../components/Club/ClubBanner";
 import ClubDetails from "../components/Club/ClubDetails";
 import { fetchClub } from "@/services/clubService";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { useUser } from "@clerk/clerk-react";
 import { useState } from "react";
 import MembersList from "@/components/Club/Club Members/MembersList";
 import { SignInButton } from "@clerk/clerk-react";
 import ErrorPage from "../components/ErrorPage";
+import ClubChat from "../components/Club/ClubChat";
 
 export default function ClubPage() {
   const { slug } = useParams();
+  const navigate = useNavigate();
   const { isSignedIn, user } = useUser();
   const [activeTab, setActiveTab] = useState("discussions");
 
@@ -78,11 +80,17 @@ export default function ClubPage() {
       <div className="py-8">
         {activeTab === "discussions" ? (
           <ClubDiscussions club={club} user={user} />
-        ) : (
+        ) : activeTab === "members" ? (
           <MembersList members={club.members} />
+        ) : (
+          <ClubChat />
         )}
       </div>
     );
+  };
+
+  const handleChatClick = () => {
+    navigate(`/clubs/${slug}/chat`);
   };
 
   if (isLoading) {
@@ -121,6 +129,12 @@ export default function ClubPage() {
               }`}
             >
               Members
+            </button>
+            <button
+              onClick={handleChatClick}
+              className="px-4 py-4 font-medium text-gray-400 hover:text-white"
+            >
+              Chat
             </button>
           </nav>
         </div>

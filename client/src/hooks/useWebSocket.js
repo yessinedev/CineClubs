@@ -42,6 +42,36 @@ export function useWebSocket() {
           return oldData.filter((club) => club.id !== clubId);
         });
       });
+
+      // Subscribe to club messages
+      const messageSubscriptions = new Map();
+
+      // Method to subscribe to a specific club's messages
+      window.subscribeToClubMessages = (clubId) => {
+        if (messageSubscriptions.has(clubId)) return;
+
+        const subscription = client.subscribe(
+          `/topic/clubs/${clubId}/messages`,
+          function (message) {
+            const newMessage = JSON.parse(message.body);
+            queryClient.setQueryData(["messages", clubId], (oldData) => {
+              if (!oldData) return [newMessage];
+              return [newMessage, ...oldData];
+            });
+          }
+        );
+
+        messageSubscriptions.set(clubId, subscription);
+      };
+
+      // Method to unsubscribe from a specific club's messages
+      window.unsubscribeFromClubMessages = (clubId) => {
+        const subscription = messageSubscriptions.get(clubId);
+        if (subscription) {
+          subscription.unsubscribe();
+          messageSubscriptions.delete(clubId);
+        }
+      };
     };
 
     client.activate();
