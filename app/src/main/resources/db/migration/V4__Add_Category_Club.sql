@@ -22,7 +22,11 @@ ALTER TABLE clubs
     ADD COLUMN created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
 ALTER TABLE clubs
     ADD COLUMN updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
-
+--Add id column to club_members table
+ALTER TABLE club_members
+    DROP CONSTRAINT IF EXISTS club_members_pkey;
+ALTER TABLE club_members
+    ADD COLUMN id BIGSERIAL PRIMARY KEY;
 -- Add status and role to the club_members table
 ALTER TABLE club_members
     ADD COLUMN status VARCHAR(255) DEFAULT 'PENDING';
