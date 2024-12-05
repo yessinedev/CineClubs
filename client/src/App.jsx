@@ -1,5 +1,4 @@
 import { useUserSync } from "./hooks/useUserSync";
-import { useWebSocket } from "./hooks/useWebSocket";
 import Navbar from "./components/Navbar";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import ClubPage from "./pages/ClubPage";
@@ -14,7 +13,6 @@ import ClubChatPage from "./pages/ClubChatPage";
 
 function App() {
   useUserSync();
-  useWebSocket();
 
   return (
     <div className="min-h-screen text-white bg-gray-950">

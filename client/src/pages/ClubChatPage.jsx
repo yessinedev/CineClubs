@@ -7,13 +7,25 @@ import { Users, ArrowLeft } from "lucide-react";
 export default function ClubChatPage() {
   const { slug } = useParams();
   const navigate = useNavigate();
-  const { data: club, isLoading } = useQuery({
+  const {
+    data: club,
+    isLoading,
+    error,
+  } = useQuery({
     queryKey: ["club", slug],
     queryFn: () => fetchClub(slug),
   });
 
-  if (isLoading) {
-    return <div>Loading...</div>;
+  if (error) {
+    return (
+      <div className="p-4 text-red-500">
+        Error loading club: {error.message}
+      </div>
+    );
+  }
+
+  if (isLoading || !club) {
+    return <div className="p-4 text-gray-400">Loading club...</div>;
   }
 
   const dummyMembers = [
@@ -23,8 +35,8 @@ export default function ClubChatPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-950 pt-16">
-      <div className="h-[calc(100vh-64px)]">
+    <div className="h-screen overflow-hidden bg-gray-950">
+      <div className="h-full pt-16">
         <div className="flex items-center justify-between p-4 border-b border-gray-800 bg-gray-900">
           <button
             onClick={() => navigate(`/clubs/${slug}`)}
@@ -37,16 +49,14 @@ export default function ClubChatPage() {
           <div className="w-[100px]"></div>
         </div>
 
-        <div className="grid grid-cols-4 h-[calc(100%-60px)]">
+        <div className="grid grid-cols-4 h-[calc(100%-64px)] bg-gray-950">
           {/* Main Chat Area */}
           <div className="col-span-3 border-r border-gray-800">
-            <div className="h-full">
-              <ClubChat club={club} />
-            </div>
+            <ClubChat club={club} />
           </div>
 
           {/* Members Sidebar */}
-          <div className="bg-gray-900 p-4">
+          <div className="bg-gray-900 p-4 overflow-y-auto">
             <div className="mb-6">
               <h2 className="text-lg font-semibold text-white mb-2">Members</h2>
               <div className="flex items-center text-sm text-gray-400 mb-4">
