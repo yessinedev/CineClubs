@@ -1,6 +1,7 @@
 package com.cineclubs.app.dto;
 
 import com.cineclubs.app.models.Club;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.util.Comparator;
 import java.util.List;

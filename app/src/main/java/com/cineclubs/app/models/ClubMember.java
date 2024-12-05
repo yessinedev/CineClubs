@@ -20,7 +20,7 @@ public class ClubMember {
     @ManyToOne
     @JoinColumn(name = "club_id", nullable = false)
     private Club club;
-
+    @Enumerated(EnumType.STRING)
     private MemberStatus status = MemberStatus.PENDING;
 
     @Enumerated(EnumType.STRING)

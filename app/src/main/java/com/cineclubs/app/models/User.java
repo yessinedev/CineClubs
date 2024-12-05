@@ -30,12 +30,12 @@ public class User {
     @Column(name = "updated_at")
     private java.time.LocalDateTime updatedAt = LocalDateTime.now();
 
-    @ManyToMany(fetch = FetchType.LAZY,
-            cascade = {
-                    CascadeType.PERSIST,
-                    CascadeType.MERGE
-            },
-            mappedBy = "members")
+    @ManyToMany
+    @JoinTable(
+            name = "club_members",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "club_id")
+    )
     private Set<Club> joinedClubs = new HashSet<>();
 
     @OneToMany(mappedBy = "author", cascade = { CascadeType.PERSIST, CascadeType.MERGE }, orphanRemoval = true)
