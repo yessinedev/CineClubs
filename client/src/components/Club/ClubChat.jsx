@@ -6,6 +6,7 @@ import { format } from "date-fns";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 
 export default function ClubChat({ club }) {
   const { user } = useUser();
@@ -49,53 +50,69 @@ export default function ClubChat({ club }) {
     }
   };
 
+  const getUserInitials = (username) => {
+    return (
+      username
+        ?.split(/\s+/)
+        ?.map((n) => n[0])
+        ?.join("")
+        ?.toUpperCase() || "??"
+    );
+  };
+
   return (
     <div className="flex flex-col h-[calc(100vh-128px)]">
-      {/* Messages Area */}
       <ScrollArea
         ref={scrollAreaRef}
         className="flex-1 px-4"
         style={{ height: "calc(100% - 80px)" }}
       >
-        <div className="py-4 space-y-4">
+        <div className="py-4 space-y-6">
           {Array.isArray(messages) &&
             messages.map((msg) => {
-              const isCurrentUser = msg.sender.id === user.id;
+              const isCurrentUser = msg.sender.userId === user.id;
+              const initials = getUserInitials(msg.sender.username);
 
               return (
                 <div
                   key={msg.id}
-                  className={`flex items-start gap-3 ${
-                    isCurrentUser ? "flex-row-reverse" : ""
+                  className={`flex items-end gap-2 ${
+                    isCurrentUser ? "flex-row-reverse" : "flex-row"
                   }`}
                 >
-                  <img
-                    src={msg.sender.imageUrl}
-                    alt={msg.sender.username}
-                    className="w-8 h-8 rounded-full bg-gray-700 flex-shrink-0"
-                  />
+                  <Avatar className="w-8 h-8 mb-1">
+                    <AvatarImage
+                      src={isCurrentUser ? user.imageUrl : msg.sender.imageUrl}
+                      alt={msg.sender.username}
+                    />
+                    <AvatarFallback className="bg-gray-700 text-gray-200 text-xs">
+                      {initials}
+                    </AvatarFallback>
+                  </Avatar>
+
                   <div
                     className={`flex flex-col ${
                       isCurrentUser ? "items-end" : "items-start"
-                    } max-w-[70%]`}
+                    } max-w-[60%]`}
                   >
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm text-gray-400">
+                    {!isCurrentUser && (
+                      <span className="text-sm text-gray-400 ml-1 mb-1">
                         {msg.sender.username}
                       </span>
-                      <span className="text-xs text-gray-500">
-                        {format(new Date(msg.createdAt), "h:mm a")}
-                      </span>
-                    </div>
+                    )}
+
                     <div
-                      className={`mt-1 px-4 py-2 rounded-2xl ${
+                      className={`px-4 py-2 rounded-2xl ${
                         isCurrentUser
-                          ? "bg-blue-600 text-white rounded-tr-none"
-                          : "bg-gray-800 text-gray-100 rounded-tl-none"
+                          ? "bg-blue-600 text-white rounded-br-none"
+                          : "bg-gray-800 text-gray-100 rounded-bl-none"
                       }`}
                     >
                       <p className="break-words">{msg.content}</p>
                     </div>
+                    <span className="text-xs text-gray-500 mt-1 mx-1">
+                      {format(new Date(msg.createdAt), "h:mm a")}
+                    </span>
                   </div>
                 </div>
               );
@@ -107,6 +124,12 @@ export default function ClubChat({ club }) {
       {/* Input Area */}
       <div className="p-4 border-t border-gray-800 bg-gray-900">
         <div className="flex items-center gap-2">
+          <Avatar className="w-8 h-8">
+            <AvatarImage src={user.imageUrl} alt={user.username} />
+            <AvatarFallback className="bg-gray-700 text-gray-200 text-xs">
+              {getUserInitials(user.username)}
+            </AvatarFallback>
+          </Avatar>
           <Input
             type="text"
             value={newMessage}
@@ -118,7 +141,6 @@ export default function ClubChat({ club }) {
           <Button
             onClick={handleSendMessage}
             size="icon"
-            variant="default"
             className="bg-blue-600 hover:bg-blue-700"
           >
             <Send className="w-4 h-4" />
