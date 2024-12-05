@@ -25,17 +25,17 @@ public class User {
     private String username;
 
     @Column(name = "created_at")
-    private java.time.LocalDateTime createdAt;
+    private java.time.LocalDateTime createdAt = LocalDateTime.now();
 
     @Column(name = "updated_at")
-    private java.time.LocalDateTime updatedAt;
+    private java.time.LocalDateTime updatedAt = LocalDateTime.now();
 
-    @ManyToMany(fetch = FetchType.LAZY,
-            cascade = {
-                    CascadeType.PERSIST,
-                    CascadeType.MERGE
-            },
-            mappedBy = "members")
+    @ManyToMany
+    @JoinTable(
+            name = "club_members",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "club_id")
+    )
     private Set<Club> joinedClubs = new HashSet<>();
 
     @OneToMany(mappedBy = "author", cascade = { CascadeType.PERSIST, CascadeType.MERGE }, orphanRemoval = true)

@@ -1,6 +1,7 @@
 package com.cineclubs.app.dto;
 
 import com.cineclubs.app.models.Club;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.util.Comparator;
 import java.util.List;
@@ -44,7 +45,7 @@ public class ClubDTO {
 
         if (includeMembers && club.getMembers() != null) {
             this.members = club.getMembers().stream()
-                    .map(user -> new UserDTO(user, club.getId()))
+                    .map(user -> new UserDTO(user.getUser(), club.getId()))
                     .sorted(Comparator.comparingInt(UserDTO::getPostsCount).reversed())
                     .collect(Collectors.toList());
         }

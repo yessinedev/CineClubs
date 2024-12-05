@@ -1,5 +1,7 @@
 package com.cineclubs.app.seeder;
 
+import com.cineclubs.app.enums.ClubRole;
+import com.cineclubs.app.enums.MemberStatus;
 import com.cineclubs.app.utils.SlugGenerator;
 import com.github.javafaker.Faker;
 import org.slf4j.Logger;
@@ -22,6 +24,7 @@ public class DatabaseSeeder {
     private final UserRepository userRepository;
     private final ClubRepository clubRepository;
     private final PostRepository postRepository;
+    private final CategoryRepository categoryRepository;
     private final DataSeederConfig seederConfig;
     private final Faker faker;
 
@@ -45,10 +48,12 @@ public class DatabaseSeeder {
             UserRepository userRepository,
             ClubRepository clubRepository,
             PostRepository postRepository,
+            CategoryRepository categoryRepository,
             DataSeederConfig seederConfig) {
         this.userRepository = userRepository;
         this.clubRepository = clubRepository;
         this.postRepository = postRepository;
+        this.categoryRepository = categoryRepository;
         this.seederConfig = seederConfig;
         this.faker = new Faker();
     }
@@ -63,7 +68,8 @@ public class DatabaseSeeder {
         logger.info("Starting database seeding...");
         try {
             List<User> users = seedUsers();
-            List<Club> clubs = seedClubs(users);
+            List<Category> categories = seedCategories();
+            List<Club> clubs = seedClubs(users, categories);
             seedPosts(users, clubs);
 
             logger.info("Database seeding completed successfully!");
@@ -83,11 +89,18 @@ public class DatabaseSeeder {
         List<User> users = createUsers(seederConfig.getUserCount());
         return userRepository.saveAll(users);
     }
+    @Transactional
+    protected List<Category> seedCategories() {
+        logger.info("Seeding {} categories...", seederConfig.getCategoryCount());
+        List<Category> categories = createCategories(seederConfig.getCategoryCount());
+        return categoryRepository.saveAll(categories);
+
+    }
 
     @Transactional
-    protected List<Club> seedClubs(List<User> users) {
+    protected List<Club> seedClubs(List<User> users, List<Category> categories) {
         logger.info("Seeding {} clubs...", seederConfig.getClubCount());
-        List<Club> clubs = createClubs(seederConfig.getClubCount(), users);
+        List<Club> clubs = createClubs(seederConfig.getClubCount(), users, categories);
         return clubRepository.saveAll(clubs);
     }
 
@@ -115,20 +128,55 @@ public class DatabaseSeeder {
         return users;
     }
 
-    private List<Club> createClubs(int count, List<User> users) {
+    private List<Category> createCategories(int count) {
+        List<Category> categories = new ArrayList<>();
+        for (int i = 0; i < count; i++) {
+            Category category = new Category();
+            category.setName(faker.gameOfThrones().house());
+            category.setCreatedAt(LocalDateTime.now());
+            category.setUpdatedAt(LocalDateTime.now());
+            categories.add(category);
+        }
+        return categories;
+    }
+
+    private List<Club> createClubs(int count, List<User> users, List<Category> categories) {
         List<Club> clubs = new ArrayList<>();
         for (int i = 0; i < count; i++) {
             Club club = new Club();
             club.setName(generateClubName());
             club.setDescription(generateClubDescription());
             club.setSlug(SlugGenerator.generateUniqueSlug(club.getName()));
+            club.setPublic(true);
             club.setImageUrl(CLUB_COVER_IMAGES[i % CLUB_COVER_IMAGES.length] + "?w=1200&h=630&fit=crop");
             club.setUser(users.get(faker.random().nextInt(users.size())));
-            club.setMembers(new HashSet<>(users.subList(0, faker.random().nextInt(2, users.size()))));
+            club.setCategory(categories.get(faker.random().nextInt(categories.size())));
+
+            // Creating ClubMember instances instead of setting the members directly
+            Set<ClubMember> clubMembers = new HashSet<>();
+            ClubMember owner = new ClubMember();
+            owner.setClub(club);
+            owner.setUser(club.getUser());
+            owner.setStatus(MemberStatus.APPROVED);
+            owner.setRole(ClubRole.ADMIN);
+            clubMembers.add(owner);
+            int memberCount = faker.random().nextInt(2, users.size());  // Adjust number of members
+            for (int j = 1; j < memberCount; j++) {
+                User memberUser = users.get(faker.random().nextInt(users.size()));
+                ClubMember clubMember = new ClubMember();
+                clubMember.setClub(club);
+                clubMember.setUser(memberUser);
+                clubMember.setStatus(MemberStatus.PENDING);  // You can adjust the status or role as needed
+                clubMember.setRole(ClubRole.MEMBER);  // Or set different roles if needed
+                clubMembers.add(clubMember);
+            }
+
+            club.setMembers(clubMembers);  // Setting the ClubMembers for the club
             clubs.add(club);
         }
         return clubs;
     }
+
 
     private List<Post> createPosts(int count, List<User> users, List<Club> clubs) {
         List<Post> posts = new ArrayList<>();
@@ -193,6 +241,6 @@ public class DatabaseSeeder {
         String[] genre = { "frontend", "backend", "fullstack", "AI/ML", "cybersecurity", "game development", "web development", "mobile development", "cloud computing", "open source" };
 
 
-        return String.format(template, genre);
+        return String.format(template, (Object) genre);
     }
 }

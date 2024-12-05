@@ -77,7 +77,7 @@ export default function ClubPage() {
     }
 
     return (
-      <div className="p-8">
+      <div className="py-8">
         {activeTab === "discussions" ? (
           <ClubDiscussions club={club} user={user} />
         ) : activeTab === "members" ? (

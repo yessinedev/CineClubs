@@ -2,12 +2,13 @@ package com.cineclubs.app.models;
 
 import jakarta.persistence.*;
 
+import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
 @Entity
 @Table(name = "clubs")
-
 public class Club {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,13 +23,20 @@ public class Club {
     @Column(nullable = false)
     private String imageUrl;
 
+    @Column(name = "is_public", nullable = false)
+    private boolean isPublic;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
-    @ManyToMany
-    @JoinTable(name = "club_members", joinColumns = @JoinColumn(name = "club_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
-    private Set<User> members;
+    @ManyToOne
+    @JoinColumn(name = "category_id", nullable = false)
+    private Category category;
+
+    @OneToMany(mappedBy = "club", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<ClubMember> members = new HashSet<>();
+
 
     @OneToMany(mappedBy = "club", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Post> posts;
@@ -36,11 +44,17 @@ public class Club {
     @Column(nullable = false, unique = true)
     private String slug;
 
+    @Column(name = "created_at")
+    private java.time.LocalDateTime createdAt = LocalDateTime.now();
+
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt = LocalDateTime.now();
+
     public Club() {
     }
 
     public Club(Long id, String name, String description, String imageUrl, User user,
-            Set<User> members, Set<Post> posts) {
+            Set<ClubMember> members, Set<Post> posts) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -90,11 +104,11 @@ public class Club {
         this.user = user;
     }
 
-    public Set<User> getMembers() {
+    public Set<ClubMember> getMembers() {
         return members;
     }
 
-    public void setMembers(Set<User> members) {
+    public void setMembers(Set<ClubMember> members) {
         this.members = members;
     }
 
@@ -112,6 +126,38 @@ public class Club {
 
     public void setSlug(String slug) {
         this.slug = slug;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    public boolean isPublic() {
+        return isPublic;
+    }
+
+    public void setPublic(boolean aPublic) {
+        isPublic = aPublic;
     }
 
     @Override

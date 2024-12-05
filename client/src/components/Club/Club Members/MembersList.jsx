@@ -13,7 +13,7 @@ export default function MembersList({members}) {
 
   return (
     <div className="bg-gray-900 rounded-xl border border-gray-800 overflow-hidden">
-      <MembersListHeader memberCount={members?.length > 0 ? members.length : 0} />
+      {/* <MembersListHeader memberCount={members?.length > 0 ? members.length : 0} />
       
       <div className="p-4 border-b border-gray-800">
         <div className="relative">
@@ -26,7 +26,7 @@ export default function MembersList({members}) {
             className="w-full pl-10 pr-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-gray-300 focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500"
           />
         </div>
-      </div>
+      </div> */}
 
       <div className="p-4 space-y-3">
         {filteredMembers.length > 0 ? (
