@@ -20,10 +20,10 @@ public class Category {
     private Set<Club> clubs = new HashSet<>();
 
     @Column(name = "created_at")
-    private java.time.LocalDateTime createdAt;
+    private java.time.LocalDateTime createdAt = LocalDateTime.now();
 
     @Column(name = "updated_at")
-    private java.time.LocalDateTime updatedAt;
+    private java.time.LocalDateTime updatedAt = LocalDateTime.now();
 
     public Category() {}
 

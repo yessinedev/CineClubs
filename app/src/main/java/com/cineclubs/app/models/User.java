@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "users")
@@ -30,13 +31,8 @@ public class User {
     @Column(name = "updated_at")
     private java.time.LocalDateTime updatedAt = LocalDateTime.now();
 
-    @ManyToMany
-    @JoinTable(
-            name = "club_members",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "club_id")
-    )
-    private Set<Club> joinedClubs = new HashSet<>();
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private Set<ClubMember> joinedClubs = new HashSet<>();
 
     @OneToMany(mappedBy = "author", cascade = { CascadeType.PERSIST, CascadeType.MERGE }, orphanRemoval = true)
     private Set<Post> posts = new HashSet<>();
@@ -168,10 +164,10 @@ public class User {
 
 
     public Set<Club> getJoinedClubs() {
-        return joinedClubs;
+        return joinedClubs.stream().map(ClubMember::getClub).collect(Collectors.toSet());
     }
 
-    public void setJoinedClubs(Set<Club> joinedClubs) {
+    public void setJoinedClubs(Set<ClubMember> joinedClubs) {
         this.joinedClubs = joinedClubs;
     }
 
