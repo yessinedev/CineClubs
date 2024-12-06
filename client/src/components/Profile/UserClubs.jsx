@@ -1,5 +1,4 @@
-import { Users, Star } from 'lucide-react';
-import { ClubCard } from '../Club/ClubCard';
+import ClubCard from '../Club/ClubCard/ClubCard';
 
 
 

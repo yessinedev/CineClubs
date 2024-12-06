@@ -7,7 +7,7 @@ import { SignInButton, useUser } from "@clerk/clerk-react";
 export default function ClubDetails({ club, isMember }) {
   const { isSignedIn, user } = useUser();
   const queryClient = useQueryClient();
-
+  console.log(club)
   const { mutate: joinClubMutation, isLoading: isJoining } = useMutation({
     mutationFn: () => joinClub(user.id, club.id),
     onSuccess: () => {

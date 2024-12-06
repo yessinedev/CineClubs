@@ -1,7 +1,7 @@
 import { fetchClubs } from "@/services/clubService";
 import { useQuery } from "@tanstack/react-query";
 import { Star, TrendingUp } from "lucide-react";
-import { ClubCard } from "../Club/ClubCard";
+import ClubCard from "../Club/ClubCard/ClubCard";
 import { Link } from "react-router-dom";
 
 

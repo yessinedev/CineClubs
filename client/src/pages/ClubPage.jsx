@@ -10,10 +10,10 @@ import MembersList from "@/components/Club/Club Members/MembersList";
 import { SignInButton } from "@clerk/clerk-react";
 import ErrorPage from "../components/ErrorPage";
 import ClubChat from "../components/Club/ClubChat";
+import ClubChatPage from "./ClubChatPage";
 
 export default function ClubPage() {
   const { slug } = useParams();
-  const navigate = useNavigate();
   const { isSignedIn, user } = useUser();
   const [activeTab, setActiveTab] = useState("discussions");
 
@@ -83,15 +83,13 @@ export default function ClubPage() {
         ) : activeTab === "members" ? (
           <MembersList members={club.members} />
         ) : (
-          <ClubChat />
+          <ClubChatPage slug={club.slug} />
         )}
       </div>
     );
   };
 
-  const handleChatClick = () => {
-    navigate(`/clubs/${slug}/chat`);
-  };
+  
 
   if (isLoading) {
     return (
@@ -131,8 +129,12 @@ export default function ClubPage() {
               Members
             </button>
             <button
-              onClick={handleChatClick}
-              className="px-4 py-4 font-medium text-gray-400 hover:text-white"
+              onClick={() => setActiveTab("chat")}
+              className={`px-4 py-4 font-medium ${
+                activeTab === "chat"
+                  ? "text-blue-500 border-b-2 border-blue-500"
+                  : "text-gray-400 hover:text-white"
+              }`}
             >
               Chat
             </button>

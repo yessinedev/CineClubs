@@ -14,8 +14,7 @@ import {
   SheetClose,
 } from "@/components/ui/sheet";
 
-export default function ClubChatPage() {
-  const { slug } = useParams();
+export default function ClubChatPage({slug}) {
   const navigate = useNavigate();
 
   const {
@@ -82,7 +81,7 @@ export default function ClubChatPage() {
           </h3>
           <ul className="space-y-2">
             {offlineMembers.map((member) => (
-              <li key={member.id} className="flex items-center gap-2">
+              <li key={member.userId} className="flex items-center gap-2">
                 <span className="w-2 h-2 bg-gray-500 rounded-full"></span>
                 <Avatar className="w-6 h-6">
                   <AvatarImage src={member.imageUrl} alt={member.username} />

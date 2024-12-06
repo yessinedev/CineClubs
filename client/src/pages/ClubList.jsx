@@ -1,8 +1,7 @@
-import { ClubCard } from "@/components/Club/ClubCard";
+import ClubCard  from "@/components/Club/ClubCard/ClubCard";
 import CreateCommunityModal from "@/components/Club/CreateCommunityModal";
 import { fetchClubs } from "@/services/clubService";
 import { useQuery } from "@tanstack/react-query";
-import { Plus } from "lucide-react";
 
 const ClubList = () => {
   const {
