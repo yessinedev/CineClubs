@@ -176,4 +176,27 @@ public class Club {
     public int hashCode() {
         return Objects.hashCode(id);
     }
+
+    public void addMember(ClubMember member) {
+        members.add(member);
+        member.setClub(this);
+    }
+
+    public void removeMember(ClubMember member) {
+        members.remove(member);
+        member.setClub(null);
+    }
+
+    @PrePersist
+    protected void onCreate() {
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        this.updatedAt = LocalDateTime.now();
+    }
+
+
 }

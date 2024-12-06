@@ -49,6 +49,7 @@ public class ClubService {
     }
 
     public ClubDTO createClub(Club club, String userId, Long categoryId) {
+        // Validate inputs (can be handled via annotations for cleaner code)
         if (club.getName() == null || club.getName().trim().isEmpty()) {
             throw new ValidationException("CLUB", "Club name is required");
         }
@@ -59,28 +60,32 @@ public class ClubService {
             throw new ValidationException("CLUB", "Club image URL is required");
         }
 
+        // Generate slug
         String slug = SlugGenerator.generateUniqueSlug(club.getName());
 
+        // Fetch related entities
         User user = userService.getUserByUserId(userId);
         Category category = categoryService.getCategoryById(categoryId);
+
+        // Set relationships
         club.setCategory(category);
         club.setUser(user);
         club.setSlug(slug);
 
-        if (club.getMembers() == null) {
-            club.setMembers(new HashSet<>());
-        }
+        // Add creator as a member with ADMIN role
         ClubMember member = new ClubMember();
-        member.setClub(club);
         member.setUser(user);
         member.setRole(ClubRole.ADMIN);
         member.setStatus(MemberStatus.APPROVED);
-        club.getMembers().add(member);
+        club.addMember(member); // Use helper method to maintain bidirectional relationship
+
+        // Save club and broadcast
         Club savedClub = clubRepository.save(club);
-        clubMemberRepository.save(member);
         messagingTemplate.convertAndSend("/topic/clubs", new ClubDTO(savedClub, false, false));
+
         return new ClubDTO(savedClub, false, false);
     }
+
 
     public ClubDTO updateClub(Long id, Club clubDetails, String userId) {
         Club club = getClubById(id);

@@ -34,7 +34,7 @@ public class CategoryService {
 
     public Category getCategoryById(Long id) {
         return categoryRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("CLUB", id.toString()));
+                .orElseThrow(() -> new ResourceNotFoundException("Category not found", id.toString()));
     }
 
 }
