@@ -8,7 +8,7 @@ export default function MembersList({members}) {
   const [searchQuery, setSearchQuery] = React.useState('');
   
   const filteredMembers = members?.filter(member =>
-    member.firstName.toLowerCase().includes(searchQuery.toLowerCase())
+    member.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   return (
