@@ -41,7 +41,7 @@ export default function ClubCard({ club }) {
         <div className="w-full flex flex-row-reverse">
         <Link
           to={`/clubs/${club.slug}`}
-          className="w-full sm:w-auto px-4 py-2 text-sm bg-blue-400 hover:bg-primary/90 text-primary-foreground rounded-full transition-colors duration-200 text-center"
+          className="w-full sm:w-auto px-4 py-2 text-sm bg-primary border border-blue-400/40 hover:border-blue-400/90 text-primary-foreground rounded-full transition-colors duration-200 text-center"
         >
           View Community
         </Link>
