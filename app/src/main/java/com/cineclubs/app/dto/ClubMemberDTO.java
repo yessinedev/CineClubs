@@ -7,10 +7,13 @@ import java.time.LocalDateTime;
 
 public class ClubMemberDTO {
     private Long id;
-    private Long userId; // Only include the ID to avoid exposing the entire User entity
+    private String name;
+    private String imageUrl;
+    private String userId; // Only include the ID to avoid exposing the entire User entity
     private Long clubId; // Only include the ID to avoid exposing the entire Club entity
     private MemberStatus status;
     private ClubRole role;
+    private int postsCount;
     private LocalDateTime joinedAt;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
@@ -18,13 +21,18 @@ public class ClubMemberDTO {
     public ClubMemberDTO() {}
 
 
-    public ClubMemberDTO(Long id, Long userId, Long clubId, MemberStatus status, ClubRole role,
+
+
+    public ClubMemberDTO(Long id, String userId, Long clubId, String name, String imageUrl, MemberStatus status, ClubRole role, int postsCount,
                          LocalDateTime joinedAt, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
         this.userId = userId;
         this.clubId = clubId;
         this.status = status;
         this.role = role;
+        this.name = name;
+        this.imageUrl = imageUrl;
+        this.postsCount = postsCount;
         this.joinedAt = joinedAt;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
@@ -38,11 +46,11 @@ public class ClubMemberDTO {
         this.id = id;
     }
 
-    public Long getUserId() {
+    public String getUserId() {
         return userId;
     }
 
-    public void setUserId(Long userId) {
+    public void setUserId(String userId) {
         this.userId = userId;
     }
 
@@ -92,5 +100,29 @@ public class ClubMemberDTO {
 
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public int getPostsCount() {
+        return postsCount;
+    }
+
+    public void setPostsCount(int postsCount) {
+        this.postsCount = postsCount;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 }

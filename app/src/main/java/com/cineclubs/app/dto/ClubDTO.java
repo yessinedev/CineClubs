@@ -21,7 +21,7 @@ public class ClubDTO {
     private int postsCount;
     private CategoryDTO category;
     private List<PostDTO> posts;
-    private List<UserDTO> members;
+    private List<ClubMemberDTO> members;
     private String slug;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
@@ -54,10 +54,25 @@ public class ClubDTO {
 
         if (includeMembers && club.getMembers() != null) {
             this.members = club.getMembers().stream()
-                    .map(user -> new UserDTO(user.getUser(), club.getId()))
-                    .sorted(Comparator.comparingInt(UserDTO::getPostsCount).reversed())
+                    .map(member -> new ClubMemberDTO(
+                            member.getId(),
+                            member.getUser().getUserId(),
+                            club.getId(),
+                            member.getUser().getFirstName() + " " + member.getUser().getLastName(),
+                            member.getUser().getImageUrl(),
+                            member.getStatus(),
+                            member.getRole(),
+                            (int) club.getPosts().stream()
+                                    .filter(post -> post.getAuthor().getUserId().equals(member.getUser().getUserId()))
+                                    .count(),
+                            member.getJoinedAt(),
+                            member.getCreatedAt(),
+                            member.getUpdatedAt()
+                    ))
+                    .sorted(Comparator.comparing(ClubMemberDTO::getJoinedAt))
                     .collect(Collectors.toList());
         }
+
     }
 
     public Long getId() {
@@ -140,11 +155,11 @@ public class ClubDTO {
         this.posts = posts;
     }
 
-    public List<UserDTO> getMembers() {
+    public List<ClubMemberDTO> getMembers() {
         return members;
     }
 
-    public void setMembers(List<UserDTO> members) {
+    public void setMembers(List<ClubMemberDTO> members) {
         this.members = members;
     }
 

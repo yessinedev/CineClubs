@@ -17,6 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 
@@ -77,7 +78,8 @@ public class ClubService {
         member.setUser(user);
         member.setRole(ClubRole.ADMIN);
         member.setStatus(MemberStatus.APPROVED);
-        club.addMember(member); // Use helper method to maintain bidirectional relationship
+        member.setJoinedAt(LocalDateTime.now());
+        club.addMember(member);
 
         // Save club and broadcast
         Club savedClub = clubRepository.save(club);
