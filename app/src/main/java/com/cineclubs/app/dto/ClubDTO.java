@@ -3,6 +3,7 @@ package com.cineclubs.app.dto;
 import com.cineclubs.app.models.Club;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -11,15 +12,19 @@ public class ClubDTO {
     private Long id;
     private String name;
     private String description;
+    private boolean isPublic;
     private String imageUrl;
     private String ownerId;
     private String ownerUsername;
     private String ownerImageUrl;
     private int membersCount;
     private int postsCount;
+    private CategoryDTO category;
     private List<PostDTO> posts;
     private List<UserDTO> members;
     private String slug;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 
     public ClubDTO(Club club) {
         this(club, false, false);
@@ -36,6 +41,10 @@ public class ClubDTO {
         this.membersCount = club.getMembers() != null ? club.getMembers().size() : 0;
         this.postsCount = club.getPosts() != null ? club.getPosts().size() : 0;
         this.slug = club.getSlug();
+        this.isPublic = club.isPublic();
+        this.category = new CategoryDTO(club.getCategory());
+        this.createdAt = club.getCreatedAt();
+        this.updatedAt = club.getUpdatedAt();
 
         if (includePosts && club.getPosts() != null) {
             this.posts = club.getPosts().stream()
@@ -147,4 +156,35 @@ public class ClubDTO {
         this.slug = slug;
     }
 
+    public boolean isPublic() {
+        return isPublic;
+    }
+
+    public void setPublic(boolean aPublic) {
+        isPublic = aPublic;
+    }
+
+    public CategoryDTO getCategory() {
+        return category;
+    }
+
+    public void setCategory(CategoryDTO category) {
+        this.category = category;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
+    }
 }

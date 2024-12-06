@@ -54,7 +54,7 @@ public class Club {
     }
 
     public Club(Long id, String name, String description, String imageUrl, User user,
-            Set<ClubMember> members, Set<Post> posts) {
+            Set<ClubMember> members, Set<Post> posts, Category category, String slug, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -62,6 +62,10 @@ public class Club {
         this.user = user;
         this.members = members;
         this.posts = posts;
+        this.category = category;
+        this.slug = slug;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
     }
 
     public Long getId() {

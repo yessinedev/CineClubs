@@ -1,6 +1,7 @@
 package com.cineclubs.app.services;
 
 import com.cineclubs.app.dto.CategoryDTO;
+import com.cineclubs.app.exceptions.ResourceNotFoundException;
 import com.cineclubs.app.models.Category;
 import com.cineclubs.app.repository.CategoryRepository;
 import com.cineclubs.app.repository.ClubRepository;
@@ -29,6 +30,11 @@ public class CategoryService {
     public List<CategoryDTO> getAllCategories() {
         return categoryRepository.findAll().stream()
                 .map(CategoryDTO::new).toList();
+    }
+
+    public Category getCategoryById(Long id) {
+        return categoryRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("CLUB", id.toString()));
     }
 
 }

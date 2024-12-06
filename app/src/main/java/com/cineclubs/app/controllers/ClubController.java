@@ -34,8 +34,8 @@ public class ClubController {
     }
 
     @PostMapping
-    public ResponseEntity<ClubDTO> createClub(@RequestBody Club club, @RequestParam String userId) {
-        return ResponseEntity.ok(clubService.createClub(club, userId));
+    public ResponseEntity<ClubDTO> createClub(@RequestBody Club club, @RequestParam String userId, @RequestParam Long categoryId) {
+        return ResponseEntity.ok(clubService.createClub(club, userId, categoryId));
     }
 
     @PutMapping("/{id}")

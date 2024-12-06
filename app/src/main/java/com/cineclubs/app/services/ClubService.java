@@ -1,9 +1,11 @@
 package com.cineclubs.app.services;
 
+import com.cineclubs.app.dto.CategoryDTO;
 import com.cineclubs.app.dto.ClubDTO;
 import com.cineclubs.app.enums.ClubRole;
 import com.cineclubs.app.enums.MemberStatus;
 import com.cineclubs.app.exceptions.*;
+import com.cineclubs.app.models.Category;
 import com.cineclubs.app.models.Club;
 import com.cineclubs.app.models.ClubMember;
 import com.cineclubs.app.models.User;
@@ -22,12 +24,14 @@ public class ClubService {
     private final ClubRepository clubRepository;
     private final UserService userService;
     private final SimpMessagingTemplate messagingTemplate;
+    private final CategoryService categoryService;
 
     public ClubService(ClubRepository clubRepository, UserService userService,
-                       SimpMessagingTemplate messagingTemplate) {
+                       SimpMessagingTemplate messagingTemplate, CategoryService categoryService) {
         this.clubRepository = clubRepository;
         this.userService = userService;
         this.messagingTemplate = messagingTemplate;
+        this.categoryService = categoryService;
     }
 
     public List<ClubDTO> getAllClubs() {
@@ -41,7 +45,7 @@ public class ClubService {
                 .orElseThrow(() -> new ResourceNotFoundException("CLUB", id.toString()));
     }
 
-    public ClubDTO createClub(Club club, String clerkId) {
+    public ClubDTO createClub(Club club, String userId, Long categoryId) {
         if (club.getName() == null || club.getName().trim().isEmpty()) {
             throw new ValidationException("CLUB", "Club name is required");
         }
@@ -54,7 +58,9 @@ public class ClubService {
 
         String slug = SlugGenerator.generateUniqueSlug(club.getName());
 
-        User user = userService.getUserByUserId(clerkId);
+        User user = userService.getUserByUserId(userId);
+        Category category = categoryService.getCategoryById(categoryId);
+        club.setCategory(category);
         club.setUser(user);
         club.setSlug(slug);
 
@@ -73,10 +79,10 @@ public class ClubService {
         return new ClubDTO(savedClub, false, false);
     }
 
-    public ClubDTO updateClub(Long id, Club clubDetails, String clerkId) {
+    public ClubDTO updateClub(Long id, Club clubDetails, String userId) {
         Club club = getClubById(id);
 
-        if (!club.getUser().getUserId().equals(clerkId)) {
+        if (!club.getUser().getUserId().equals(userId)) {
             throw new UnauthorizedActionException("CLUB", "update");
         }
 
@@ -101,10 +107,10 @@ public class ClubService {
         return new ClubDTO(updatedClub, false, false);
     }
 
-    public void deleteClub(Long id, String clerkId) {
+    public void deleteClub(Long id, String userId) {
         Club club = getClubById(id);
 
-        if (!club.getUser().getUserId().equals(clerkId)) {
+        if (!club.getUser().getUserId().equals(userId)) {
             throw new UnauthorizedActionException("CLUB", "delete");
         }
 
@@ -116,9 +122,9 @@ public class ClubService {
         return club.getMembers().stream().anyMatch(member -> member.getUser().equals(user));
     }
 
-    public void joinClub(String clerkId, Long clubId) {
+    public void joinClub(String userId, Long clubId) {
         Club club = getClubById(clubId);
-        User user = userService.getUserByUserId(clerkId);
+        User user = userService.getUserByUserId(userId);
 
         if (isUserJoined(club, user)) {
             throw new ValidationException("CLUB", "User is already a member of this club");
@@ -139,15 +145,15 @@ public class ClubService {
         messagingTemplate.convertAndSend("/topic/clubs", new ClubDTO(joinedClub, false, false));
     }
 
-    public void leaveClub(String clerkId, Long clubId) {
+    public void leaveClub(String userId, Long clubId) {
         Club club = getClubById(clubId);
-        User user = userService.getUserByUserId(clerkId);
+        User user = userService.getUserByUserId(userId);
 
         if (!isUserJoined(club, user)) {
             throw new ValidationException("CLUB", "User is not a member of this club");
         }
 
-        if (club.getUser().getUserId().equals(clerkId)) {
+        if (club.getUser().getUserId().equals(userId)) {
             throw new ValidationException("CLUB", "Club owner cannot leave the club");
         }
         club.getMembers().removeIf(member -> member.getUser().equals(user));
