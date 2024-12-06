@@ -9,6 +9,7 @@ import com.cineclubs.app.models.Category;
 import com.cineclubs.app.models.Club;
 import com.cineclubs.app.models.ClubMember;
 import com.cineclubs.app.models.User;
+import com.cineclubs.app.repository.ClubMemberRepository;
 import com.cineclubs.app.repository.ClubRepository;
 import com.cineclubs.app.utils.SlugGenerator;
 import org.springframework.data.domain.PageRequest;
@@ -25,13 +26,15 @@ public class ClubService {
     private final UserService userService;
     private final SimpMessagingTemplate messagingTemplate;
     private final CategoryService categoryService;
+    private final ClubMemberRepository clubMemberRepository;
 
     public ClubService(ClubRepository clubRepository, UserService userService,
-                       SimpMessagingTemplate messagingTemplate, CategoryService categoryService) {
+                       SimpMessagingTemplate messagingTemplate, CategoryService categoryService, ClubMemberRepository clubMemberRepository) {
         this.clubRepository = clubRepository;
         this.userService = userService;
         this.messagingTemplate = messagingTemplate;
         this.categoryService = categoryService;
+        this.clubMemberRepository = clubMemberRepository;
     }
 
     public List<ClubDTO> getAllClubs() {
@@ -73,8 +76,8 @@ public class ClubService {
         member.setRole(ClubRole.ADMIN);
         member.setStatus(MemberStatus.APPROVED);
         club.getMembers().add(member);
-
         Club savedClub = clubRepository.save(club);
+        clubMemberRepository.save(member);
         messagingTemplate.convertAndSend("/topic/clubs", new ClubDTO(savedClub, false, false));
         return new ClubDTO(savedClub, false, false);
     }
