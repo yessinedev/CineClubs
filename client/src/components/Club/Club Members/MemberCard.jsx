@@ -79,7 +79,7 @@ export default function MemberCard({ member }) {
       <div className="flex items-center gap-4 w-full sm:w-auto justify-between sm:justify-end">
         <div className="flex items-center gap-2 px-3 py-1 bg-gray-900/50 rounded-full">
           <MessageCircle className="w-4 h-4 text-blue-400" />
-          <span className="text-sm text-gray-300">{member.postsCount}</span>
+          <span className="text-sm text-gray-300">{member.postsCount > 1 ? `${member.postsCount} posts` : `${member.postsCount} post` }</span>
         </div>
 
         {isOwner && (
@@ -92,27 +92,34 @@ export default function MemberCard({ member }) {
                 Member Actions
               </DropdownMenuLabel>
               <DropdownMenuSeparator className="bg-gray-800" />
-              {memberRoles.map((role) => (
-                <DropdownMenuItem
-                  key={role.value}
-                  className={cn(
-                    "flex items-center gap-2 text-gray-300 hover:text-white cursor-pointer",
-                    member.role === role.value && "bg-gray-800"
-                  )}
-                  // onClick={() => onRoleChange?.(member.id, role.value)}
-                >
-                  {role.icon}
-                  <span>Make {role.label}</span>
-                </DropdownMenuItem>
-              ))}
-              <DropdownMenuSeparator className="bg-gray-800" />
-              <DropdownMenuItem
-                className="flex items-center gap-2 text-red-400 hover:text-red-300 cursor-pointer"
-                // onClick={() => onRemoveMember?.(member.id)}
-              >
-                <UserMinus className="w-4 h-4" />
-                <span>Remove Member</span>
-              </DropdownMenuItem>
+              {memberRoles
+                .filter((role) => role.value !== member.role)
+                .map((role) => (
+                  <DropdownMenuItem
+                    key={role.value}
+                    className={cn(
+                      "flex items-center gap-2 text-gray-300 hover:text-white cursor-pointer",
+                      member.role === role.value && "bg-gray-800"
+                    )}
+                    // onClick={() => onRoleChange?.(member.id, role.value)}
+                  >
+                    {role.icon}
+                    <span>Make {role.label}</span>
+                  </DropdownMenuItem>
+                ))}
+
+              {member.role !== "ADMIN" && (
+                <>
+                  <DropdownMenuSeparator className="bg-gray-800" />
+                  <DropdownMenuItem
+                    className="flex items-center gap-2 text-red-400 hover:text-red-300 cursor-pointer"
+                    // onClick={() => onRemoveMember?.(member.id)}
+                  >
+                    <UserMinus className="w-4 h-4" />
+                    <span>Remove Member</span>
+                  </DropdownMenuItem>
+                </>
+              )}
             </DropdownMenuContent>
           </DropdownMenu>
         )}
