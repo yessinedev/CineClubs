@@ -4,7 +4,7 @@ import { MessageCircle, Users } from "lucide-react";
 import ProfilePictureModal from "../Profile/ProfilePictureModal";
 import { SignInButton, useUser } from "@clerk/clerk-react";
 
-export default function ClubDetails({ club, isMember }) {
+export default function ClubDetails({ club, member }) {
   const { isSignedIn, user } = useUser();
   const queryClient = useQueryClient();
   console.log(club)
@@ -41,7 +41,7 @@ export default function ClubDetails({ club, isMember }) {
             <h1 className="text-2xl sm:text-3xl font-bold text-white">
               {club.name}
             </h1>
-            {isSignedIn && isMember && (
+            {isSignedIn && member.role === 'ADMIN' && (
               <ProfilePictureModal
                 modalTitle="Change your community banner image"
                 id={club.id}
@@ -73,7 +73,7 @@ export default function ClubDetails({ club, isMember }) {
         </div>
         <div className="w-full sm:w-auto">
           {isSignedIn ? (
-            isMember ? (
+            member.status === 'APPROVED' ? (
               <button
                 onClick={() => leaveClubMutation()}
                 disabled={isLeaving}
@@ -84,8 +84,8 @@ export default function ClubDetails({ club, isMember }) {
             ) : (
               <button
                 onClick={handleJoinClick}
-                disabled={isJoining}
-                className="w-full sm:w-auto px-8 py-3 bg-blue-500 hover:bg-blue-600 text-white rounded-xl flex items-center justify-center gap-2 transition-colors"
+                disabled={isJoining || member.status === "PENDING"}
+                className={`w-full sm:w-auto px-8 py-3 ${member.status === "PENDING" ? "bg-gray-400 hover:bg-gray-600": "bg-blue-500 hover:bg-blue-600" }  text-white rounded-xl flex items-center justify-center gap-2 transition-colors`}
               >
                 Join Club
               </button>

@@ -1,5 +1,6 @@
 package com.cineclubs.app.dto;
 
+import com.cineclubs.app.enums.MemberStatus;
 import com.cineclubs.app.models.Club;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -38,7 +39,9 @@ public class ClubDTO {
         this.ownerId = club.getUser().getUserId();
         this.ownerUsername = club.getUser().getUsername();
         this.ownerImageUrl = club.getUser().getImageUrl();
-        this.membersCount = club.getMembers() != null ? club.getMembers().size() : 0;
+        this.membersCount = club.getMembers() != null ? (int) club.getMembers().stream()
+                .filter(member -> member.getStatus() == MemberStatus.APPROVED)
+                .count() : 0;
         this.postsCount = club.getPosts() != null ? club.getPosts().size() : 0;
         this.slug = club.getSlug();
         this.isPublic = club.isPublic();

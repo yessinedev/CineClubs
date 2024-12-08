@@ -15,7 +15,6 @@ import {
 } from "@/components/ui/sheet";
 
 export default function ClubChatPage({ slug }) {
-  const navigate = useNavigate();
 
   const {
     data: club,

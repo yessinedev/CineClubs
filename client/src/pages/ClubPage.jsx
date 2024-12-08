@@ -40,6 +40,7 @@ export default function ClubPage() {
   }
 
   if (error) {
+    console.log(error)
     return (
       <ErrorPage
         title="Something went wrong"
@@ -49,8 +50,9 @@ export default function ClubPage() {
     );
   }
 
-  const isMember =
-    isSignedIn && club?.members?.some((member) => member.userId === user?.id);
+   
+  const member = club?.members.find((member) => member.userId === user?.id  );
+  console.log(member)
 
   const renderContent = () => {
     if (!isSignedIn) {
@@ -66,7 +68,7 @@ export default function ClubPage() {
       );
     }
 
-    if (!isMember) {
+    if (!member || member.status !== 'APPROVED') {
       return (
         <div className="p-8 text-center bg-gray-900 border border-gray-800 rounded-xl">
           <p className="text-gray-300">
@@ -105,7 +107,7 @@ export default function ClubPage() {
     <div className="min-h-screen bg-gray-950">
       <ClubBanner imageUrl={club.imageUrl} />
       <div className="relative z-10 px-4 mx-auto -mt-52 max-w-7xl sm:px-6 lg:px-8">
-        <ClubDetails club={club} isMember={isMember} />
+        <ClubDetails club={club} member={member} />
         <div className="px-8 mt-8 border-b border-gray-800">
           <nav className="flex space-x-8">
             <button
