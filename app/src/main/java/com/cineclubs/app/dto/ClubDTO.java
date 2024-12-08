@@ -58,18 +58,18 @@ public class ClubDTO {
                             member.getId(),
                             member.getUser().getUserId(),
                             club.getId(),
-                            member.getUser().getFirstName() + " " + member.getUser().getLastName(),
+                            member.getUser().getUsername(),
                             member.getUser().getImageUrl(),
                             member.getStatus(),
                             member.getRole(),
-                            (int) club.getPosts().stream()
+                            club.getPosts() != null ? (int) club.getPosts().stream()
                                     .filter(post -> post.getAuthor().getUserId().equals(member.getUser().getUserId()))
-                                    .count(),
+                                    .count() : 0,
                             member.getJoinedAt(),
                             member.getCreatedAt(),
                             member.getUpdatedAt()
                     ))
-                    .sorted(Comparator.comparing(ClubMemberDTO::getJoinedAt))
+                    .sorted(Comparator.comparing(ClubMemberDTO::getJoinedAt, Comparator.nullsLast(Comparator.naturalOrder())))
                     .collect(Collectors.toList());
         }
 
