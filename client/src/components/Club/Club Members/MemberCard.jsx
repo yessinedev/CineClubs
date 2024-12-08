@@ -82,7 +82,7 @@ export default function MemberCard({ member }) {
           <span className="text-sm text-gray-300">{member.postsCount > 1 ? `${member.postsCount} posts` : `${member.postsCount} post` }</span>
         </div>
 
-        {isOwner && (
+       
           <DropdownMenu>
             <DropdownMenuTrigger className="p-2 text-gray-400 hover:text-white rounded-full hover:bg-gray-700 transition-colors">
               <MoreVertical className="w-5 h-5" />
@@ -122,7 +122,7 @@ export default function MemberCard({ member }) {
               )}
             </DropdownMenuContent>
           </DropdownMenu>
-        )}
+      
       </div>
     </div>
   );
