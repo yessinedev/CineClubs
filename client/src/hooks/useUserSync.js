@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useUser } from "@clerk/clerk-react";
 import axios from "axios";
+import apiClient from "@/services/apiClient";
 
 export function useUserSync() {
   const { user, isSignedIn } = useUser();
@@ -9,7 +10,7 @@ export function useUserSync() {
     const syncUserToDatabase = async () => {
       if (isSignedIn && user) {
         try {
-          await axios.post("http://localhost:8080/api/users", {
+          await apiClient.post("/users", {
             userId: user.id,
             email: user.primaryEmailAddress?.emailAddress,
             firstName: user.firstName,
