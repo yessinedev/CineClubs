@@ -24,4 +24,6 @@ public interface ClubRepository extends JpaRepository<Club, Long> {
     boolean existsBySlug(String slug);
 
     Optional<Club> findBySlug(String slug);
+
+    List<Club> findClubsByCategoryId(Long categoryId);
 }

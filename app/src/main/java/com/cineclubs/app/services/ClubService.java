@@ -216,4 +216,8 @@ public class ClubService {
                 .orElseThrow(() -> new ResourceNotFoundException("CLUB", "slug: " + slug));
         return new ClubDTO(club, includePosts, includeMembers);
     }
+
+    public List<ClubDTO> getClubsByCategory(Long categoryId) {
+        return clubRepository.findClubsByCategoryId(categoryId).stream().map(club -> new ClubDTO(club, false, false)).toList();
+    }
 }

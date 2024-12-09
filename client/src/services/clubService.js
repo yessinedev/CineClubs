@@ -10,7 +10,14 @@ export const createClub = async (userId, club) => {
 };
 
 export const fetchClubs = async () => {
+  console.log('all invoked')
   const { data } = await apiClient.get("/clubs");
+  return data;
+};
+
+export const fetchClubsByCategory = async (categoryId) => {
+  console.log('cat invoked')
+  const { data } = await apiClient.get(`/clubs/category?categoryId=${categoryId}`);
   return data;
 };
 

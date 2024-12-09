@@ -93,4 +93,9 @@ public class ClubController {
             @RequestParam(defaultValue = "false") boolean includeMembers) {
         return ResponseEntity.ok(clubService.getClubDTOBySlug(slug, includePosts, includeMembers));
     }
+
+    @GetMapping("/category")
+    public ResponseEntity<List<ClubDTO>> getClubsByCategory(@RequestParam Long categoryId) {
+        return ResponseEntity.ok(clubService.getClubsByCategory(categoryId));
+    }
 }

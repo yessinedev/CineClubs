@@ -2,14 +2,13 @@ import ClubDiscussions from "../components/Discussions/ClubDiscussions";
 import ClubBanner from "../components/Club/ClubBanner";
 import ClubDetails from "../components/Club/ClubDetails";
 import { fetchClub } from "@/services/clubService";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams} from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { useUser } from "@clerk/clerk-react";
 import { useState } from "react";
 import MembersList from "@/components/Club/Club Members/MembersList";
 import { SignInButton } from "@clerk/clerk-react";
 import ErrorPage from "../components/ErrorPage";
-import ClubChat from "../components/Club/ClubChat";
 import ClubChatPage from "./ClubChatPage";
 
 export default function ClubPage() {

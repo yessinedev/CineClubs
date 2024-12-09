@@ -1,6 +1,7 @@
 import { fetchCategories } from '@/services/categoryService';
 import { useQuery } from '@tanstack/react-query';
 import { Code2, Palette, Dumbbell, Microscope, BookOpen, Camera, Music, Globe } from 'lucide-react';
+import { Link } from "react-router-dom";
 
 const iconMapping = {
   "IT & Technologies": <Code2 className="w-6 h-6" />,
@@ -42,6 +43,7 @@ export default function Categories() {
     );
 
   const transformedCategories = categories?.map((category) => ({
+    id: category.id,
     icon: iconMapping[category.name] || <Globe className="w-6 h-6" />, // Default icon if no match
     name: category.name,
     count: category.clubsCount,
@@ -59,7 +61,7 @@ export default function Categories() {
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {transformedCategories.map((category) => (
-            <button
+            <Link to={`/clubs/category/${category.id}`}
               key={category.name}
               className="group p-6 bg-gray-900/50 rounded-xl border border-gray-800 hover:border-blue-500/50 transition-all duration-300"
             >
@@ -70,7 +72,7 @@ export default function Categories() {
                 <h3 className="text-lg font-semibold text-white mb-1">{category.name}</h3>
                 <p className="text-sm text-gray-400">{category.count} communities</p>
               </div>
-            </button>
+            </Link>
           ))}
         </div>
       </div>
