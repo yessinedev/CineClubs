@@ -1,17 +1,52 @@
+import { fetchCategories } from '@/services/categoryService';
+import { useQuery } from '@tanstack/react-query';
 import { Code2, Palette, Dumbbell, Microscope, BookOpen, Camera, Music, Globe } from 'lucide-react';
 
-const categories = [
-  { icon: <Code2 className="w-6 h-6" />, name: 'Technology', count: 245 },
-  { icon: <Palette className="w-6 h-6" />, name: 'Arts & Design', count: 189 },
-  { icon: <Dumbbell className="w-6 h-6" />, name: 'Health & Fitness', count: 167 },
-  { icon: <Microscope className="w-6 h-6" />, name: 'Science', count: 142 },
-  { icon: <BookOpen className="w-6 h-6" />, name: 'Education', count: 156 },
-  { icon: <Camera className="w-6 h-6" />, name: 'Photography', count: 134 },
-  { icon: <Music className="w-6 h-6" />, name: 'Music', count: 178 },
-  { icon: <Globe className="w-6 h-6" />, name: 'Culture', count: 123 },
-];
+const iconMapping = {
+  "IT & Technologies": <Code2 className="w-6 h-6" />,
+  "Arts & Design": <Palette className="w-6 h-6" />,
+  "Health & Fitness": <Dumbbell className="w-6 h-6" />,
+  Science: <Microscope className="w-6 h-6" />,
+  Education: <BookOpen className="w-6 h-6" />,
+  "Fun & Diversity": <Globe className="w-6 h-6" />,
+  Music: <Music className="w-6 h-6" />,
+  Culture: <Globe className="w-6 h-6" />,
+};
 
 export default function Categories() {
+  const {
+    data: categories,
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: ["categories"],
+    queryFn: fetchCategories
+  });
+
+  if (isLoading)
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-lg font-semibold text-gray-600 animate-pulse">
+          Loading categories...
+        </div>
+      </div>
+    );
+
+  if (error)
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="p-4 text-red-500 bg-red-100 rounded-lg shadow">
+          Error: {error.message}
+        </div>
+      </div>
+    );
+
+  const transformedCategories = categories?.map((category) => ({
+    icon: iconMapping[category.name] || <Globe className="w-6 h-6" />, // Default icon if no match
+    name: category.name,
+    count: category.clubsCount,
+  }));
+
   return (
     <section className="py-20 bg-gradient-to-b from-gray-950 to-black">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -23,7 +58,7 @@ export default function Categories() {
         </div>
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {categories.map((category) => (
+          {transformedCategories.map((category) => (
             <button
               key={category.name}
               className="group p-6 bg-gray-900/50 rounded-xl border border-gray-800 hover:border-blue-500/50 transition-all duration-300"

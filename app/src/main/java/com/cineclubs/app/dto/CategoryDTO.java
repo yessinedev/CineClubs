@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 public class CategoryDTO {
     private Long id;
     private String name;
+    private int clubsCount;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
@@ -17,6 +18,7 @@ public class CategoryDTO {
     public CategoryDTO(Category category) {
         id = category.getId();
         name = category.getName();
+        clubsCount = category.getClubs() != null ? category.getClubs().size() : 0;
         createdAt = category.getCreatedAt();
         updatedAt = category.getUpdatedAt();
     }
@@ -52,5 +54,13 @@ public class CategoryDTO {
 
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public int getClubsCount() {
+        return clubsCount;
+    }
+
+    public void setClubsCount(int clubsCount) {
+        this.clubsCount = clubsCount;
     }
 }
