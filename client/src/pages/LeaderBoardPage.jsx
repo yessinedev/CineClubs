@@ -1,4 +1,4 @@
-import LeaderboardHeader from "@/components/Leaderboard/LeaderBoardHeader";
+import LeaderboardHeader from "@/components/Leaderboard/LeaderboardHeader";
 import LeaderboardMetrics from "@/components/Leaderboard/LeaderboardMetrics";
 import LeaderboardTable from "@/components/Leaderboard/LeaderboardTable";
 import React from "react";

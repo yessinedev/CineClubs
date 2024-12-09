@@ -1,0 +1,71 @@
+version: '3.8'
+
+services:
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+      args:
+        - VITE_API_BASE_URL=${VITE_API_BASE_URL}
+        - VITE_CLERK_PUBLISHABLE_KEY=${VITE_CLERK_PUBLISHABLE_KEY}
+        - VITE_CLOUD_NAME=${VITE_CLOUD_NAME}
+        - VITE_UPLOAD_PRESET_NAME=${VITE_UPLOAD_PRESET_NAME}
+    container_name: cineclubs-client
+    ports:
+      - "80:80"
+    depends_on:
+      - app
+    networks:
+      - cineclubs-network
+
+  app:
+    build:
+      context: ./app
+      dockerfile: Dockerfile
+    container_name: cineclubs-app
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/tuniclubs
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=root
+      - SPRING_PROFILES_ACTIVE=prod
+      - SPRING_FLYWAY_URL=jdbc:postgresql://db:5432/tuniclubs
+      - SPRING_FLYWAY_USER=postgres
+      - SPRING_FLYWAY_PASSWORD=root
+    expose:
+      - 8080
+    networks:
+      - cineclubs-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  db:
+    image: postgres:15-alpine
+    container_name: cineclubs-db
+    environment:
+      - POSTGRES_DB=tuniclubs
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=root
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - cineclubs-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+networks:
+  cineclubs-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
