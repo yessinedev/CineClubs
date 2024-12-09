@@ -7,7 +7,6 @@ import { SignInButton, useUser } from "@clerk/clerk-react";
 export default function ClubDetails({ club, member }) {
   const { isSignedIn, user } = useUser();
   const queryClient = useQueryClient();
-  console.log(club)
   const { mutate: joinClubMutation, isLoading: isJoining } = useMutation({
     mutationFn: () => joinClub(user.id, club.id),
     onSuccess: () => {
@@ -41,7 +40,7 @@ export default function ClubDetails({ club, member }) {
             <h1 className="text-2xl sm:text-3xl font-bold text-white">
               {club.name}
             </h1>
-            {isSignedIn && member.role === 'ADMIN' && (
+            {isSignedIn && member?.role === "ADMIN" && (
               <ProfilePictureModal
                 modalTitle="Change your community banner image"
                 id={club.id}
@@ -73,7 +72,7 @@ export default function ClubDetails({ club, member }) {
         </div>
         <div className="w-full sm:w-auto">
           {isSignedIn ? (
-            member.status === 'APPROVED' ? (
+            member?.status === "APPROVED" ? (
               <button
                 onClick={() => leaveClubMutation()}
                 disabled={isLeaving}
@@ -81,11 +80,23 @@ export default function ClubDetails({ club, member }) {
               >
                 Leave Club
               </button>
+            ) : member?.status === "PENDING" ? (
+              <button
+                onClick={() => leaveClubMutation()}
+                disabled={isLeaving}
+                className={`w-full sm:w-auto px-8 py-3 ${
+                  member.status === "PENDING"
+                    ? "bg-gray-400 hover:bg-gray-600"
+                    : "bg-blue-500 hover:bg-blue-600"
+                }  text-white rounded-xl flex items-center justify-center gap-2 transition-colors`}
+              >
+                Cancel Request
+              </button>
             ) : (
               <button
                 onClick={handleJoinClick}
-                disabled={isJoining || member.status === "PENDING"}
-                className={`w-full sm:w-auto px-8 py-3 ${member.status === "PENDING" ? "bg-gray-400 hover:bg-gray-600": "bg-blue-500 hover:bg-blue-600" }  text-white rounded-xl flex items-center justify-center gap-2 transition-colors`}
+                disabled={isJoining}
+                className={`w-full sm:w-auto px-8 py-3 bg-blue-500 hover:bg-blue-600text-white rounded-xl flex items-center justify-center gap-2 transition-colors`}
               >
                 Join Club
               </button>

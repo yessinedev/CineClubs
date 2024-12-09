@@ -52,8 +52,7 @@ export default function ClubPage() {
 
    
   const member = club?.members.find((member) => member.userId === user?.id  );
-  console.log(member)
-
+ 
   const renderContent = () => {
     if (!isSignedIn) {
       return (
