@@ -1,12 +1,11 @@
-# Movie Club Platform
+# TuniClubs - Social Media Platform
 
-A platform for movie and TV enthusiasts to create, join, and engage with clubs focused on specific genres, themes, or shows. Clubs act as community hubs for discussions, sharing recommendations, and tracking member activity.
-
+a dynamic platform connecting people through diverse clubs and shared interests.
 ---
 
 ## 🚀 Project Overview
 
-This platform fosters a vibrant community for fans of movies and TV shows, offering a space to connect with like-minded individuals. Users can join clubs, participate in discussions, and stay updated on club activities.
+This platform fosters a vibrant community for diverse clubs, offering a space to connect with like-minded individuals. Users can join clubs, participate in discussions, and stay updated on club activities.
 
 ---
 
@@ -22,20 +21,11 @@ This platform fosters a vibrant community for fans of movies and TV shows, offer
   - Banner image.
 
 ---
-
-### **Join and Leave Clubs**
-
-- Users can **join** or **leave** clubs.
-- Display a list of clubs.
-- Display a **Leaderboard** of most active clubs.
-
----
-
 ### **Club Discussions**
 
 - Create **discussion threads** within a club.
 - Enable **replies** to threads for detailed conversations.
-- Allow moderators to **pin important threads** (e.g., _Weekly Watch Recommendations_).
+- Club Members Chat messages
 
 ---
 ### **User Pofile**
@@ -56,13 +46,14 @@ This platform fosters a vibrant community for fans of movies and TV shows, offer
   - **Invite new members** to private clubs.
 
 ---
-
+## ✨ Upcoming Features
+---
 ### **Member Activity Tracking**
 
 - Track active members and their contributions:
   - Threads started.
   - Posts made.
-- Display a simple **leaderboard** of the most active members.
+- Display a  **leaderboard** of the most active members & clubs.
 
 ---
 
@@ -82,13 +73,6 @@ This platform fosters a vibrant community for fans of movies and TV shows, offer
 - **API Management**: React Query for efficient state handling.
 
 ---
-
-## 🚧 Future Enhancements
-
-- Add **real-time chat** for live discussions.
-- Support for **movie/TV tracking** within clubs.
-- Advanced **search and filtering** for discovering clubs.
-
 ## 💾 Database Seeding
 
 Populate the database with sample data for development:
