@@ -3,6 +3,7 @@ package com.tuniclubs.app.dto;
 import com.tuniclubs.app.enums.MemberStatus;
 import com.tuniclubs.app.models.Club;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.tuniclubs.app.models.ClubMember;
 
 import java.time.LocalDateTime;
 import java.util.Comparator;
@@ -61,7 +62,7 @@ public class ClubDTO {
                             member.getId(),
                             member.getUser().getUserId(),
                             club.getId(),
-                            member.getUser().getUsername(),
+                            createUserName(member),
                             member.getUser().getImageUrl(),
                             member.getStatus(),
                             member.getRole(),
@@ -77,6 +78,24 @@ public class ClubDTO {
         }
 
     }
+
+    private String createUserName(ClubMember member) {
+        String name = "";
+
+        if (member.getUser().getFirstName() != null && member.getUser().getLastName() != null) {
+            // Both firstName and lastName are not null
+            name = member.getUser().getFirstName() + " " + member.getUser().getLastName();
+        } else if (member.getUser().getFirstName() != null) {
+            // Only firstName is not null
+            name = member.getUser().getFirstName();
+        } else if (member.getUser().getLastName() != null) {
+            // Only lastName is not null
+            name = member.getUser().getLastName();
+        }
+
+        return name;
+    }
+
 
     public Long getId() {
         return id;
