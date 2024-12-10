@@ -5,21 +5,21 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: cineclubs-app
+    container_name: tuniclubs-app
     depends_on:
       - db
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/cineclubs
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/tuniclubs
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=root
       - SPRING_PROFILES_ACTIVE=prod
-      - SPRING_FLYWAY_URL=jdbc:postgresql://db:5432/cineclubs
+      - SPRING_FLYWAY_URL=jdbc:postgresql://db:5432/tuniclubs
       - SPRING_FLYWAY_USER=postgres
       - SPRING_FLYWAY_PASSWORD=root
     ports:
       - "8080:8080"
     networks:
-      - cineclubs-network
+      - tuniclubs-network
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
       interval: 30s
@@ -28,9 +28,9 @@ services:
 
   db:
     image: postgres:15-alpine
-    container_name: cineclubs-db
+    container_name: tuniclubs-db
     environment:
-      - POSTGRES_DB=cineclubs
+      - POSTGRES_DB=tuniclubs
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=root
     volumes:
@@ -38,7 +38,7 @@ services:
     ports:
       - "5432:5432"
     networks:
-      - cineclubs-network
+      - tuniclubs-network
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 10s
@@ -46,7 +46,7 @@ services:
       retries: 5
 
 networks:
-  cineclubs-network:
+  tuniclubs-network:
     driver: bridge
 
 volumes:
