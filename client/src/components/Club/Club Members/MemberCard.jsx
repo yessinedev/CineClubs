@@ -5,6 +5,8 @@ import {
   UserMinus,
   Shield,
   User,
+  CheckCircle,
+  XCircle,
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -35,7 +37,7 @@ const memberRoles = [
   },
 ];
 
-export default function MemberCard({ member }) {
+export default function MemberCard({ member, onAcceptMember, onDeclineMember }) {
   const currentRole =
     memberRoles.find((role) => role.value === member.role) || memberRoles[2];
   const isOwner = member.role === "ADMIN";
@@ -72,6 +74,16 @@ export default function MemberCard({ member }) {
             <span className="text-gray-400">
               Joined At {formatDate(member.createdAt)}
             </span>
+            <span
+              className={cn(
+                "ml-2 px-2 py-0.5 rounded-full text-xs font-semibold",
+                member.status === "PENDING" && "bg-yellow-500/10 text-yellow-400",
+                member.status === "APPROVED" && "bg-green-500/10 text-green-400",
+                member.status === "DECLINED" && "bg-red-500/10 text-red-400"
+              )}
+            >
+              {member.status}
+            </span>
           </div>
         </div>
       </div>
@@ -79,10 +91,27 @@ export default function MemberCard({ member }) {
       <div className="flex items-center gap-4 w-full sm:w-auto justify-between sm:justify-end">
         <div className="flex items-center gap-2 px-3 py-1 bg-gray-900/50 rounded-full">
           <MessageCircle className="w-4 h-4 text-blue-400" />
-          <span className="text-sm text-gray-300">{member.postsCount > 1 ? `${member.postsCount} posts` : `${member.postsCount} post` }</span>
+          <span className="text-sm text-gray-300">
+            {member.postsCount > 1 ? `${member.postsCount} posts` : `${member.postsCount} post`}
+          </span>
         </div>
 
-       
+        {member.status === "PENDING" ? (
+          <div className="flex items-center gap-2">
+            <button
+              className="p-2 bg-green-500/20 text-green-400 rounded-full hover:bg-green-500/30"
+              onClick={() => onAcceptMember(member.id)}
+            >
+              <CheckCircle className="w-5 h-5" />
+            </button>
+            <button
+              className="p-2 bg-red-500/20 text-red-400 rounded-full hover:bg-red-500/30"
+              onClick={() => onDeclineMember(member.id)}
+            >
+              <XCircle className="w-5 h-5" />
+            </button>
+          </div>
+        ) : (
           <DropdownMenu>
             <DropdownMenuTrigger className="p-2 text-gray-400 hover:text-white rounded-full hover:bg-gray-700 transition-colors">
               <MoreVertical className="w-5 h-5" />
@@ -101,19 +130,16 @@ export default function MemberCard({ member }) {
                       "flex items-center gap-2 text-gray-300 hover:text-white cursor-pointer",
                       member.role === role.value && "bg-gray-800"
                     )}
-                    // onClick={() => onRoleChange?.(member.id, role.value)}
                   >
                     {role.icon}
                     <span>Make {role.label}</span>
                   </DropdownMenuItem>
                 ))}
-
               {member.role !== "ADMIN" && (
                 <>
                   <DropdownMenuSeparator className="bg-gray-800" />
                   <DropdownMenuItem
                     className="flex items-center gap-2 text-red-400 hover:text-red-300 cursor-pointer"
-                    // onClick={() => onRemoveMember?.(member.id)}
                   >
                     <UserMinus className="w-4 h-4" />
                     <span>Remove Member</span>
@@ -122,7 +148,7 @@ export default function MemberCard({ member }) {
               )}
             </DropdownMenuContent>
           </DropdownMenu>
-      
+        )}
       </div>
     </div>
   );
