@@ -1,0 +1,48 @@
+version: "3.8"
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: tuniclubs-app-dev
+    depends_on:
+      - db
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/tuniclubs
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=root
+      - SPRING_PROFILES_ACTIVE=dev
+      - SPRING_FLYWAY_URL=jdbc:postgresql://db:5432/tuniclubs
+      - SPRING_FLYWAY_USER=postgres
+      - SPRING_FLYWAY_PASSWORD=root
+    ports:
+      - "8080:8080" # Application port
+      - "5005:5005" # Debug port
+    volumes:
+      - ./:/app # Mount source code for hot-reloading
+      - maven_cache:/root/.m2 # Cache Maven dependencies
+    networks:
+      - tuniclubs-network-dev
+
+  db:
+    image: postgres:15-alpine
+    container_name: tuniclubs-db-dev
+    environment:
+      - POSTGRES_DB=tuniclubs
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=root
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data_dev:/var/lib/postgresql/data
+    networks:
+      - tuniclubs-network-dev
+
+networks:
+  tuniclubs-network-dev:
+    driver: bridge
+
+volumes:
+  postgres_data_dev: # Development database data
+  maven_cache: # Maven dependencies cache
