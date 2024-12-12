@@ -1,5 +1,6 @@
 package com.tuniclubs.app.controllers;
 
+import com.tuniclubs.app.dto.CreatePostRequest;
 import com.tuniclubs.app.dto.PageRequest;
 import com.tuniclubs.app.dto.PageResponse;
 import com.tuniclubs.app.dto.PostDTO;
@@ -9,12 +10,19 @@ import com.tuniclubs.app.models.Post;
 import com.tuniclubs.app.services.PostService;
 
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 @RestController
 @RequestMapping("/api/posts")
+@Tag(name = "Posts", description = "Post management endpoints")
 public class PostController {
 
     private final PostService postService;
@@ -24,18 +32,21 @@ public class PostController {
     }
 
     @PostMapping
-    public ResponseEntity<PostDTO> createPost(@RequestParam Long clubId,
-            @RequestParam String userId,
-            @RequestBody Post post) {
-        try {
-            PostDTO createdPost = postService.createPost(clubId, userId, post);
-            return ResponseEntity.ok(createdPost);
-        } catch (RuntimeException e) {
-            if (e.getMessage().contains("Only club members can create posts")) {
-                return ResponseEntity.status(403).build();
-            }
-            throw e;
-        }
+    @Operation(summary = "Create new post")
+    @ApiResponse(responseCode = "200", description = "Post created successfully")
+    @ApiResponse(responseCode = "400", description = "Invalid request")
+    @ApiResponse(responseCode = "403", description = "Not authorized")
+    public ResponseEntity<PostDTO> createPost(
+            @Parameter(description = "Club ID", required = true) @RequestParam Long clubId,
+
+            @Parameter(description = "User ID", required = true) @RequestParam String userId,
+
+            @Valid @RequestBody CreatePostRequest request) {
+        Post post = new Post();
+        post.setTitle(request.getTitle());
+        post.setContent(request.getContent());
+
+        return ResponseEntity.ok(postService.createPost(clubId, userId, post));
     }
 
     @GetMapping("/club/{clubId}")

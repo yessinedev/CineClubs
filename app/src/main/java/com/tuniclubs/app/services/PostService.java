@@ -33,11 +33,23 @@ public class PostService {
     }
 
     public PostDTO createPost(Long clubId, String userId, Post post) {
+        // Validate required fields
+        if (post.getTitle() == null || post.getTitle().trim().isEmpty()) {
+            throw new ValidationException("POST", "Post title is required");
+        }
+        if (post.getContent() == null || post.getContent().trim().isEmpty()) {
+            throw new ValidationException("POST", "Post content is required");
+        }
+
+        // Trim whitespace from inputs
+        post.setTitle(post.getTitle().trim());
+        post.setContent(post.getContent().trim());
+
         User author = userService.getUserByUserId(userId);
         Club club = clubService.getClubById(clubId);
 
         if (!clubService.isUserJoined(club, author)) {
-            throw new RuntimeException("Only club members can create posts");
+            throw new UnauthorizedActionException("POST", "create");
         }
 
         post.setAuthor(author);
