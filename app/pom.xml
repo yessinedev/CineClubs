@@ -136,7 +136,7 @@
 				<version>10.10.0</version>
 				<configuration>
 					<driver>org.postgresql.Driver</driver>
-					<url>jdbc:postgresql://localhost:5432/cineclubs</url>
+					<url>jdbc:postgresql://localhost:5432/tuniclubs</url>
 					<user>postgres</user>
 					<password>root</password>
 					<baselineOnMigrate>true</baselineOnMigrate>

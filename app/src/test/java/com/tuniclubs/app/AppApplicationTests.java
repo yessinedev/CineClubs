@@ -1,10 +1,10 @@
-package com.cineclubs.app;
+package com.tuniclubs.app;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class AppApplicationTests {
+class TuniclubsApplicationTests {
 
 	@Test
 	void contextLoads() {
