@@ -1,5 +1,6 @@
 package com.tuniclubs.app.dto;
 
+import com.tuniclubs.app.mapper.UserMapper;
 import com.tuniclubs.app.models.Message;
 import java.time.LocalDateTime;
 
@@ -13,7 +14,7 @@ public class MessageDTO {
     public MessageDTO(Message message) {
         this.id = message.getId();
         this.content = message.getContent();
-        this.sender = new UserDTO(message.getSender());
+        this.sender = UserMapper.toUserDTO(message.getSender());
         this.clubId = message.getClub().getId();
         this.createdAt = message.getCreatedAt();
     }
