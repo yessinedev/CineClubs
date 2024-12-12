@@ -21,6 +21,6 @@ esac
 
 # Execute maven command
 ./mvnw compile exec:java \
-    -Dexec.mainClass="com.cineclubs.app.cli.DatabaseSeederMain" \
+    -Dexec.mainClass="com.tuniclubs.app.cli.DatabaseSeederMain" \
     -Dexec.args="$COMMAND" \
     -Dspring.profiles.active=seed
