@@ -28,73 +28,14 @@ public class ClubDTO {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
+    public ClubDTO() {}
+
+
     public ClubDTO(Club club) {
         this(club, false, false);
     }
 
-    public ClubDTO(Club club, boolean includePosts, boolean includeMembers) {
-        this.id = club.getId();
-        this.name = club.getName();
-        this.description = club.getDescription();
-        this.imageUrl = club.getImageUrl();
-        this.ownerId = club.getUser().getUserId();
-        this.ownerUsername = club.getUser().getUsername();
-        this.ownerImageUrl = club.getUser().getImageUrl();
-        this.membersCount = club.getMembers() != null ? (int) club.getMembers().stream()
-                .filter(member -> member.getStatus() == MemberStatus.APPROVED)
-                .count() : 0;
-        this.postsCount = club.getPosts() != null ? club.getPosts().size() : 0;
-        this.slug = club.getSlug();
-        this.isPublic = club.isPublic();
-        this.category = new CategoryDTO(club.getCategory());
-        this.createdAt = club.getCreatedAt();
-        this.updatedAt = club.getUpdatedAt();
 
-        if (includePosts && club.getPosts() != null) {
-            this.posts = club.getPosts().stream()
-                    .map(PostDTO::new)
-                    .collect(Collectors.toList());
-        }
-
-        if (includeMembers && club.getMembers() != null) {
-            this.members = club.getMembers().stream()
-                    .map(member -> new ClubMemberDTO(
-                            member.getId(),
-                            member.getUser().getUserId(),
-                            club.getId(),
-                            createUserName(member),
-                            member.getUser().getImageUrl(),
-                            member.getStatus(),
-                            member.getRole(),
-                            club.getPosts() != null ? (int) club.getPosts().stream()
-                                    .filter(post -> post.getAuthor().getUserId().equals(member.getUser().getUserId()))
-                                    .count() : 0,
-                            member.getJoinedAt(),
-                            member.getCreatedAt(),
-                            member.getUpdatedAt()
-                    ))
-                    .sorted(Comparator.comparing(ClubMemberDTO::getJoinedAt, Comparator.nullsLast(Comparator.naturalOrder())))
-                    .collect(Collectors.toList());
-        }
-
-    }
-
-    private String createUserName(ClubMember member) {
-        String name = "";
-
-        if (member.getUser().getFirstName() != null && member.getUser().getLastName() != null) {
-            // Both firstName and lastName are not null
-            name = member.getUser().getFirstName() + " " + member.getUser().getLastName();
-        } else if (member.getUser().getFirstName() != null) {
-            // Only firstName is not null
-            name = member.getUser().getFirstName();
-        } else if (member.getUser().getLastName() != null) {
-            // Only lastName is not null
-            name = member.getUser().getLastName();
-        }
-
-        return name;
-    }
 
 
     public Long getId() {

@@ -33,13 +33,14 @@ public class PostService {
     }
 
     public PostDTO createPost(Long clubId, String userId, Post post) {
+        // Validate required fields
+        ValidatePost(post, post);
         User author = userService.getUserByUserId(userId);
         Club club = clubService.getClubById(clubId);
 
         if (!clubService.isUserJoined(club, author)) {
-            throw new RuntimeException("Only club members can create posts");
+            throw new UnauthorizedActionException("POST", "create");
         }
-
         post.setAuthor(author);
         post.setClub(club);
         Post savedPost = postRepository.save(post);
@@ -131,6 +132,14 @@ public class PostService {
             throw new UnauthorizedActionException("POST", "update");
         }
 
+        ValidatePost(postDetails, post);
+
+        Post updatedPost = postRepository.save(post);
+        messagingTemplate.convertAndSend("/topic/posts", new PostDTO(updatedPost));
+        return new PostDTO(updatedPost);
+    }
+
+    private void ValidatePost(Post postDetails, Post post) {
         if (postDetails.getTitle() == null || postDetails.getTitle().trim().isEmpty()) {
             throw new ValidationException("POST", "Post title is required");
         }
@@ -140,9 +149,5 @@ public class PostService {
 
         post.setTitle(postDetails.getTitle().trim());
         post.setContent(postDetails.getContent().trim());
-
-        Post updatedPost = postRepository.save(post);
-        messagingTemplate.convertAndSend("/topic/posts", new PostDTO(updatedPost));
-        return new PostDTO(updatedPost);
     }
 }
