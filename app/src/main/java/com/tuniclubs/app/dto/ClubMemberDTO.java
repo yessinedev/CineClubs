@@ -2,6 +2,7 @@ package com.tuniclubs.app.dto;
 
 import com.tuniclubs.app.enums.ClubRole;
 import com.tuniclubs.app.enums.MemberStatus;
+import com.tuniclubs.app.models.ClubMember;
 
 import java.time.LocalDateTime;
 
@@ -19,8 +20,6 @@ public class ClubMemberDTO {
     private LocalDateTime updatedAt;
 
     public ClubMemberDTO() {}
-
-
 
 
     public ClubMemberDTO(Long id, String userId, Long clubId, String name, String imageUrl, MemberStatus status, ClubRole role, int postsCount,

@@ -5,6 +5,7 @@ import com.tuniclubs.app.dto.ClubDTO;
 import com.tuniclubs.app.enums.ClubRole;
 import com.tuniclubs.app.enums.MemberStatus;
 import com.tuniclubs.app.exceptions.*;
+import com.tuniclubs.app.mapper.ClubMapper;
 import com.tuniclubs.app.models.Category;
 import com.tuniclubs.app.models.Club;
 import com.tuniclubs.app.models.ClubMember;
@@ -27,7 +28,6 @@ public class ClubService {
     private final UserService userService;
     private final SimpMessagingTemplate messagingTemplate;
     private final CategoryService categoryService;
-    private final ClubMemberRepository clubMemberRepository;
 
     public ClubService(ClubRepository clubRepository, UserService userService,
                        SimpMessagingTemplate messagingTemplate, CategoryService categoryService, ClubMemberRepository clubMemberRepository) {
@@ -35,12 +35,11 @@ public class ClubService {
         this.userService = userService;
         this.messagingTemplate = messagingTemplate;
         this.categoryService = categoryService;
-        this.clubMemberRepository = clubMemberRepository;
     }
 
     public List<ClubDTO> getAllClubs() {
         return clubRepository.findAll().stream()
-                .map(club -> new ClubDTO(club, false, false))
+                .map(club -> ClubMapper.toClubDTO(club, false, false))
                 .toList();
     }
 
@@ -83,9 +82,9 @@ public class ClubService {
 
         // Save club and broadcast
         Club savedClub = clubRepository.save(club);
-        messagingTemplate.convertAndSend("/topic/clubs", new ClubDTO(savedClub, false, false));
+        messagingTemplate.convertAndSend("/topic/clubs", ClubMapper.toClubDTO(savedClub, false, false));
 
-        return new ClubDTO(savedClub, false, false);
+        return ClubMapper.toClubDTO(savedClub, false, false);
     }
 
 
@@ -113,8 +112,8 @@ public class ClubService {
         club.setImageUrl(clubDetails.getImageUrl());
 
         Club updatedClub = clubRepository.save(club);
-        messagingTemplate.convertAndSend("/topic/clubs", new ClubDTO(updatedClub, false, false));
-        return new ClubDTO(updatedClub, false, false);
+        messagingTemplate.convertAndSend("/topic/clubs", ClubMapper.toClubDTO(updatedClub, false, false));
+        return ClubMapper.toClubDTO(updatedClub, false, false);
     }
 
     public void deleteClub(Long id, String userId) {
@@ -152,7 +151,7 @@ public class ClubService {
         }
         club.getMembers().add(member);
         Club joinedClub = clubRepository.save(club);
-        messagingTemplate.convertAndSend("/topic/clubs", new ClubDTO(joinedClub, false, false));
+        messagingTemplate.convertAndSend("/topic/clubs", ClubMapper.toClubDTO(joinedClub, false, false));
     }
 
     public void leaveClub(String userId, Long clubId) {
@@ -168,12 +167,12 @@ public class ClubService {
         }
         club.getMembers().removeIf(member -> member.getUser().equals(user));
         Club leftClub = clubRepository.save(club);
-        messagingTemplate.convertAndSend("/topic/clubs", new ClubDTO(leftClub, false, false));
+        messagingTemplate.convertAndSend("/topic/clubs", ClubMapper.toClubDTO(leftClub, false, false));
     }
 
     public ClubDTO getClubDTO(Long id, boolean includePosts, boolean includeMembers) {
         Club club = getClubById(id);
-        return new ClubDTO(club, includePosts, includeMembers);
+        return ClubMapper.toClubDTO(club, includePosts, includeMembers);
     }
 
     public ClubDTO updateBanner(Long clubId, String imageUrl) {
@@ -197,7 +196,7 @@ public class ClubService {
 
         Pageable limit = PageRequest.of(0, 4); // Limit to 4 results
         return clubRepository.quickSearchClubs(query.trim(), limit).stream()
-                .map(club -> new ClubDTO(club, false, false))
+                .map(club -> ClubMapper.toClubDTO(club, false, false))
                 .toList();
     }
 
@@ -207,17 +206,17 @@ public class ClubService {
         }
 
         return clubRepository.searchClubs(query.trim()).stream()
-                .map(club -> new ClubDTO(club, false, true))
+                .map(club -> ClubMapper.toClubDTO(club, false, true))
                 .toList();
     }
 
     public ClubDTO getClubDTOBySlug(String slug, boolean includePosts, boolean includeMembers) {
         Club club = clubRepository.findBySlug(slug)
                 .orElseThrow(() -> new ResourceNotFoundException("CLUB", "slug: " + slug));
-        return new ClubDTO(club, includePosts, includeMembers);
+        return ClubMapper.toClubDTO(club, includePosts, includeMembers);
     }
 
     public List<ClubDTO> getClubsByCategory(Long categoryId) {
-        return clubRepository.findClubsByCategoryId(categoryId).stream().map(club -> new ClubDTO(club, false, false)).toList();
+        return clubRepository.findClubsByCategoryId(categoryId).stream().map(club ->ClubMapper.toClubDTO(club, false, false)).toList();
     }
 }

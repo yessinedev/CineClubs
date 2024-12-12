@@ -1,5 +1,6 @@
 package com.tuniclubs.app.models;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -9,17 +10,22 @@ import java.util.HashSet;
 @Entity
 @Table(name = "posts")
 
+@Schema(description = "Post creation request")
 public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Schema(hidden = true)
     private Long id;
 
+    @Schema(description = "Title of the post", example = "Welcome to our club!", requiredMode = Schema.RequiredMode.REQUIRED)
     @Column(nullable = false)
     private String title;
 
+    @Schema(description = "Content of the post", example = "This is our first post", requiredMode = Schema.RequiredMode.REQUIRED)
     @Column(columnDefinition = "TEXT", nullable = false)
     private String content;
 
+    @Schema(hidden = true)
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
 
