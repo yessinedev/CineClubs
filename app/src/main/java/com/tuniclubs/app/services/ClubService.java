@@ -30,7 +30,7 @@ public class ClubService {
     private final CategoryService categoryService;
 
     public ClubService(ClubRepository clubRepository, UserService userService,
-                       SimpMessagingTemplate messagingTemplate, CategoryService categoryService, ClubMemberRepository clubMemberRepository) {
+                       SimpMessagingTemplate messagingTemplate, CategoryService categoryService, ClubMemberRepository clubMemberRepository, ClubMapper clubMapper) {
         this.clubRepository = clubRepository;
         this.userService = userService;
         this.messagingTemplate = messagingTemplate;
@@ -167,7 +167,7 @@ public class ClubService {
         }
         club.getMembers().removeIf(member -> member.getUser().equals(user));
         Club leftClub = clubRepository.save(club);
-        messagingTemplate.convertAndSend("/topic/clubs", ClubMapper.toClubDTO(leftClub, false, false));
+        messagingTemplate.convertAndSend("/topic/clubs", ClubMapper.toClubDTO(leftClub));
     }
 
     public ClubDTO getClubDTO(Long id, boolean includePosts, boolean includeMembers) {
@@ -186,7 +186,7 @@ public class ClubService {
         club.setImageUrl(cleanImageUrl);
 
         Club updatedClub = clubRepository.save(club);
-        return new ClubDTO(updatedClub);
+        return ClubMapper.toClubDTO(updatedClub);
     }
 
     public List<ClubDTO> quickSearchClubs(String query) {
@@ -196,7 +196,7 @@ public class ClubService {
 
         Pageable limit = PageRequest.of(0, 4); // Limit to 4 results
         return clubRepository.quickSearchClubs(query.trim(), limit).stream()
-                .map(club -> ClubMapper.toClubDTO(club, false, false))
+                .map(ClubMapper::toClubDTO)
                 .toList();
     }
 
@@ -217,6 +217,6 @@ public class ClubService {
     }
 
     public List<ClubDTO> getClubsByCategory(Long categoryId) {
-        return clubRepository.findClubsByCategoryId(categoryId).stream().map(club ->ClubMapper.toClubDTO(club, false, false)).toList();
+        return clubRepository.findClubsByCategoryId(categoryId).stream().map(ClubMapper::toClubDTO).toList();
     }
 }

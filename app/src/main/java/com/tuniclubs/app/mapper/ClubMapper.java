@@ -8,12 +8,16 @@ import com.tuniclubs.app.dto.PostDTO;
 import com.tuniclubs.app.enums.MemberStatus;
 import com.tuniclubs.app.models.Club;
 import com.tuniclubs.app.models.ClubMember;
+import org.springframework.stereotype.Component;
 
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
-
+@Component
 public class ClubMapper {
+    public static ClubDTO toClubDTO(Club club) {
+        return toClubDTO(club, false, false);
+    }
 
     public static ClubDTO toClubDTO(Club club, boolean includePosts, boolean includeMembers) {
         ClubDTO clubDTO = new ClubDTO();

@@ -1,6 +1,5 @@
 import { useEffect } from "react";
 import { useUser } from "@clerk/clerk-react";
-import axios from "axios";
 import apiClient from "@/services/apiClient";
 
 export function useUserSync() {

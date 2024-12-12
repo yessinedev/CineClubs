@@ -38,10 +38,10 @@ export default function Hero() {
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <button className="px-8 py-3 bg-gradient-to-r from-blue-600 to-pink-600 hover:from-blue-700 hover:to-pink-700 text-white rounded-full flex items-center gap-2 transition-all transform hover:scale-105">
+            <Link to="/clubs" className="px-8 py-3 bg-gradient-to-r from-blue-600 to-pink-600 hover:from-blue-700 hover:to-pink-700 text-white rounded-full flex items-center gap-2 transition-all transform hover:scale-105">
               <Globe2 className="w-5 h-5" />
               Explore Communities
-            </button>
+            </Link>
             <button className="px-8 py-3 bg-white/10 backdrop-blur-sm hover:bg-white/20 text-white rounded-full flex items-center gap-2 transition-all">
               <Users className="w-5 h-5" />
               Create Community

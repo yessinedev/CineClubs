@@ -1,6 +1,7 @@
 package com.tuniclubs.app.services;
 
 import com.tuniclubs.app.dto.UserDTO;
+import com.tuniclubs.app.mapper.UserMapper;
 import com.tuniclubs.app.models.User;
 import com.tuniclubs.app.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -36,12 +37,12 @@ public class UserService {
         }
 
         User savedUser = userRepository.save(user);
-        return new UserDTO(savedUser);
+        return UserMapper.toUserDTO(savedUser);
     }
 
     public UserDTO getUserDTO(String userId, boolean includePosts, boolean includeJoinedClubs) {
         User user = getUserByUserId(userId);
-        return new UserDTO(user, includePosts, includeJoinedClubs);
+        return UserMapper.toUserDTO(user, includePosts, includeJoinedClubs);
     }
 
     public User getUserByUserId(String userId) {
@@ -58,7 +59,7 @@ public class UserService {
         user.setUpdatedAt(LocalDateTime.now());
 
         User updatedUser = userRepository.save(user);
-        return new UserDTO(updatedUser);
+        return UserMapper.toUserDTO(updatedUser);
     }
 
     public List<UserDTO> quickSearchUsers(String query) {
@@ -68,7 +69,7 @@ public class UserService {
 
         Pageable limit = PageRequest.of(0, 4); // Limit to 4 results
         return userRepository.quickSearchUsers(query.trim(), limit).stream()
-                .map(user -> new UserDTO(user))
+                .map(UserMapper::toUserDTO)
                 .toList();
     }
 
@@ -78,7 +79,7 @@ public class UserService {
         }
 
         return userRepository.searchUsers(query.trim()).stream()
-                .map(user -> new UserDTO(user))
+                .map(UserMapper::toUserDTO)
                 .toList();
     }
 }

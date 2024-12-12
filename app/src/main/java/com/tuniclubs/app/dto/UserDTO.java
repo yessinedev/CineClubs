@@ -22,51 +22,10 @@ public class UserDTO {
     private List<PostDTO> posts;
     private List<ClubDTO> joinedClubs;
 
-    public UserDTO(User user) {
-        this(user, false, false);
+    // Default constructor
+    public UserDTO() {
     }
 
-    public UserDTO(User user, boolean includePosts, boolean includeClubs) {
-        this.userId = user.getUserId();
-        this.email = user.getEmail();
-        this.firstName = user.getFirstName();
-        this.lastName = user.getLastName();
-        this.imageUrl = user.getImageUrl();
-        this.username = user.getUsername();
-        this.createdAt = user.getCreatedAt();
-        this.updatedAt = user.getUpdatedAt();
-        this.joinedClubsCount = user.getJoinedClubs() != null ? user.getJoinedClubs().size() : 0;
-        this.postsCount = user.getPosts() != null ? user.getPosts().size() : 0;
-        this.commentsCount = user.getComments() != null ? user.getComments().size() : 0;
-        this.likedPostsCount = user.getLikedPosts() != null ? user.getLikedPosts().size() : 0;
-        this.likedCommentsCount = user.getLikedComments() != null ? user.getLikedComments().size() : 0;
-
-        if (includePosts && user.getPosts() != null) {
-            this.posts = user.getPosts().stream()
-                    .map(PostDTO::new)
-                    .collect(Collectors.toList());
-        }
-        if (includeClubs && user.getJoinedClubs() != null) {
-            this.joinedClubs = user.getJoinedClubs().stream().map(ClubDTO::new).collect(Collectors.toList());
-        }
-
-    }
-    public UserDTO(User user, Long clubId) {
-        this.userId = user.getUserId();
-        this.email = user.getEmail();
-        this.firstName = user.getFirstName();
-        this.lastName = user.getLastName();
-        this.imageUrl = user.getImageUrl();
-        this.username = user.getUsername();
-        this.createdAt = user.getCreatedAt();
-        this.updatedAt = user.getUpdatedAt();
-        this.joinedClubsCount = user.getJoinedClubs() != null ? user.getJoinedClubs().size() : 0;
-        this.postsCount = user.getPosts() != null ? (int) user.getPosts().stream().filter(post -> post.getClub().getId().equals(clubId)).count() : 0;
-        this.commentsCount = user.getComments() != null ? user.getComments().size() : 0;
-        this.likedPostsCount = user.getLikedPosts() != null ? user.getLikedPosts().size() : 0;
-        this.likedCommentsCount = user.getLikedComments() != null ? user.getLikedComments().size() : 0;
-
-    }
 
     public String getUserId() {
         return userId;

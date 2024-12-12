@@ -31,13 +31,6 @@ public class ClubDTO {
     public ClubDTO() {}
 
 
-    public ClubDTO(Club club) {
-        this(club, false, false);
-    }
-
-
-
-
     public Long getId() {
         return id;
     }
