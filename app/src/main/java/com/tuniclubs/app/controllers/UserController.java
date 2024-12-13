@@ -4,6 +4,7 @@ import com.tuniclubs.app.dto.UserDTO;
 import com.tuniclubs.app.models.User;
 import com.tuniclubs.app.services.UserService;
 
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.persistence.EntityNotFoundException;
 
 import org.springframework.http.ResponseEntity;
@@ -21,11 +22,12 @@ public class UserController {
         this.userService = userService;
     }
 
+    @Operation(summary = "Create User")
     @PostMapping
     public ResponseEntity<UserDTO> createOrUpdateUser(@RequestBody User user) {
         return ResponseEntity.ok(userService.createOrUpdateUser(user));
     }
-
+    @Operation(summary = "Fetch One User")
     @GetMapping("/{userId}")
     public ResponseEntity<UserDTO> getUserByUserId(
             @PathVariable String userId,
@@ -33,7 +35,7 @@ public class UserController {
             @RequestParam(defaultValue = "false") boolean includeJoinedClubs) {
         return ResponseEntity.ok(userService.getUserDTO(userId, includePosts, includeJoinedClubs));
     }
-
+    @Operation(summary = "Update user Profile Picture")
     @PutMapping("/change/{userId}")
     public ResponseEntity<UserDTO> updateProfilePicture(
             @PathVariable String userId,
@@ -47,12 +49,12 @@ public class UserController {
             return ResponseEntity.internalServerError().build();
         }
     }
-
+    @Operation(summary = "Search Users: Return the first 4 matches")
     @GetMapping("/quick-search")
     public ResponseEntity<List<UserDTO>> quickSearchUsers(@RequestParam String query) {
         return ResponseEntity.ok(userService.quickSearchUsers(query));
     }
-
+    @Operation(summary = "Search Users: Return all matches")
     @GetMapping("/search")
     public ResponseEntity<List<UserDTO>> searchUsers(@RequestParam String query) {
         return ResponseEntity.ok(userService.searchUsers(query));
