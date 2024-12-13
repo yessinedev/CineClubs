@@ -45,7 +45,7 @@ public class PostController {
 
         return ResponseEntity.ok(postService.createPost(clubId, userId, post));
     }
-
+    @Operation(summary = "Fetch Posts Of a Club")
     @GetMapping("/club/{clubId}")
     public ResponseEntity<PageResponse<PostDTO>> getPostsByClub(
             @PathVariable Long clubId,
@@ -60,7 +60,7 @@ public class PostController {
         PageResponse<PostDTO> response = postService.getPostsForClub(clubId, userId, pageRequest);
         return ResponseEntity.ok(response);
     }
-
+    @Operation(summary = "Fetch post by id")
     @GetMapping("/{postId}")
     public ResponseEntity<PostDTO> getPostById(
             @PathVariable Long postId,
@@ -68,25 +68,26 @@ public class PostController {
         PostDTO post = postService.getPostById(postId, userId);
         return ResponseEntity.ok(post);
     }
-
+    @Operation(summary = "Like a Post")
     @PostMapping("/{postId}/like")
     public ResponseEntity<PostDTO> likePost(@PathVariable Long postId, @RequestParam String userId) {
         PostDTO post = postService.likePost(postId, userId);
         return ResponseEntity.ok(post);
     }
-
+    @Operation(summary = "Unlike a Post")
     @PostMapping("/{postId}/unlike")
     public ResponseEntity<PostDTO> unlikePost(@PathVariable Long postId, @RequestParam String userId) {
         PostDTO post = postService.unlikePost(postId, userId);
         return ResponseEntity.ok(post);
     }
+    @Operation(summary = "Delete a Post")
 
     @DeleteMapping("/{postId}")
     public ResponseEntity<Void> deletePost(@PathVariable Long postId, @RequestParam String userId) {
         postService.deletePost(postId, userId);
         return ResponseEntity.noContent().build();
     }
-
+    @Operation(summary = "Update a Post")
     @PutMapping("/{postId}")
     public ResponseEntity<PostDTO> updatePost(
             @PathVariable Long postId,
